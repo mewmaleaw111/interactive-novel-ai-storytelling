@@ -1,0 +1,661 @@
+.profile-branches-page {
+  min-height: 100vh;
+  background-color: var(--bg-main);
+  padding: 2rem 1.5rem 5rem;
+}
+
+.profile-branches-container {
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+/* =========================
+   Back
+========================= */
+
+.profile-branches-back {
+  background: none;
+  color: var(--accent-color);
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0;
+  margin-bottom: 2.5rem;
+}
+
+.profile-branches-back:hover {
+  color: var(--accent-hover);
+}
+
+/* =========================
+   Header
+========================= */
+
+.profile-branches-header {
+  margin-bottom: 2rem;
+}
+
+.profile-branches-eyebrow {
+  color: var(--accent-color);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.profile-branches-header h1 {
+  margin-top: 0.35rem;
+  color: var(--text-primary);
+  font-family: var(--font-global);
+  font-size: 2rem;
+  line-height: 1.3;
+}
+
+.profile-branches-header p {
+  margin-top: 0.4rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+/* =========================
+   Branch List
+========================= */
+
+.profile-branches-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* =========================
+   Branch Card
+========================= */
+
+.profile-branch-card {
+  position: relative;
+  overflow: hidden;
+
+  background-color: var(--bg-card);
+
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+
+  box-shadow: var(--shadow-sm);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.profile-branch-card:hover {
+  transform: translateY(-2px);
+  border-color: #d8c8a8;
+  box-shadow: var(--shadow-md);
+}
+
+/* =========================
+   Card Layout
+========================= */
+
+.profile-branch-content {
+  display: flex;
+  min-height: 210px;
+}
+
+/* =========================
+   Cover Area
+========================= */
+
+.profile-branch-cover {
+  width: 145px;
+  min-width: 145px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 12px;
+
+  background-color: rgba(242, 235, 217, 0.35);
+
+  border-right: 1px solid var(--border-color);
+}
+
+.profile-branch-cover img {
+  width: 100%;
+  height: 185px;
+
+  display: block;
+
+  object-fit: cover;
+
+  border-radius: 6px;
+
+  box-shadow:
+    0 3px 10px rgba(0, 0, 0, 0.14);
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.profile-branch-card:hover .profile-branch-cover img {
+  transform: translateY(-1px);
+  box-shadow:
+    0 5px 14px rgba(0, 0, 0, 0.18);
+}
+
+.profile-branch-cover-empty {
+  width: 100%;
+  height: 185px;
+
+  border-radius: 6px;
+
+  background-color: var(--bg-subtle);
+
+  border: 1px solid var(--border-color);
+}
+
+/* =========================
+   Main
+========================= */
+
+.profile-branch-main {
+  min-width: 0;
+  flex: 1;
+
+  padding: 1.4rem 1.35rem 1.3rem;
+}
+
+.profile-branch-meta {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 0.45rem;
+
+  margin-bottom: 0.65rem;
+}
+
+.profile-branch-meta span {
+  color: var(--accent-color);
+
+  background-color: var(--bg-subtle);
+
+  border-radius: 12px;
+
+  padding: 3px 9px;
+
+  font-size: 0.72rem;
+}
+
+.profile-branch-main h2 {
+  color: var(--text-primary);
+
+  font-family: var(--font-global);
+
+  font-size: 1.4rem;
+
+  line-height: 1.35;
+
+  overflow-wrap: anywhere;
+}
+
+.profile-branch-synopsis {
+  margin-top: 0.45rem;
+
+  color: var(--text-secondary);
+
+  font-size: 0.83rem;
+
+  line-height: 1.7;
+
+  display: -webkit-box;
+
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+
+  overflow-wrap: anywhere;
+}
+
+/* =========================
+   Player
+========================= */
+
+.profile-branch-player {
+  margin-top: 0.75rem;
+
+  color: var(--text-muted);
+
+  font-size: 0.78rem;
+}
+
+.profile-branch-player strong {
+  color: var(--text-secondary);
+}
+
+/* =========================
+   Progress
+========================= */
+
+.profile-branch-progress {
+  margin-top: 0.9rem;
+
+  max-width: 430px;
+}
+
+.profile-branch-progress-info {
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  margin-bottom: 0.35rem;
+
+  color: var(--text-muted);
+
+  font-size: 0.72rem;
+}
+
+.profile-branch-progress-bar {
+  width: 100%;
+  height: 5px;
+
+  background-color: var(--bg-subtle);
+
+  border-radius: 999px;
+
+  overflow: hidden;
+}
+
+.profile-branch-progress-fill {
+  height: 100%;
+
+  background-color: var(--accent-color);
+
+  border-radius: inherit;
+
+  transition: width 0.3s ease;
+}
+
+/* =========================
+   Actions
+========================= */
+
+.profile-branch-actions {
+  width: 125px;
+  min-width: 125px;
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+
+  gap: 0.5rem;
+
+  padding: 1.25rem;
+
+  border-left: 1px solid var(--border-color);
+
+  background-color: rgba(242, 235, 217, 0.22);
+}
+
+.profile-branch-actions button {
+  width: 100%;
+
+  padding: 0.6rem 0.75rem;
+
+  border-radius: var(--radius-sm);
+
+  font-size: 0.78rem;
+
+  font-weight: 600;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.15s ease;
+}
+
+.profile-branch-actions button:active {
+  transform: scale(0.98);
+}
+
+.profile-branch-continue {
+  background-color: var(--accent-color);
+  color: #ffffff;
+}
+
+.profile-branch-continue:hover {
+  background-color: var(--accent-hover);
+}
+
+.profile-branch-view {
+  background-color: var(--bg-card);
+
+  color: var(--accent-color);
+
+  border: 1px solid var(--border-color);
+}
+
+.profile-branch-view:hover {
+  background-color: var(--accent-light);
+  border-color: var(--accent-color);
+}
+
+/* =========================
+   Loading / Error
+========================= */
+
+.profile-branches-loading,
+.profile-branches-state,
+.profile-branches-empty {
+  text-align: center;
+
+  padding: 4rem 1rem;
+
+  color: var(--text-muted);
+}
+
+.profile-branches-empty {
+  background-color: var(--bg-card);
+
+  border: 1px solid var(--border-color);
+
+  border-radius: var(--radius-md);
+}
+
+.profile-branches-empty h2 {
+  color: var(--text-primary);
+
+  font-family: var(--font-global);
+
+  font-size: 1.35rem;
+}
+
+.profile-branches-empty p {
+  margin-top: 0.5rem;
+
+  font-size: 0.85rem;
+}
+
+.profile-branches-empty button,
+.profile-branches-state button {
+  margin-top: 1.25rem;
+
+  background-color: var(--accent-color);
+
+  color: #ffffff;
+
+  padding: 0.65rem 1rem;
+
+  border-radius: var(--radius-sm);
+
+  font-size: 0.8rem;
+
+  font-weight: 600;
+}
+
+.profile-branches-empty button:hover,
+.profile-branches-state button:hover {
+  background-color: var(--accent-hover);
+}
+
+/* =========================
+   Mobile
+========================= */
+
+@media (max-width: 640px) {
+  .profile-branches-page {
+    padding: 1.5rem 1rem 4rem;
+  }
+
+  .profile-branches-back {
+    margin-bottom: 2rem;
+    font-size: 0.8rem;
+  }
+
+  .profile-branches-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .profile-branches-header h1 {
+    font-size: 1.7rem;
+  }
+
+  .profile-branches-header p {
+    font-size: 0.8rem;
+  }
+
+  /* =========================
+     Card
+  ========================= */
+
+  .profile-branch-content {
+    display: grid;
+
+    grid-template-columns: 105px 1fr;
+
+    min-height: 0;
+  }
+
+  /* =========================
+     Cover
+  ========================= */
+
+  .profile-branch-cover {
+    width: 105px;
+    min-width: 105px;
+
+    height: 155px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px;
+
+    background-color: rgba(242, 235, 217, 0.3);
+
+    border-right: 1px solid var(--border-color);
+    border-bottom: none;
+  }
+
+  .profile-branch-cover img {
+    width: 85px;
+    height: 135px;
+
+    display: block;
+
+    object-fit: cover;
+
+    border-radius: 6px;
+
+    box-shadow:
+      0 3px 10px rgba(0, 0, 0, 0.15);
+
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease;
+  }
+
+  .profile-branch-card:hover .profile-branch-cover img {
+    transform: translateY(-1px);
+
+    box-shadow:
+      0 5px 13px rgba(0, 0, 0, 0.18);
+  }
+
+  .profile-branch-cover-empty {
+    width: 85px;
+    height: 135px;
+
+    border-radius: 6px;
+
+    background-color: var(--bg-subtle);
+
+    border: 1px solid var(--border-color);
+  }
+
+  /* =========================
+     Main
+  ========================= */
+
+  .profile-branch-main {
+    width: 100%;
+    min-width: 0;
+
+    padding: 0.95rem 1rem;
+  }
+
+  .profile-branch-meta {
+    gap: 0.3rem;
+
+    margin-bottom: 0.45rem;
+  }
+
+  .profile-branch-meta span {
+    font-size: 0.64rem;
+
+    padding: 3px 7px;
+  }
+
+  .profile-branch-main h2 {
+    font-size: 1.05rem;
+
+    line-height: 1.35;
+  }
+
+  .profile-branch-synopsis {
+    margin-top: 0.35rem;
+
+    font-size: 0.73rem;
+
+    line-height: 1.55;
+
+    -webkit-line-clamp: 2;
+  }
+
+  /* =========================
+     Player
+  ========================= */
+
+  .profile-branch-player {
+    margin-top: 0.5rem;
+
+    font-size: 0.69rem;
+  }
+
+  /* =========================
+     Progress
+  ========================= */
+
+  .profile-branch-progress {
+    width: 100%;
+
+    max-width: none;
+
+    margin-top: 0.6rem;
+  }
+
+  .profile-branch-progress-info {
+    font-size: 0.64rem;
+
+    margin-bottom: 0.3rem;
+  }
+
+  .profile-branch-progress-bar {
+    height: 4px;
+  }
+
+  /* =========================
+     Actions
+  ========================= */
+
+  .profile-branch-actions {
+    grid-column: 1 / -1;
+
+    width: 100%;
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: row;
+
+    gap: 0.5rem;
+
+    padding: 0.65rem 0.75rem;
+
+    border-left: none;
+    border-top: 1px solid var(--border-color);
+
+    background-color: rgba(242, 235, 217, 0.2);
+  }
+
+  .profile-branch-actions button {
+    flex: 1;
+
+    padding: 0.65rem 0.5rem;
+
+    font-size: 0.74rem;
+  }
+}
+
+/* =========================
+   Small Mobile
+========================= */
+
+@media (max-width: 380px) {
+  .profile-branches-page {
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+  }
+
+  .profile-branch-content {
+    grid-template-columns: 88px 1fr;
+  }
+
+  .profile-branch-cover {
+    width: 88px;
+    min-width: 88px;
+
+    height: 140px;
+
+    padding: 9px;
+  }
+
+  .profile-branch-cover img,
+  .profile-branch-cover-empty {
+    width: 70px;
+    height: 120px;
+  }
+
+  .profile-branch-main {
+    padding: 0.8rem 0.85rem;
+  }
+
+  .profile-branch-main h2 {
+    font-size: 0.98rem;
+  }
+
+  .profile-branch-synopsis {
+    font-size: 0.69rem;
+
+    -webkit-line-clamp: 2;
+  }
+
+  .profile-branch-player {
+    font-size: 0.67rem;
+  }
+
+  .profile-branch-actions {
+    padding: 0.6rem;
+  }
+
+  .profile-branch-actions button {
+    padding: 0.6rem 0.4rem;
+
+    font-size: 0.7rem;
+  }
+}

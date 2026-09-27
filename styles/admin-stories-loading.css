@@ -1,0 +1,630 @@
+/* ========================================
+   STORIES SKELETON
+======================================== */
+
+.admin-stories .admin-skeleton-back,
+.admin-stories .admin-skeleton-label,
+.admin-stories .admin-skeleton-title,
+.admin-stories .admin-skeleton-description,
+.admin-stories .admin-skeleton-search,
+.admin-stories .admin-skeleton-summary,
+.admin-stories .admin-skeleton-table-head span,
+.admin-stories .admin-skeleton-table-row > span,
+.admin-stories .admin-skeleton-story span {
+    background: linear-gradient(
+        90deg,
+        #eee8e1 25%,
+        #f7f3ee 50%,
+        #eee8e1 75%
+    );
+    background-size: 200% 100%;
+    animation: admin-stories-shimmer 1.4s ease-in-out infinite;
+}
+
+.admin-stories .admin-skeleton-back {
+    width: 130px;
+    height: 14px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+.admin-stories .admin-skeleton-label {
+    width: 105px;
+    height: 9px;
+    margin-bottom: 12px;
+    border-radius: 4px;
+}
+
+.admin-stories .admin-skeleton-title {
+    width: 190px;
+    height: 34px;
+    margin-bottom: 10px;
+    border-radius: 7px;
+}
+
+.admin-stories .admin-skeleton-description {
+    width: 310px;
+    max-width: 70%;
+    height: 13px;
+    border-radius: 5px;
+}
+
+.admin-stories .admin-skeleton-search {
+    width: 100%;
+    max-width: 560px;
+    height: 48px;
+    margin-bottom: 26px;
+    border: 1px solid #e1d8cf;
+    border-radius: 12px;
+}
+
+.admin-stories .admin-skeleton-summary {
+    width: 145px;
+    height: 13px;
+    margin-bottom: 14px;
+    border-radius: 5px;
+}
+
+.admin-stories .admin-stories-skeleton-table {
+    overflow: hidden;
+}
+
+.admin-stories .admin-skeleton-table-head,
+.admin-stories .admin-skeleton-table-row {
+    display: grid;
+    grid-template-columns:
+        minmax(260px, 2.4fr)
+        minmax(90px, 0.8fr)
+        70px
+        90px
+        150px
+        120px;
+    gap: 20px;
+    align-items: center;
+    padding: 16px 22px;
+}
+
+.admin-stories .admin-skeleton-table-head {
+    background: #f4f0eb;
+    border-bottom: 1px solid #ddd3c9;
+}
+
+.admin-stories .admin-skeleton-table-head span {
+    width: 55px;
+    height: 9px;
+    border-radius: 4px;
+    animation-duration: 1.6s;
+}
+
+.admin-stories .admin-skeleton-table-row {
+    min-height: 88px;
+    border-bottom: 1px solid #eee7df;
+}
+
+.admin-stories .admin-skeleton-table-row:last-child {
+    border-bottom: 0;
+}
+
+.admin-stories .admin-skeleton-table-row > span {
+    width: 70%;
+    height: 11px;
+    border-radius: 4px;
+}
+
+.admin-stories .admin-skeleton-story {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.admin-stories .admin-skeleton-story span:first-child {
+    width: 150px;
+    height: 14px;
+    border-radius: 5px;
+}
+
+.admin-stories .admin-skeleton-story span:last-child {
+    width: 90%;
+    max-width: 360px;
+    height: 10px;
+    border-radius: 4px;
+}
+
+@keyframes admin-stories-shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+@media (max-width: 900px) {
+    .admin-stories .admin-skeleton-table-head,
+    .admin-stories .admin-skeleton-table-row {
+        grid-template-columns:
+            minmax(220px, 2fr)
+            minmax(80px, 0.8fr)
+            60px
+            85px
+            120px;
+    }
+
+    .admin-stories .admin-skeleton-table-head span:last-child,
+    .admin-stories .admin-skeleton-table-row > span:last-child {
+        display: none;
+    }
+}
+
+@media (max-width: 650px) {
+    .admin-stories .admin-skeleton-title {
+        width: 150px;
+        height: 29px;
+    }
+
+    .admin-stories .admin-skeleton-description {
+        width: 250px;
+        max-width: 85%;
+    }
+
+    .admin-stories .admin-skeleton-search {
+        height: 46px;
+    }
+
+    .admin-stories .admin-skeleton-table-head {
+        display: none;
+    }
+
+    .admin-stories .admin-skeleton-table-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 18px;
+    }
+
+    .admin-stories .admin-skeleton-story {
+        width: 100%;
+        margin-bottom: 4px;
+    }
+
+    .admin-stories .admin-skeleton-table-row > span {
+        width: 70px;
+    }
+}
+
+/* ========================================
+   STORY DETAIL SKELETON
+======================================== */
+
+.admin-story-detail .admin-skeleton-back,
+.admin-story-detail .admin-skeleton-label,
+.admin-story-detail .admin-skeleton-title,
+.admin-story-detail .admin-skeleton-description,
+.admin-story-detail .admin-skeleton-section-title,
+.admin-story-detail .admin-skeleton-section-description,
+.admin-story-detail .admin-skeleton-status,
+.admin-story-detail .admin-skeleton-detail-label,
+.admin-story-detail .admin-skeleton-detail-value,
+.admin-story-detail .admin-skeleton-text-block span,
+.admin-story-detail .admin-skeleton-chapter-number,
+.admin-story-detail .admin-skeleton-chapter-title,
+.admin-story-detail .admin-skeleton-chapter-preview,
+.admin-story-detail .admin-skeleton-chapter-date,
+.admin-story-detail .admin-skeleton-word-count,
+.admin-story-detail .admin-skeleton-session-number,
+.admin-story-detail .admin-skeleton-session-title,
+.admin-story-detail .admin-skeleton-session-player,
+.admin-story-detail .admin-skeleton-meta-label,
+.admin-story-detail .admin-skeleton-meta-value,
+.admin-story-detail .admin-skeleton-session-id,
+.admin-story-detail .admin-skeleton-session-button {
+  background: linear-gradient(
+    90deg,
+    #eee8e1 25%,
+    #f7f3ee 50%,
+    #eee8e1 75%
+  );
+  background-size: 200% 100%;
+  animation: admin-story-detail-shimmer 1.4s ease-in-out infinite;
+}
+
+.admin-story-detail .admin-skeleton-back {
+  width: 150px;
+  height: 14px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}
+
+.admin-story-detail .admin-skeleton-label {
+  width: 105px;
+  height: 9px;
+  margin-bottom: 12px;
+  border-radius: 4px;
+}
+
+.admin-story-detail .admin-skeleton-title {
+  width: 280px;
+  height: 38px;
+  margin-bottom: 10px;
+  border-radius: 7px;
+}
+
+.admin-story-detail .admin-skeleton-description {
+  width: 300px;
+  height: 13px;
+  border-radius: 5px;
+}
+
+.admin-story-detail .admin-skeleton-story-title {
+  max-width: 80%;
+}
+
+.admin-story-detail .admin-detail-card {
+  overflow: hidden;
+}
+
+.admin-story-detail .admin-skeleton-section-title {
+  width: 145px;
+  height: 20px;
+  margin-bottom: 9px;
+  border-radius: 5px;
+}
+
+.admin-story-detail .admin-skeleton-section-description {
+  width: 220px;
+  height: 11px;
+  border-radius: 4px;
+}
+
+.admin-story-detail .admin-skeleton-status {
+  width: 68px;
+  height: 25px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.admin-story-detail .admin-skeleton-detail-grid {
+  margin-top: 26px;
+}
+
+.admin-story-detail .admin-skeleton-detail-label {
+  width: 65px;
+  height: 10px;
+  margin-bottom: 9px;
+  border-radius: 4px;
+}
+
+.admin-story-detail .admin-skeleton-detail-value {
+  width: 120px;
+  height: 14px;
+  border-radius: 5px;
+}
+
+.admin-story-detail .admin-skeleton-text-block {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  margin-top: 24px;
+}
+
+.admin-story-detail .admin-skeleton-text-block span {
+  display: block;
+  width: 100%;
+  height: 11px;
+  border-radius: 4px;
+}
+
+.admin-story-detail .admin-skeleton-text-block span:nth-child(2) {
+  width: 94%;
+}
+
+.admin-story-detail .admin-skeleton-text-block span:nth-child(3) {
+  width: 88%;
+}
+
+.admin-story-detail .admin-skeleton-text-block span:nth-child(4) {
+  width: 72%;
+}
+
+.admin-story-detail .admin-skeleton-plot span:nth-child(4) {
+  width: 91%;
+}
+
+.admin-story-detail .admin-skeleton-plot span:nth-child(5) {
+  width: 83%;
+}
+
+.admin-story-detail .admin-skeleton-plot span:nth-child(6) {
+  width: 67%;
+}
+
+.admin-story-detail .admin-skeleton-chapter-number {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.admin-story-detail .admin-skeleton-chapter-title {
+  width: 180px;
+  height: 15px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.admin-story-detail .admin-skeleton-chapter-preview {
+  width: 85%;
+  height: 11px;
+  margin-bottom: 9px;
+  border-radius: 4px;
+}
+
+.admin-story-detail .admin-skeleton-chapter-date {
+  width: 130px;
+  height: 9px;
+  border-radius: 4px;
+}
+
+.admin-story-detail .admin-skeleton-word-count {
+  width: 80px;
+  height: 11px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.admin-story-detail .admin-skeleton-session-number {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.admin-story-detail .admin-skeleton-session-title {
+  width: 130px;
+  height: 16px;
+  margin-bottom: 9px;
+  border-radius: 5px;
+}
+
+.admin-story-detail .admin-skeleton-session-player {
+  width: 100px;
+  height: 10px;
+  border-radius: 4px;
+}
+
+.admin-story-detail .admin-skeleton-meta-label {
+  width: 85px;
+  height: 9px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+}
+
+.admin-story-detail .admin-skeleton-meta-value {
+  width: 110px;
+  height: 12px;
+  border-radius: 4px;
+}
+
+.admin-story-detail .admin-skeleton-session-id {
+  width: 190px;
+  height: 9px;
+  border-radius: 4px;
+}
+
+.admin-story-detail .admin-skeleton-session-button {
+  width: 105px;
+  height: 34px;
+  border-radius: 9px;
+}
+
+@keyframes admin-story-detail-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@media (max-width: 650px) {
+  .admin-story-detail .admin-skeleton-title {
+    width: 190px;
+    height: 32px;
+  }
+
+  .admin-story-detail .admin-skeleton-description {
+    width: 220px;
+    max-width: 85%;
+  }
+
+  .admin-story-detail .admin-skeleton-detail-grid {
+    margin-top: 20px;
+  }
+
+  .admin-story-detail .admin-skeleton-word-count {
+    display: none;
+  }
+
+  .admin-story-detail .admin-skeleton-session-button {
+    width: 90px;
+  }
+}
+
+/* ==================================================
+   ADMIN SESSION DETAIL LOADING
+   ================================================== */
+
+.admin-session-detail .admin-skeleton-back,
+.admin-session-detail .admin-skeleton-label,
+.admin-session-detail .admin-skeleton-title,
+.admin-session-detail .admin-skeleton-description,
+.admin-session-detail .admin-skeleton-section-title,
+.admin-session-detail .admin-skeleton-section-description,
+.admin-session-detail .admin-skeleton-status,
+.admin-session-detail .admin-skeleton-detail-label,
+.admin-session-detail .admin-skeleton-detail-value,
+.admin-session-detail .admin-skeleton-chapter-number,
+.admin-session-detail .admin-skeleton-chapter-title,
+.admin-session-detail .admin-skeleton-chapter-source,
+.admin-session-detail .admin-skeleton-chapter-preview,
+.admin-session-detail .admin-skeleton-chapter-date,
+.admin-session-detail .admin-skeleton-word-count {
+  background: linear-gradient(
+    90deg,
+    #eee8e1 25%,
+    #f7f3ee 50%,
+    #eee8e1 75%
+  );
+  background-size: 200% 100%;
+  animation: admin-session-detail-shimmer 1.4s ease-in-out infinite;
+}
+
+/* HEADER */
+
+.admin-session-detail .admin-skeleton-back {
+  width: 150px;
+  height: 14px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}
+
+.admin-session-detail .admin-skeleton-label {
+  width: 105px;
+  height: 9px;
+  margin-bottom: 12px;
+  border-radius: 4px;
+}
+
+.admin-session-detail .admin-skeleton-title {
+  width: 240px;
+  height: 38px;
+  margin-bottom: 10px;
+  border-radius: 7px;
+}
+
+.admin-session-detail .admin-skeleton-session-page-title {
+  max-width: 80%;
+}
+
+.admin-session-detail .admin-skeleton-description {
+  width: 280px;
+  height: 13px;
+  border-radius: 5px;
+}
+
+/* SECTION HEADER */
+
+.admin-session-detail .admin-skeleton-section-title {
+  width: 145px;
+  height: 20px;
+  margin-bottom: 9px;
+  border-radius: 5px;
+}
+
+.admin-session-detail .admin-skeleton-section-description {
+  width: 230px;
+  height: 11px;
+  border-radius: 4px;
+}
+
+.admin-session-detail .admin-skeleton-status {
+  width: 68px;
+  height: 25px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+/* DETAIL GRID */
+
+.admin-session-detail .admin-skeleton-detail-label {
+  width: 75px;
+  height: 10px;
+  margin-bottom: 9px;
+  border-radius: 4px;
+}
+
+.admin-session-detail .admin-skeleton-detail-value {
+  width: 125px;
+  height: 14px;
+  border-radius: 5px;
+}
+
+/* CHAPTER */
+
+.admin-session-detail .admin-skeleton-chapter-number {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.admin-session-detail .admin-skeleton-chapter-title {
+  width: 180px;
+  height: 15px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.admin-session-detail .admin-skeleton-chapter-source {
+  width: 85px;
+  height: 23px;
+  margin-bottom: 10px;
+  border-radius: 999px;
+}
+
+.admin-session-detail .admin-skeleton-chapter-preview {
+  width: 90%;
+  height: 11px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+}
+
+.admin-session-detail .admin-skeleton-chapter-preview.short {
+  width: 68%;
+  margin-bottom: 9px;
+}
+
+.admin-session-detail .admin-skeleton-chapter-date {
+  width: 130px;
+  height: 9px;
+  border-radius: 4px;
+}
+
+.admin-session-detail .admin-skeleton-word-count {
+  width: 85px;
+  height: 11px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+/* ANIMATION */
+
+@keyframes admin-session-detail-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 650px) {
+  .admin-session-detail .admin-skeleton-title {
+    width: 190px;
+    height: 32px;
+  }
+
+  .admin-session-detail .admin-skeleton-description {
+    width: 220px;
+    max-width: 85%;
+  }
+
+  .admin-session-detail .admin-skeleton-word-count {
+    display: none;
+  }
+}

@@ -1,0 +1,1363 @@
+/* ==========================================
+   CREATE STORY PAGE
+   GonnaTales
+========================================== */
+
+.story-create-page {
+  min-height: calc(100vh - 64px);
+
+  background:
+    radial-gradient(circle at top left,
+      rgba(140, 83, 62, 0.05),
+      transparent 35%),
+    var(--bg-main);
+
+  padding: 3rem 1.5rem 5rem;
+}
+
+.story-create-container {
+  width: 100%;
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+/* ==========================================
+   Header
+========================================== */
+
+.story-create-header {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  margin-bottom: 2.6rem;
+}
+
+.story-create-back {
+  position: static;
+  align-self: flex-start;
+
+  display: inline-flex;
+  align-items: center;
+
+  padding: 6px 0;
+  margin-bottom: 1.2rem;
+
+  background: transparent;
+  border: none;
+
+  color: var(--accent-color);
+
+  font-family: var(--font-global);
+  font-size: 0.86rem;
+  font-weight: 600;
+  line-height: 1.4;
+
+  cursor: pointer;
+
+  transition: color 0.2s ease;
+}
+
+.story-create-back:hover {
+  color: var(--accent-hover);
+}
+
+.story-create-heading {
+  width: 100%;
+  text-align: center;
+  padding: 0;
+}
+
+.story-create-subtitle {
+  display: block;
+
+  margin-bottom: 0.4rem;
+
+  color: var(--accent-color);
+
+  font-family: var(--font-global);
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+}
+
+.story-create-heading h1 {
+  margin: 0;
+
+  color: var(--text-primary);
+
+  font-family: var(--font-global);
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+}
+
+.story-create-heading p {
+  margin: 0.65rem 0 0;
+
+  color: var(--text-secondary);
+
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* ==========================================
+   Progress
+========================================== */
+
+.story-create-progress {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 3rem;
+
+  margin-bottom: 2.2rem;
+}
+
+.story-create-progress-item {
+  display: flex;
+  align-items: center;
+
+  gap: 0.55rem;
+
+  color: var(--text-muted);
+
+  font-size: 0.85rem;
+
+  transition: color 0.2s ease;
+}
+
+.story-create-progress-item.active {
+  color: var(--accent-color);
+}
+
+.story-create-progress-number {
+  width: 30px;
+  height: 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: var(--bg-subtle);
+
+  border: 1px solid var(--border-color);
+
+  font-weight: 600;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.story-create-progress-item.active .story-create-progress-number {
+  background: var(--accent-color);
+
+  border-color: var(--accent-color);
+
+  color: #ffffff;
+}
+
+/* ==========================================
+   Card
+========================================== */
+
+.story-create-card {
+  overflow: hidden;
+
+  background: var(--bg-card);
+
+  border: 1px solid var(--border-color);
+
+  border-radius: var(--radius-lg);
+
+  box-shadow:
+    0 12px 40px rgba(44, 34, 30, 0.07);
+}
+
+.story-create-step {
+  padding: 2.6rem;
+}
+
+/* ==========================================
+   Step Heading
+========================================== */
+
+.story-create-step-heading {
+  margin-bottom: 2.4rem;
+}
+
+.story-create-step-heading>span {
+  color: var(--accent-color);
+
+  font-size: 0.8rem;
+  font-weight: 600;
+
+  letter-spacing: 0.04em;
+}
+
+.story-create-step-heading h2 {
+  margin: 0.45rem 0 0.5rem;
+
+  color: var(--text-primary);
+
+  font-family: var(--font-global);
+
+  font-size: 1.6rem;
+  line-height: 1.4;
+}
+
+.story-create-step-heading p {
+  margin: 0;
+
+  color: var(--text-secondary);
+
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+/* ==========================================
+   Fields
+========================================== */
+
+.story-create-fields {
+  display: flex;
+  flex-direction: column;
+
+  gap: 1.8rem;
+}
+
+.story-create-field {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.55rem;
+}
+
+/* Label */
+
+.story-create-field label {
+  color: var(--text-primary);
+
+  font-size: 0.9rem;
+  font-weight: 600;
+
+  line-height: 1.5;
+}
+
+/* ==========================================
+   Required
+========================================== */
+
+.story-create-required {
+  color: #b42318;
+
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+/* ==========================================
+   Optional Text
+========================================== */
+
+.story-create-optional {
+  color: var(--text-muted);
+
+  font-size: 0.78rem;
+  font-weight: 400;
+
+  opacity: 0.58;
+
+  white-space: nowrap;
+}
+
+/* ==========================================
+   Field Description
+========================================== */
+
+.story-create-field>p {
+  margin: -0.1rem 0 0;
+
+  color: var(--text-muted);
+
+  font-size: 0.78rem;
+  font-weight: 400;
+
+  line-height: 1.55;
+}
+
+/* ==========================================
+   Inputs
+========================================== */
+
+.story-create-field input,
+.story-create-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+
+  background: #ffffff;
+
+  border: 1px solid var(--border-color);
+
+  border-radius: var(--radius-md);
+
+  padding: 0.8rem 0.95rem;
+
+  color: var(--text-primary);
+
+  font-family: var(--font-global);
+
+  font-size: 0.9rem;
+  line-height: 1.6;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.story-create-field textarea {
+  resize: vertical;
+
+  min-height: 120px;
+}
+
+.story-create-field input::placeholder,
+.story-create-field textarea::placeholder {
+  color: var(--text-muted);
+
+  opacity: 0.8;
+}
+
+.story-create-field input:focus,
+.story-create-field textarea:focus {
+  border-color: var(--accent-color);
+
+  box-shadow:
+    0 0 0 3px rgba(140, 83, 62, 0.08);
+}
+
+/* ==========================================
+   Section Heading
+========================================== */
+
+/*
+   ใช้กับหัวข้อใหญ่ของแต่ละ Section
+   เช่น
+
+   ตัวละครหลัก
+   ตัวละครประกอบ (NPC)
+   โลก / ฉากหลัง
+*/
+
+.story-create-section-heading {
+  margin-top: 2.8rem;
+  margin-bottom: 0;
+
+  padding-bottom: 0.8rem;
+
+  border-bottom: 1px solid var(--border-color);
+}
+
+.story-create-section-heading:first-child {
+  margin-top: 0;
+}
+
+.story-create-section-heading h3 {
+  margin: 0 0 0.3rem;
+
+  color: var(--text-primary);
+
+  font-family: var(--font-global);
+
+  font-size: 1.2rem;
+  font-weight: 700;
+
+  line-height: 1.4;
+}
+
+.story-create-section-heading p {
+  margin: 0;
+
+  color: var(--text-secondary);
+
+  font-size: 0.82rem;
+  font-weight: 400;
+
+  line-height: 1.5;
+}
+
+/* ช่องกรอกที่อยู่หลังหัวข้อ Section */
+
+.story-create-section-heading+.story-create-field {
+  margin-top: 1.2rem;
+}
+
+/* Section ใหม่หลังจาก Field */
+
+.story-create-field+.story-create-section-heading {
+  margin-top: 2.8rem;
+}
+
+/* ==========================================
+   Supporting Header
+========================================== */
+
+.story-create-supporting-section-heading {
+  margin-bottom: 0;
+}
+
+.story-create-supporting-header {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+}
+
+.story-create-supporting-header>div:first-child {
+  min-width: 0;
+}
+
+.story-create-supporting-header h3 {
+  margin: 0 0 0.3rem;
+}
+
+.story-create-supporting-header p {
+  margin: 0;
+
+  color: var(--text-secondary);
+
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.story-create-supporting-header .story-create-secondary {
+  flex-shrink: 0;
+}
+
+/* ==========================================
+   Supporting Characters
+========================================== */
+
+.story-create-supporting-list {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 20px;
+
+  margin-top: 1.25rem;
+}
+
+.story-create-supporting-character {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 20px;
+
+  border: 1px solid rgba(0, 0, 0, 0.08);
+
+  border-radius: 16px;
+
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.story-create-supporting-character-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  margin-bottom: 18px;
+}
+
+.story-create-remove-character {
+  border: none;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  color: #b42318;
+
+  font-size: 14px;
+}
+
+.story-create-supporting-character .story-create-field+.story-create-field {
+  margin-top: 0.4rem;
+}
+
+/* ==========================================
+   Options
+========================================== */
+
+.story-create-options {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 0.6rem;
+}
+
+.story-create-options button {
+  background: var(--bg-main);
+
+  border: 1px solid var(--border-color);
+
+  border-radius: 999px;
+
+  padding: 0.55rem 0.9rem;
+
+  color: var(--text-secondary);
+
+  font-size: 0.85rem;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.story-create-options button:hover {
+  transform: translateY(-1px);
+
+  border-color: var(--accent-color);
+
+  color: var(--accent-color);
+}
+
+.story-create-options button.selected {
+  background: var(--accent-light);
+
+  border-color: var(--accent-color);
+
+  color: var(--accent-color);
+
+  font-weight: 600;
+}
+
+/* ==========================================
+   Length
+========================================== */
+
+.story-create-length-options {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 0.8rem;
+}
+
+.story-create-length-options button {
+  display: flex;
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  gap: 0.3rem;
+
+  text-align: left;
+
+  background: var(--bg-main);
+
+  border: 1px solid var(--border-color);
+
+  border-radius: var(--radius-md);
+
+  padding: 1rem;
+
+  color: var(--text-primary);
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.story-create-length-options button:hover {
+  transform: translateY(-1px);
+
+  border-color: var(--accent-color);
+}
+
+.story-create-length-options button.selected {
+  background: var(--accent-light);
+
+  border-color: var(--accent-color);
+}
+
+.story-create-length-options strong {
+  font-size: 0.9rem;
+}
+
+.story-create-length-options span {
+  color: var(--text-secondary);
+
+  font-size: 0.8rem;
+}
+
+/* ==========================================
+   Cover
+========================================== */
+
+.story-create-cover {
+  width: 220px;
+  aspect-ratio: 2 / 3;
+
+  border-radius: 12px;
+
+  overflow: hidden;
+
+  background: var(--bg-subtle);
+
+  border: 1px solid var(--border-color);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.story-create-cover img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  display: block;
+}
+
+.story-create-cover-empty {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--text-muted);
+
+  font-size: 0.9rem;
+
+  text-align: center;
+}
+
+.story-create-upload {
+  width: fit-content;
+
+  margin-top: 0.15rem;
+
+  background: var(--accent-light);
+
+  border: 1px solid rgba(140, 83, 62, 0.2);
+
+  border-radius: 999px;
+
+  padding: 0.55rem 0.9rem;
+
+  color: var(--accent-color);
+
+  font-size: 0.8rem;
+
+  cursor: pointer;
+}
+
+.story-create-upload input {
+  display: none;
+}
+
+/* ==========================================
+   Summary
+========================================== */
+
+.story-create-summary {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, 1fr);
+
+  gap: 0.8rem;
+
+  margin-top: 0.4rem;
+
+  padding: 1.2rem;
+
+  background: var(--bg-main);
+
+  border: 1px solid var(--border-color);
+
+  border-radius: var(--radius-md);
+}
+
+.story-create-summary div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 0.25rem;
+
+  min-width: 0;
+}
+
+.story-create-summary span {
+  color: var(--text-muted);
+
+  font-size: 0.75rem;
+}
+
+.story-create-summary strong {
+  color: var(--text-primary);
+
+  font-size: 0.85rem;
+
+  line-height: 1.5;
+
+  overflow-wrap: anywhere;
+}
+
+/* ==========================================
+   Footer
+========================================== */
+
+.story-create-footer {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  padding: 1.2rem 2.5rem;
+
+  background: var(--bg-main);
+
+  border-top: 1px solid var(--border-color);
+}
+
+.story-create-secondary,
+.story-create-primary {
+  border: none;
+
+  border-radius: 999px;
+
+  padding: 0.7rem 1.2rem;
+
+  font-size: 0.85rem;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.story-create-secondary {
+  background: transparent;
+
+  color: var(--text-secondary);
+}
+
+.story-create-secondary:hover {
+  background: var(--bg-subtle);
+
+  color: var(--text-primary);
+}
+
+.story-create-primary {
+  background: var(--accent-color);
+
+  color: #ffffff;
+}
+
+.story-create-primary:hover:not(:disabled) {
+  background: var(--accent-hover);
+
+  transform: translateY(-1px);
+}
+
+.story-create-primary:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.45;
+}
+
+/* ==========================================
+   Tablet
+========================================== */
+
+@media (max-width: 900px) {
+  .story-create-page {
+    padding-top: 2.5rem;
+  }
+
+  .story-create-step {
+    padding: 2rem;
+  }
+
+  .story-create-footer {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  .story-create-section-heading {
+    margin-top: 2.5rem;
+
+    padding-bottom: 0.7rem;
+  }
+
+  .story-create-section-heading h3 {
+    font-size: 1.15rem;
+  }
+
+  .story-create-section-heading p {
+    font-size: 0.8rem;
+  }
+
+  .story-create-field+.story-create-section-heading {
+    margin-top: 2.5rem;
+  }
+}
+
+/* ==========================================
+   Mobile
+========================================== */
+
+@media (max-width: 700px) {
+  .story-create-page {
+    min-height: calc(100vh - 60px);
+
+    padding: 1.5rem 1rem 2.5rem;
+  }
+
+  .story-create-header {
+    margin-bottom: 1.9rem;
+  }
+
+  .story-create-back {
+    align-self: flex-start;
+
+    margin-bottom: 0.95rem;
+
+    min-height: 36px;
+
+    padding: 0.45rem 0.7rem;
+
+    border-radius: 9px;
+
+    font-size: 0.8rem;
+
+    white-space: nowrap;
+  }
+
+  .story-create-heading {
+    width: 100%;
+
+    padding: 0;
+
+    text-align: center;
+  }
+
+  .story-create-heading h1 {
+    font-size: 1.7rem;
+
+    line-height: 1.35;
+  }
+
+  .story-create-heading p {
+    margin-top: 0.55rem;
+
+    font-size: 0.84rem;
+
+    line-height: 1.55;
+  }
+
+  /* Progress */
+
+  .story-create-progress {
+    gap: 0.7rem;
+
+    margin-bottom: 1.65rem;
+  }
+
+  .story-create-progress-item {
+    flex-direction: column;
+
+    gap: 0.3rem;
+
+    font-size: 0.7rem;
+
+    text-align: center;
+  }
+
+  .story-create-progress-number {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* Card */
+
+  .story-create-step {
+    padding: 1.4rem;
+  }
+
+  .story-create-step-heading {
+    margin-bottom: 1.9rem;
+  }
+
+  .story-create-step-heading h2 {
+    font-size: 1.35rem;
+
+    line-height: 1.45;
+  }
+
+  .story-create-step-heading p {
+    font-size: 0.82rem;
+
+    line-height: 1.55;
+  }
+
+  /* Fields */
+
+  .story-create-fields {
+    gap: 1.45rem;
+  }
+
+  .story-create-field {
+    gap: 0.5rem;
+  }
+
+  .story-create-field label {
+    font-size: 0.86rem;
+  }
+
+  .story-create-optional {
+    font-size: 0.72rem;
+
+    opacity: 0.55;
+  }
+
+  .story-create-field>p {
+    margin-top: -0.05rem;
+
+    font-size: 0.74rem;
+
+    line-height: 1.5;
+  }
+
+  .story-create-field input,
+  .story-create-field textarea {
+    padding: 0.75rem 0.85rem;
+
+    font-size: 0.86rem;
+  }
+
+  .story-create-field textarea {
+    min-height: 110px;
+  }
+
+  /* ========================================
+     Section Heading
+  ======================================== */
+
+  .story-create-section-heading {
+    margin-top: 2.25rem;
+
+    padding-bottom: 0.65rem;
+  }
+
+  .story-create-section-heading h3 {
+    margin-bottom: 0.25rem;
+
+    font-size: 1.05rem;
+  }
+
+  .story-create-section-heading p {
+    font-size: 0.75rem;
+
+    line-height: 1.5;
+  }
+
+  .story-create-field+.story-create-section-heading {
+    margin-top: 2.25rem;
+  }
+
+  .story-create-section-heading+.story-create-field {
+    margin-top: 1rem;
+  }
+
+  /* ========================================
+     Supporting Header
+  ======================================== */
+
+  .story-create-supporting-header {
+    align-items: flex-start;
+  }
+
+  .story-create-supporting-header button {
+    flex-shrink: 0;
+  }
+
+  /* ========================================
+     NPC
+  ======================================== */
+
+  .story-create-supporting-list {
+    gap: 16px;
+
+    margin-top: 1rem;
+  }
+
+  .story-create-supporting-character {
+    padding: 1rem;
+
+    border-radius: 13px;
+  }
+
+  .story-create-supporting-character .story-create-field+.story-create-field {
+    margin-top: 0.25rem;
+  }
+
+  /* ========================================
+     Options
+  ======================================== */
+
+  .story-create-options {
+    gap: 0.5rem;
+  }
+
+  .story-create-options button {
+    padding: 0.5rem 0.75rem;
+
+    font-size: 0.78rem;
+  }
+
+  /* ========================================
+     Length
+  ======================================== */
+
+  .story-create-length-options {
+    grid-template-columns: 1fr;
+
+    gap: 0.65rem;
+  }
+
+  .story-create-length-options button {
+    padding: 0.9rem;
+  }
+
+  /* ========================================
+     Cover
+  ======================================== */
+
+  .story-create-cover {
+    width: min(220px, 100%);
+  }
+
+  /* ========================================
+     Summary
+  ======================================== */
+
+  .story-create-summary {
+    grid-template-columns: 1fr;
+
+    gap: 0.7rem;
+
+    padding: 1rem;
+  }
+
+  /* ========================================
+     Footer
+  ======================================== */
+
+  .story-create-footer {
+    padding: 0.9rem 1.2rem;
+  }
+
+  .story-create-secondary,
+  .story-create-primary {
+    padding: 0.65rem 1rem;
+
+    font-size: 0.8rem;
+  }
+}
+
+/* ==========================================
+   Small Mobile
+========================================== */
+
+@media (max-width: 420px) {
+  .story-create-page {
+    padding: 1.25rem 0.75rem 2rem;
+  }
+
+  .story-create-header {
+    margin-bottom: 1.65rem;
+  }
+
+  .story-create-back {
+    margin-bottom: 0.8rem;
+
+    min-height: 34px;
+
+    padding: 0.4rem 0.6rem;
+
+    font-size: 0.76rem;
+  }
+
+  .story-create-heading h1 {
+    font-size: 1.5rem;
+  }
+
+  .story-create-heading p {
+    font-size: 0.8rem;
+  }
+
+  .story-create-progress {
+    gap: 0.45rem;
+
+    margin-bottom: 1.35rem;
+  }
+
+  .story-create-progress-item {
+    font-size: 0.66rem;
+  }
+
+  .story-create-progress-number {
+    width: 26px;
+    height: 26px;
+  }
+
+  .story-create-step {
+    padding: 1.15rem;
+  }
+
+  .story-create-step-heading {
+    margin-bottom: 1.65rem;
+  }
+
+  .story-create-step-heading h2 {
+    font-size: 1.25rem;
+  }
+
+  .story-create-fields {
+    gap: 1.25rem;
+  }
+
+  .story-create-field input,
+  .story-create-field textarea {
+    padding: 0.7rem 0.8rem;
+
+    font-size: 0.84rem;
+  }
+
+  .story-create-optional {
+    font-size: 0.7rem;
+  }
+
+  .story-create-field>p {
+    font-size: 0.72rem;
+  }
+
+  /* ========================================
+     Section Heading
+  ======================================== */
+
+  .story-create-section-heading {
+    margin-top: 2rem;
+
+    padding-bottom: 0.55rem;
+  }
+
+  .story-create-section-heading h3 {
+    font-size: 1rem;
+  }
+
+  .story-create-section-heading p {
+    font-size: 0.72rem;
+  }
+
+  .story-create-field+.story-create-section-heading {
+    margin-top: 2rem;
+  }
+
+  .story-create-section-heading+.story-create-field {
+    margin-top: 0.9rem;
+  }
+
+  /* ========================================
+     NPC
+  ======================================== */
+
+  .story-create-supporting-character {
+    padding: 0.9rem;
+  }
+
+  .story-create-footer {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* =========================================================
+   CREATE STORY AUTH
+========================================================= */
+
+.story-create-auth-loading {
+  min-height: calc(100vh - 100px);
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+
+  padding: 40px;
+
+  font-family: var(--font-global);
+}
+
+
+.story-create-auth-loading h2 {
+  margin: 20px 0 8px;
+
+  font-family: var(--font-global);
+
+  font-size: 30px;
+
+  color: #3b241c;
+}
+
+
+.story-create-auth-loading p {
+  margin: 0 0 26px;
+
+  color: #806f63;
+
+  font-size: 16px;
+}
+
+
+.story-create-auth-icon {
+  width: 78px;
+
+  height: 78px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #f3e8dc;
+
+  font-size: 34px;
+}
+
+/* Loading spinner */
+
+.story-create-auth-spinner {
+  width: 42px;
+  height: 42px;
+
+  border: 4px solid #eaded1;
+
+  border-top-color: #985b42;
+
+  border-radius: 50%;
+
+  animation:
+    storyCreateAuthSpin 0.8s linear infinite;
+}
+
+@keyframes storyCreateAuthSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* Login button */
+
+.story-create-auth-login {
+  min-width: 170px;
+
+  padding: 13px 26px;
+
+  margin-bottom: 10px;
+
+  border: none;
+  border-radius: 999px;
+
+  background: #985b42;
+
+  color: #fff;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.story-create-auth-login:hover {
+  background: #824b37;
+
+  transform: translateY(-2px);
+}
+
+
+/* Home button */
+
+.story-create-auth-home {
+  min-width: 170px;
+
+  padding: 12px 26px;
+
+  border: 1px solid #ddcdbd;
+
+  border-radius: 999px;
+
+  background: #fffaf4;
+
+  color: #6f5143;
+
+  font-size: 15px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.story-create-auth-home:hover {
+  background: #f5eadf;
+
+  transform: translateY(-1px);
+}

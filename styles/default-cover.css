@@ -1,0 +1,262 @@
+/* =========================================================
+   DEFAULT COVER
+   GonnaTales
+========================================================= */
+
+.my-story-cover-placeholder,
+.card-cover-placeholder {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      145deg,
+      #f4eee6 0%,
+      #e9ddd0 45%,
+      #ddcbb9 100%
+    );
+
+  color: #765f4c;
+}
+
+
+/* =========================================================
+   DECORATIVE BACKGROUND
+========================================================= */
+
+.my-story-cover-placeholder::before,
+.card-cover-placeholder::before {
+  content: '';
+
+  position: absolute;
+
+  width: 150%;
+  height: 55%;
+
+  left: -25%;
+  bottom: -12%;
+
+  background: rgba(255, 255, 255, 0.22);
+
+  border-radius: 50%;
+
+  transform: rotate(-8deg);
+
+  pointer-events: none;
+}
+
+
+/* =========================================================
+   INNER
+========================================================= */
+
+.my-story-cover-placeholder-inner,
+.card-cover-placeholder-inner {
+  position: relative;
+  z-index: 1;
+
+  width: 82%;
+  height: 88%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  box-sizing: border-box;
+
+  border: 1px solid rgba(118, 95, 76, 0.22);
+
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, 0.16);
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18),
+    0 8px 22px rgba(90, 65, 45, 0.08);
+}
+
+
+/* =========================================================
+   BOOK ICON
+========================================================= */
+
+.my-story-cover-placeholder-icon,
+.card-cover-placeholder-icon {
+  width: 54px;
+  height: 54px;
+
+  margin-bottom: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #765f4c;
+}
+
+.my-story-cover-placeholder-icon svg,
+.card-cover-placeholder-icon svg {
+  display: block;
+
+  width: 54px;
+  height: 54px;
+}
+
+
+/* =========================================================
+   BRAND
+========================================================= */
+
+.my-story-cover-placeholder-brand,
+.card-cover-placeholder-brand {
+  display: block;
+
+  max-width: 90%;
+
+  color: #654e3d;
+
+  font-family: var(--font-global);
+
+  font-size: 0.82rem;
+  font-weight: 700;
+
+  letter-spacing: 0.03em;
+
+  line-height: 1.2;
+
+  text-align: center;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   STORY LABEL
+========================================================= */
+
+.my-story-cover-placeholder-label,
+.card-cover-placeholder-label {
+  display: block;
+
+  max-width: 90%;
+
+  margin-top: 6px;
+
+  color: #8d7967;
+
+  font-family: var(--font-global);
+
+  font-size: 0.46rem;
+  font-weight: 600;
+
+  letter-spacing: 0.18em;
+
+  line-height: 1;
+
+  text-align: center;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   MY STORIES COVER SIZE
+========================================================= */
+
+.my-story-cover-placeholder {
+  width: 100%;
+  height: 100%;
+}
+
+
+/* =========================================================
+   STORY CARD COVER SIZE
+========================================================= */
+
+.card-cover-placeholder {
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 650px) {
+  .my-story-cover-placeholder-inner,
+  .card-cover-placeholder-inner {
+    width: 82%;
+    height: 88%;
+  }
+
+  .my-story-cover-placeholder-icon,
+  .card-cover-placeholder-icon {
+    width: 46px;
+    height: 46px;
+
+    margin-bottom: 14px;
+  }
+
+  .my-story-cover-placeholder-icon svg,
+  .card-cover-placeholder-icon svg {
+    width: 46px;
+    height: 46px;
+  }
+
+  .my-story-cover-placeholder-brand,
+  .card-cover-placeholder-brand {
+    font-size: 0.72rem;
+  }
+
+  .my-story-cover-placeholder-label,
+  .card-cover-placeholder-label {
+    margin-top: 5px;
+
+    font-size: 0.4rem;
+
+    letter-spacing: 0.15em;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+  .my-story-cover-placeholder-icon,
+  .card-cover-placeholder-icon {
+    width: 40px;
+    height: 40px;
+
+    margin-bottom: 12px;
+  }
+
+  .my-story-cover-placeholder-icon svg,
+  .card-cover-placeholder-icon svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .my-story-cover-placeholder-brand,
+  .card-cover-placeholder-brand {
+    font-size: 0.64rem;
+  }
+
+  .my-story-cover-placeholder-label,
+  .card-cover-placeholder-label {
+    font-size: 0.36rem;
+
+    letter-spacing: 0.12em;
+  }
+}

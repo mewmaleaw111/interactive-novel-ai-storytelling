@@ -1,0 +1,467 @@
+/* =========================================================
+   GonnaTales - Story Generating
+   ========================================================= */
+
+.generating-page {
+  min-height: 100vh;
+
+  background: #f9f6f0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 32px 20px;
+
+  color: #2c221e;
+
+  font-family: var(--font-global);
+}
+
+
+/* =========================================================
+   Generating Card
+   ========================================================= */
+
+.generating-card {
+  width: 100%;
+  max-width: 620px;
+
+  min-height: 560px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5dcc3;
+
+  border-radius: 20px;
+
+  box-shadow:
+    0 20px 60px rgba(70, 45, 30, 0.07);
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 64px 48px;
+
+  text-align: center;
+
+  animation: cardAppear 0.6s ease-out;
+
+  font-family: var(--font-global);
+}
+
+
+/* =========================================================
+   Header
+   ========================================================= */
+
+.ornament {
+  font-family: var(--font-global);
+
+  font-size: 15px;
+
+  letter-spacing: 4px;
+
+  color: #8c533e;
+
+  margin-bottom: 24px;
+
+  opacity: 0.75;
+}
+
+
+.eyebrow {
+  font-size: 11px;
+
+  letter-spacing: 4px;
+
+  color: #9e918a;
+
+  margin-bottom: 18px;
+
+  font-weight: 600;
+}
+
+
+.generating-card h1 {
+  margin: 0;
+
+  font-family: var(--font-global);
+
+  font-size: 36px;
+
+  line-height: 1.35;
+
+  font-weight: 500;
+
+  color: #2c221e;
+}
+
+
+/* =========================================================
+   Story Preview
+   ========================================================= */
+
+.story-preview {
+  margin-top: 28px;
+
+  padding: 14px 24px;
+
+  border-top: 1px solid #eee5d8;
+  border-bottom: 1px solid #eee5d8;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  max-width: 100%;
+
+  font-family: var(--font-global);
+}
+
+
+.preview-label {
+  font-size: 12px;
+
+  color: #9e918a;
+}
+
+
+.story-title {
+  font-family: var(--font-global);
+
+  font-size: 17px;
+
+  color: #8c533e;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  max-width: 360px;
+}
+
+
+/* =========================================================
+   Message
+   ========================================================= */
+
+.message {
+  margin-top: 34px;
+
+  margin-bottom: 28px;
+
+  font-size: 15px;
+
+  color: #70635c;
+}
+
+
+.dots span {
+  display: inline-block;
+
+  animation: dotBlink 1.4s infinite;
+}
+
+
+.dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+
+.dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+
+/* =========================================================
+   Writing Animation
+   ========================================================= */
+
+.writing-area {
+  width: 100%;
+
+  max-width: 360px;
+
+  height: 72px;
+
+  position: relative;
+
+  border-top: 1px solid #e5dcc3;
+
+  border-bottom: 1px solid #e5dcc3;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  gap: 12px;
+
+  overflow: hidden;
+}
+
+
+.paper-line {
+  height: 1px;
+
+  background: #eee8dd;
+
+  width: 100%;
+
+  transform-origin: left;
+}
+
+
+.line-one {
+  animation:
+    lineWriting 2.4s ease-in-out infinite;
+}
+
+
+.line-two {
+  width: 78%;
+
+  animation:
+    lineWriting 2.4s 0.25s ease-in-out infinite;
+}
+
+
+.line-three {
+  width: 55%;
+
+  animation:
+    lineWriting 2.4s 0.5s ease-in-out infinite;
+}
+
+
+.writing-cursor {
+  position: absolute;
+
+  width: 1px;
+
+  height: 18px;
+
+  background: #8c533e;
+
+  left: 0;
+
+  top: 25px;
+
+  animation:
+    cursorMove 2.4s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   Bottom Message
+   ========================================================= */
+
+.sub-message {
+  margin-top: 30px;
+
+  font-size: 13px;
+
+  line-height: 1.8;
+
+  color: #9e918a;
+}
+
+
+/* =========================================================
+   Error
+   ========================================================= */
+
+.error-card {
+  min-height: 420px;
+}
+
+
+.error-message {
+  max-width: 460px;
+
+  margin-top: 20px;
+
+  color: #8c533e;
+
+  font-size: 14px;
+
+  line-height: 1.7;
+}
+
+
+.error-actions {
+  display: flex;
+
+  gap: 12px;
+
+  margin-top: 30px;
+}
+
+
+.primary-button,
+.secondary-button {
+  padding: 11px 22px;
+
+  border-radius: 10px;
+
+  font-size: 14px;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+
+  font-family: var(--font-global);
+}
+
+
+.primary-button {
+  background: #8c533e;
+
+  color: #ffffff;
+}
+
+
+.primary-button:hover {
+  background: #703f2d;
+
+  transform: translateY(-1px);
+}
+
+
+.secondary-button {
+  background: #f5ece5;
+
+  color: #8c533e;
+}
+
+
+.secondary-button:hover {
+  background: #eee0d6;
+
+  transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   Animation
+   ========================================================= */
+
+@keyframes cardAppear {
+  from {
+    opacity: 0;
+
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
+}
+
+
+@keyframes dotBlink {
+  0%,
+  60%,
+  100% {
+    opacity: 0.25;
+  }
+
+  30% {
+    opacity: 1;
+  }
+}
+
+
+@keyframes lineWriting {
+  0% {
+    transform: scaleX(0.2);
+
+    opacity: 0.3;
+  }
+
+  50% {
+    transform: scaleX(1);
+
+    opacity: 1;
+  }
+
+  100% {
+    transform: scaleX(0.65);
+
+    opacity: 0.5;
+  }
+}
+
+
+@keyframes cursorMove {
+  0% {
+    left: 0;
+
+    opacity: 0;
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  50% {
+    left: 100%;
+
+    opacity: 1;
+  }
+
+  65% {
+    left: 100%;
+
+    opacity: 0;
+  }
+
+  100% {
+    left: 0;
+
+    opacity: 0;
+  }
+}
+
+
+/* =========================================================
+   Mobile
+   ========================================================= */
+
+@media (max-width: 640px) {
+  .generating-card {
+    min-height: 500px;
+
+    padding: 48px 24px;
+  }
+
+  .generating-card h1 {
+    font-size: 30px;
+  }
+
+  .story-title {
+    max-width: 220px;
+  }
+
+  .error-actions {
+    flex-direction: column;
+
+    width: 100%;
+  }
+
+  .primary-button,
+  .secondary-button {
+    width: 100%;
+  }
+}
