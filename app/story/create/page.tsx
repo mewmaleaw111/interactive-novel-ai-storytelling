@@ -93,6 +93,14 @@ export default function CreateStoryPage() {
   const [step, setStep] =
     useState(1);
 
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'instant',
+    });
+  }, [step]);
+
   const [formData, setFormData] =
     useState<CreateStoryFormData>(
       emptyForm
@@ -140,9 +148,9 @@ export default function CreateStoryPage() {
           const restoredProtagonistGender: Gender =
             savedFormData.protagonistGender ===
               'ชาย' ||
-            savedFormData.protagonistGender ===
+              savedFormData.protagonistGender ===
               'หญิง' ||
-            savedFormData.protagonistGender ===
+              savedFormData.protagonistGender ===
               'ไม่ระบุ'
               ? savedFormData.protagonistGender
               : 'ไม่ระบุ';
@@ -152,47 +160,47 @@ export default function CreateStoryPage() {
               savedFormData.supportingCharacters
             )
               ? savedFormData.supportingCharacters
-                  .filter(
-                    (
-                      character: SupportingCharacter
-                    ) =>
-                      character &&
+                .filter(
+                  (
+                    character: SupportingCharacter
+                  ) =>
+                    character &&
+                    typeof character.name ===
+                    'string'
+                )
+                .map(
+                  (
+                    character: SupportingCharacter
+                  ) => ({
+                    name:
                       typeof character.name ===
                         'string'
-                  )
-                  .map(
-                    (
-                      character: SupportingCharacter
-                    ) => ({
-                      name:
-                        typeof character.name ===
-                          'string'
-                          ? character.name
-                          : '',
+                        ? character.name
+                        : '',
 
-                      gender:
+                    gender:
+                      character.gender ===
+                        'ชาย' ||
                         character.gender ===
-                          'ชาย' ||
+                        'หญิง' ||
                         character.gender ===
-                          'หญิง' ||
-                        character.gender ===
-                          'ไม่ระบุ'
-                          ? character.gender
-                          : 'ไม่ระบุ',
+                        'ไม่ระบุ'
+                        ? character.gender
+                        : 'ไม่ระบุ',
 
-                      personality:
-                        typeof character.personality ===
-                          'string'
-                          ? character.personality
-                          : '',
+                    personality:
+                      typeof character.personality ===
+                        'string'
+                        ? character.personality
+                        : '',
 
-                      items:
-                        typeof character.items ===
-                          'string'
-                          ? character.items
-                          : '',
-                    })
-                  )
+                    items:
+                      typeof character.items ===
+                        'string'
+                        ? character.items
+                        : '',
+                  })
+                )
               : [];
 
           setFormData({
@@ -321,9 +329,9 @@ export default function CreateStoryPage() {
           ) =>
             characterIndex === index
               ? {
-                  ...character,
-                  [field]: value,
-                }
+                ...character,
+                [field]: value,
+              }
               : character
         ),
     }));
@@ -382,7 +390,7 @@ export default function CreateStoryPage() {
       if (!response.ok) {
         throw new Error(
           data.error ||
-            'อัปโหลดรูปไม่สำเร็จ'
+          'อัปโหลดรูปไม่สำเร็จ'
         );
       }
 
@@ -542,43 +550,43 @@ export default function CreateStoryPage() {
       CreateStoryFormData & {
         coverImageUrl: string;
       } = {
-        title:
-          formData.title.trim(),
+      title:
+        formData.title.trim(),
 
-        corePremise:
-          formData.corePremise.trim(),
+      corePremise:
+        formData.corePremise.trim(),
 
-        genre:
-          formData.genre,
+      genre:
+        formData.genre,
 
-        tone:
-          formData.tone,
+      tone:
+        formData.tone,
 
-        length:
-          formData.length,
+      length:
+        formData.length,
 
-        protagonist:
-          formData.protagonist.trim(),
+      protagonist:
+        formData.protagonist.trim(),
 
-        protagonistGender:
-          formData.protagonistGender ||
-          'ไม่ระบุ',
+      protagonistGender:
+        formData.protagonistGender ||
+        'ไม่ระบุ',
 
-        protagonistPersonality:
-          formData.protagonistPersonality.trim(),
+      protagonistPersonality:
+        formData.protagonistPersonality.trim(),
 
-        protagonistItems:
-          formData.protagonistItems.trim(),
+      protagonistItems:
+        formData.protagonistItems.trim(),
 
-        supportingCharacters:
-          cleanSupportingCharacters,
+      supportingCharacters:
+        cleanSupportingCharacters,
 
-        worldSetting:
-          formData.worldSetting.trim(),
+      worldSetting:
+        formData.worldSetting.trim(),
 
-        coverImageUrl:
-          coverImageUrl,
-      };
+      coverImageUrl:
+        coverImageUrl,
+    };
 
     try {
       sessionStorage.removeItem(
@@ -748,11 +756,10 @@ export default function CreateStoryPage() {
             (item) => (
               <div
                 key={item}
-                className={`story-create-progress-item ${
-                  step >= item
+                className={`story-create-progress-item ${step >= item
                     ? 'active'
                     : ''
-                }`}
+                  }`}
               >
 
                 <div className="story-create-progress-number">
