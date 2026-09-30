@@ -517,6 +517,8 @@
 }
 
 .chapter-text {
+  position: relative;
+
   color: var(--text-primary);
 
   line-height: 1.9;
@@ -528,10 +530,158 @@
   gap: 1rem;
 
   overflow-wrap: anywhere;
+
+  padding: 2rem;
+
+  border-radius: 18px;
+
+  border: 1px solid rgba(140, 83, 62, 0.12);
+
+  overflow: hidden;
+
+  background-color: rgba(255, 253, 249, 0.96);
+
+  background-size: cover;
+
+  background-position: center;
+
+  background-attachment: local;
+
+  box-shadow:
+    0 8px 24px rgba(76, 48, 36, 0.05);
+}
+
+/* ชั้นโปร่งทับรูปพื้นหลัง
+   เพื่อให้ตัวหนังสืออ่านง่าย */
+
+.chapter-text::before {
+  content: '';
+
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 0;
+
+  background:
+    linear-gradient(180deg,
+      rgba(255, 253, 249, 0.94),
+      rgba(255, 253, 249, 0.90));
+
+  pointer-events: none;
+}
+
+/* ให้ข้อความอยู่เหนือพื้นหลัง */
+
+.chapter-text p {
+  position: relative;
+
+  z-index: 1;
+
+  margin: 0;
+}
+
+/* =========================
+   Genre Background - Desktop
+========================= */
+
+.chapter-text.genre-fantasy {
+  background-image: url('/images/genres/fantasy-desktop.jpg');
+}
+
+.chapter-text.genre-romance {
+  background-image: url('/images/genres/romance-desktop.jpg');
+}
+
+.chapter-text.genre-mystery {
+  background-image: url('/images/genres/mystery-desktop.jpg');
+}
+
+.chapter-text.genre-sci-fi {
+  background-image: url('/images/genres/sci-fi-desktop.jpg');
+}
+
+.chapter-text.genre-history {
+  background-image: url('/images/genres/history-desktop.jpg');
+}
+
+.chapter-text.genre-horror {
+  background-image: url('/images/genres/horror-desktop.jpg');
+}
+
+.chapter-text.genre-drama {
+  background-image: url('/images/genres/drama-desktop.jpg');
+}
+
+.chapter-text.genre-action {
+  background-image: url('/images/genres/action-desktop.jpg');
+}
+
+.chapter-text.genre-adventure {
+  background-image: url('/images/genres/adventure-desktop.jpg');
+}
+
+.chapter-text.genre-default {
+  background-image: none;
+}
+
+
+/* =========================
+   Genre Background - Mobile
+========================= */
+
+@media (max-width: 640px) {
+
+  .chapter-text.genre-fantasy {
+    background-image: url('/images/genres/fantasy-mobile.jpg');
+  }
+
+  .chapter-text.genre-romance {
+    background-image: url('/images/genres/romance-mobile.jpg');
+  }
+
+  .chapter-text.genre-mystery {
+    background-image: url('/images/genres/mystery-mobile.jpg');
+  }
+
+  .chapter-text.genre-sci-fi {
+    background-image: url('/images/genres/sci-fi-mobile.jpg');
+  }
+
+  .chapter-text.genre-history {
+    background-image: url('/images/genres/history-mobile.jpg');
+  }
+
+  .chapter-text.genre-horror {
+    background-image: url('/images/genres/horror-mobile.jpg');
+  }
+
+  .chapter-text.genre-drama {
+    background-image: url('/images/genres/drama-mobile.jpg');
+  }
+
+  .chapter-text.genre-action {
+    background-image: url('/images/genres/action-mobile.jpg');
+  }
+
+  .chapter-text.genre-adventure {
+    background-image: url('/images/genres/adventure-mobile.jpg');
+  }
+
 }
 
 .chapter-text p {
   margin: 0;
+}
+
+.chapter-text p:first-child::first-letter {
+  float: none;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  font-weight: inherit;
+  margin: 0;
+  padding: 0;
 }
 
 .font-size-sm .chapter-text {
@@ -656,11 +806,9 @@
   padding: 22px 28px;
 
   background:
-    linear-gradient(
-      135deg,
+    linear-gradient(135deg,
       rgba(255, 252, 248, 0.98),
-      rgba(247, 238, 230, 0.96)
-    );
+      rgba(247, 238, 230, 0.96));
 
   border: 1px solid rgba(140, 83, 62, 0.16);
 
@@ -690,12 +838,10 @@
   height: 100%;
 
   background:
-    linear-gradient(
-      90deg,
+    linear-gradient(90deg,
       transparent,
       rgba(140, 83, 62, 0.08),
-      transparent
-    );
+      transparent);
 
   transform: skewX(-18deg);
 
@@ -733,11 +879,9 @@
   border-radius: 999px;
 
   background:
-    linear-gradient(
-      90deg,
+    linear-gradient(90deg,
       #9b5c46,
-      #c9957d
-    );
+      #c9957d);
 
   transform-origin: left;
 
@@ -821,6 +965,7 @@
 ========================= */
 
 @keyframes writingLine {
+
   0%,
   100% {
     opacity: 0.45;
@@ -836,6 +981,7 @@
 }
 
 @keyframes writingCursor {
+
   0%,
   45% {
     opacity: 1;
@@ -907,6 +1053,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .ai-generating-card::before,
   .writing-line,
   .writing-cursor {
@@ -1613,6 +1760,14 @@
     font-size: 0.8rem;
 
     flex-shrink: 0;
+
+    .chapter-text {
+      padding: 1.35rem 1rem;
+
+      border-radius: 14px;
+
+      background-attachment: scroll;
+    }
   }
 }
 
@@ -1715,6 +1870,7 @@
     border-radius: 0.55rem;
 
     font-size: 0.65rem;
+
   }
 }
 
@@ -1794,12 +1950,10 @@
   position: absolute;
   inset: 0;
   transform: translateX(-100%);
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent);
   animation: reader-loading-shimmer 2.8s ease-in-out infinite;
 }
 
@@ -2131,12 +2285,10 @@
   position: absolute;
   inset: 0;
   transform: translateX(-100%);
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent);
   animation: branches-loading-shimmer 2.8s ease-in-out infinite;
 }
 
@@ -2509,5 +2661,221 @@
   .cover-book-symbol span {
     width: 22px;
     height: 40px;
+  }
+}
+
+/* =========================================
+   Interactive Choice Section
+   ไม่มี white card
+========================================= */
+
+.story-reader-choice-section {
+  margin-top: 3rem;
+  padding: 0.5rem 0 2rem;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.story-reader-choice-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+
+.story-reader-choice-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: rgba(145, 92, 63, 0.08);
+  color: var(--accent-color, #8f5d45);
+
+  font-size: 1.15rem;
+}
+
+.story-reader-choice-heading h2 {
+  margin: 0;
+
+  color: var(--text-primary);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.story-reader-choice-heading p {
+  margin: 0.35rem 0 0;
+
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+/* =========================================
+   Choice Buttons
+========================================= */
+
+.story-reader-choice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.story-reader-choice-button {
+  width: 100%;
+
+  display: grid;
+  grid-template-columns: 34px 1fr auto;
+  align-items: center;
+
+  gap: 0.9rem;
+
+  padding: 0.95rem 1rem;
+
+  text-align: left;
+
+  border: 1px solid rgba(120, 78, 58, 0.14);
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.42);
+
+  color: var(--text-primary);
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.story-reader-choice-button:hover {
+  background: rgba(255, 255, 255, 0.68);
+
+  border-color: rgba(120, 78, 58, 0.3);
+
+  transform: translateX(3px);
+}
+
+.story-reader-choice-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.story-reader-choice-number {
+  width: 30px;
+  height: 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: rgba(145, 92, 63, 0.09);
+
+  color: var(--accent-color, #8f5d45);
+
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.story-reader-choice-text {
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.story-reader-choice-arrow {
+  color: var(--accent-color, #8f5d45);
+  font-size: 1.1rem;
+
+  transition: transform 0.2s ease;
+}
+
+.story-reader-choice-button:hover
+.story-reader-choice-arrow {
+  transform: translateX(3px);
+}
+
+/* =========================================
+   Fallback
+========================================= */
+
+.story-reader-choice-fallback {
+  display: flex;
+  gap: 0.7rem;
+}
+
+.story-reader-choice-fallback input {
+  flex: 1;
+
+  min-width: 0;
+
+  padding: 0.85rem 1rem;
+
+  border: 1px solid rgba(120, 78, 58, 0.16);
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, 0.42);
+
+  color: var(--text-primary);
+
+  outline: none;
+}
+
+.story-reader-choice-fallback input:focus {
+  border-color: rgba(120, 78, 58, 0.35);
+}
+
+.story-reader-submit {
+  padding: 0.85rem 1.1rem;
+
+  border: none;
+  border-radius: 10px;
+
+  background: #8f5d45;
+  color: #fff;
+
+  cursor: pointer;
+}
+
+.story-reader-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* =========================================
+   Mobile
+========================================= */
+
+@media (max-width: 640px) {
+  .story-reader-choice-section {
+    margin-top: 2.2rem;
+  }
+
+  .story-reader-choice-button {
+    grid-template-columns: 30px 1fr auto;
+
+    padding: 0.85rem;
+
+    gap: 0.7rem;
+  }
+
+  .story-reader-choice-text {
+    font-size: 0.9rem;
+  }
+
+  .story-reader-choice-fallback {
+    flex-direction: column;
+  }
+
+  .story-reader-submit {
+    width: 100%;
   }
 }

@@ -27,12 +27,121 @@ export type Gender =
   | 'หญิง'
   | 'ไม่ระบุ';
 
+/* =========================================================
+   ประเภทข้อความในเนื้อเรื่อง
+
+   ใช้สำหรับแยกการแสดงผลของนิยาย เช่น
+
+   narration  = การบรรยาย
+   dialogue   = บทสนทนา
+   action     = การกระทำ / เหตุการณ์
+   thought    = ความคิดของตัวละคร
+   emphasis   = เหตุการณ์หรือข้อความสำคัญ
+   scene      = เปลี่ยนฉาก / เวลา / สถานที่
+========================================================= */
+
+export type StoryContentBlockType =
+  | 'narration'
+  | 'dialogue'
+  | 'action'
+  | 'thought'
+  | 'emphasis'
+  | 'scene';
+
+/* =========================================================
+   ตัวละครที่พูด
+
+   ใช้เฉพาะ dialogue
+========================================================= */
+
+export interface StoryDialogue {
+  character?: string;
+  text: string;
+}
+
+/* =========================================================
+   Block ของเนื้อเรื่อง
+
+   ตัวอย่าง:
+
+   {
+     type: 'narration',
+     text: 'สายฝนตกลงมาอย่างไม่ขาดสาย...'
+   }
+
+   {
+     type: 'dialogue',
+     character: 'แทน',
+     text: 'เราต้องไปเดี๋ยวนี้'
+   }
+
+   {
+     type: 'action',
+     text: 'เขาชักดาบออกจากฝัก'
+   }
+
+   {
+     type: 'thought',
+     text: 'นี่มันเกิดอะไรขึ้นกันแน่...'
+   }
+========================================================= */
+
+export interface StoryContentBlock {
+  id?: string;
+
+  type: StoryContentBlockType;
+
+  text: string;
+
+  /**
+   * ชื่อตัวละครสำหรับบทพูด
+   */
+  character?: string;
+
+  /**
+   * ใช้สำหรับกำหนดลำดับหรือจังหวะของเนื้อเรื่อง
+   */
+  order?: number;
+}
+
+/* =========================================================
+   Chapter
+========================================================= */
+
 export interface Chapter {
   id: string;
+
   chapterNumber: number;
+
   title: string;
+
+  /**
+   * เนื้อเรื่องแบบเดิม
+   *
+   * เก็บเอาไว้เพื่อรองรับนิยายเก่า
+   * และข้อมูลที่ยังไม่ได้ migrate
+   */
   content: string;
+
+  /**
+   * เนื้อเรื่องแบบแบ่งประเภท
+   *
+   * ReaderView จะใช้ blocks เป็นหลัก
+   */
+  contentBlocks?: StoryContentBlock[];
+
+  /**
+   * ตัวเลือกสำหรับแตกแขนงเรื่อง
+   *
+   * จำกัดจำนวนที่แสดงในหน้าอ่านตาม ReaderView
+   */
+  choices?: string[];
+
+  /**
+   * การตัดสินใจของผู้ใช้ที่ทำให้เกิดบทนี้
+   */
   userPromptChoice?: string;
+
   createdAt: string;
 }
 
@@ -45,8 +154,11 @@ export interface Chapter {
 
 export interface SupportingCharacter {
   name: string;
+
   gender: Gender;
+
   personality: string;
+
   items: string;
 }
 
@@ -56,34 +168,72 @@ export interface SupportingCharacter {
 
 export interface Story {
   id: string;
+
   title: string;
+
   corePremise: string;
+
   genre: Genre;
+
   tone: NarrativeTone;
+
   length: StoryLength;
 
+  /* -------------------------------------------------------
+     ตัวละครหลัก
+  ------------------------------------------------------- */
+
   protagonist?: string;
+
   worldSetting?: string;
 
+  /* -------------------------------------------------------
+     ปกนิยาย
+  ------------------------------------------------------- */
+
   coverUrl: string;
+
   author: string;
 
+  /* -------------------------------------------------------
+     ความคืบหน้า
+  ------------------------------------------------------- */
+
   totalChapters: number;
+
   currentChapter: number;
+
   wordCount: number;
 
+  /* -------------------------------------------------------
+     สถานะปัจจุบันของเรื่อง
+  ------------------------------------------------------- */
+
+  currentLocation?: string;
+
+  physicalCondition?: string;
+
+  currentInventory?: string[];
+
+  importantSituation?: string;
+
+  /* -------------------------------------------------------
+     สถานะเว็บไซต์
+  ------------------------------------------------------- */
+
   isFavorite?: boolean;
+
   isTrending?: boolean;
+
   isFresh?: boolean;
+
   isBanned?: boolean;
 
-  /*
-   * สถานะการเผยแพร่นิยาย
-   *
-   * false = ส่วนตัว
-   * true  = เผยแพร่แล้ว
-   */
   isPublished: boolean;
+
+  /* -------------------------------------------------------
+     บททั้งหมด
+  ------------------------------------------------------- */
 
   chapters: Chapter[];
 }
@@ -94,10 +244,13 @@ export interface Story {
 
 export interface CreateStoryFormData {
   title: string;
+
   corePremise: string;
 
   genre: Genre;
+
   tone: NarrativeTone;
+
   length: StoryLength;
 
   /* -------------------------------------------------------

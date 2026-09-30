@@ -19,6 +19,71 @@ type ExtractedRelationship = {
   description: string;
 };
 
+type GeneratedChapterResult = {
+  title?: string;
+  content: string;
+  choices?: string[];
+  status: {
+    location: string;
+    physicalCondition: string;
+    inventory: string[];
+    importantSituation: string;
+  };
+};
+
+function parseGeneratedChapter(text: string): GeneratedChapterResult {
+  let cleaned = text.trim();
+
+  cleaned = cleaned
+    .replace(/^```json\s*/i, '')
+    .replace(/^```\s*/i, '')
+    .replace(/\s*```$/i, '')
+    .trim();
+
+  const parsed = JSON.parse(cleaned) as GeneratedChapterResult;
+
+  if (!parsed || typeof parsed.content !== 'string' || !parsed.content.trim()) {
+    throw new Error('AI ส่งข้อมูลบทนิยายไม่ครบ');
+  }
+
+  const choices = Array.isArray(parsed.choices)
+    ? parsed.choices
+      .filter((choice): choice is string => typeof choice === 'string')
+      .map((choice) => choice.trim())
+      .filter(Boolean)
+      .slice(0, 3)
+    : [];
+
+  if (choices.length !== 0 && choices.length !== 3) {
+    throw new Error('AI ส่งตัวเลือกไม่ครบ 3 ตัวเลือก');
+  }
+
+  const status = parsed.status || ({} as GeneratedChapterResult['status']);
+
+  return {
+    title: typeof parsed.title === 'string' ? parsed.title.trim() : undefined,
+    content: parsed.content.trim(),
+    choices,
+    status: {
+      location: typeof status.location === 'string' ? status.location.trim() : '',
+      physicalCondition:
+        typeof status.physicalCondition === 'string'
+          ? status.physicalCondition.trim()
+          : '',
+      inventory: Array.isArray(status.inventory)
+        ? status.inventory
+          .filter((item): item is string => typeof item === 'string')
+          .map((item) => item.trim())
+          .filter(Boolean)
+        : [],
+      importantSituation:
+        typeof status.importantSituation === 'string'
+          ? status.importantSituation.trim()
+          : '',
+    },
+  };
+}
+
 /* =========================================================
    Helper: Get / Create Game Session
 ========================================================= */
@@ -32,7 +97,7 @@ async function getOrCreateGameSession(
     await supabaseAdmin
       .from('game_sessions')
       .select(
-        'id, user_id, story_id, current_chapter, status, current_inventory, is_public'
+        'id, user_id, story_id, current_chapter, status, current_inventory, current_location, physical_condition, important_situation, is_public'
       )
       .eq('user_id', userId)
       .eq('story_id', storyId)
@@ -58,6 +123,9 @@ async function getOrCreateGameSession(
         current_chapter: currentChapter,
         status: 'in_progress',
         current_inventory: [],
+        current_location: '',
+        physical_condition: '',
+        important_situation: '',
         is_public: false,
       })
       .select()
@@ -75,7 +143,7 @@ async function getOrCreateGameSession(
       } = await supabaseAdmin
         .from('game_sessions')
         .select(
-          'id, user_id, story_id, current_chapter, status, current_inventory, is_public'
+          'id, user_id, story_id, current_chapter, status, current_inventory, current_location, physical_condition, important_situation, is_public'
         )
         .eq('user_id', userId)
         .eq('story_id', storyId)
@@ -1386,93 +1454,107 @@ export async function POST(req: Request) {
       const systemPrompt = `
 คุณคือ AI นักเขียนนิยายสำหรับแอป GonnaTales
 
-หน้าที่ของคุณคือเขียนนิยายภาษาไทยที่อ่านเป็นธรรมชาติ
-มีบรรยากาศ มีรายละเอียด และมีความต่อเนื่องของเรื่อง
+หน้าที่คือเขียนนิยาย Interactive Novel ภาษาไทย
+โดยผู้เล่นสามารถตัดสินใจเพื่อกำหนดเหตุการณ์ของบทถัดไป
 
 ข้อมูลนิยาย:
-
-ชื่อเรื่อง:
-${formData.title || 'นิยายไม่มีชื่อ'}
-
-แนว:
-${formData.genre || 'แฟนตาซี'}
-
-โทน:
-${formData.tone || 'มืดมนและสมจริง'}
-
-เรื่องย่อ / แก่นเรื่อง:
-${formData.corePremise || ''}
-
-ตัวละครเอก:
-${formData.protagonist || 'ไม่ระบุ'}
-
-เพศตัวละครเอก:
-${formData.protagonistGender || 'ไม่ระบุ'}
-
-นิสัยและความสามารถของตัวละครเอก:
-${formData.protagonistPersonality || 'ไม่ระบุ'}
-
-ของที่ตัวละครเอกพกติดตัว:
-${formData.protagonistItems || 'ไม่มี'}
-
+ชื่อเรื่อง: ${formData.title || 'นิยายไม่มีชื่อ'}
+แนว: ${formData.genre || 'แฟนตาซี'}
+โทน: ${formData.tone || 'มืดมนและสมจริง'}
+เรื่องย่อ / แก่นเรื่อง: ${formData.corePremise || ''}
+ตัวละครเอก: ${formData.protagonist || 'ไม่ระบุ'}
+เพศตัวละครเอก: ${formData.protagonistGender || 'ไม่ระบุ'}
+นิสัยและความสามารถของตัวละครเอก: ${formData.protagonistPersonality || 'ไม่ระบุ'}
+ของที่ตัวละครเอกพกติดตัว: ${formData.protagonistItems || 'ไม่มี'}
 ตัวละครประกอบ (NPC) ที่ผู้สร้างกำหนด:
 ${supportingCharacterPrompt}
+โลกหรือสถานที่: ${formData.worldSetting || 'ไม่ระบุ'}
 
-โลกหรือสถานที่:
-${formData.worldSetting || 'ไม่ระบุ'}
+กฎสำคัญ:
+- ต้องรักษาข้อมูลตัวละครที่ผู้สร้างกำหนด
+- ห้ามเปลี่ยนนิสัยหรือความสามารถหลักโดยไม่มีเหตุผลในเรื่อง
+- ห้ามสร้างตัวละครสำคัญใหม่ที่ไม่ได้อยู่ในข้อมูลผู้สร้าง
+- สิ่งของเริ่มต้นของตัวละครต้องถูกใช้ตามความเหมาะสมและความต่อเนื่อง
+- เนื้อเรื่องต้องสอดคล้องกับแนว โทน โลก และแก่นเรื่อง
+- ต้องจบบทด้วยสถานการณ์ที่ทำให้ผู้เล่นตัดสินใจต่อได้
 
-- หากมีข้อมูลนิสัย ความสามารถ หรือสิ่งของของตัวละครเอกที่ผู้สร้างกำหนดไว้ ต้องนำข้อมูลเหล่านั้นไปใช้ในเรื่องอย่างสอดคล้อง
-- ห้ามเปลี่ยนนิสัยหรือความสามารถหลักของตัวละครเอกโดยไม่มีเหตุผลจากเนื้อเรื่อง
-- สิ่งของที่ตัวละครเอกพกติดตัวสามารถถูกนำมาใช้ในเหตุการณ์ของเรื่องได้
-- หากมี NPC ที่ผู้สร้างกำหนดไว้ ต้องรักษาชื่อ บุคลิก ความสามารถ และสิ่งของของ NPC ให้สอดคล้องกับข้อมูลที่กำหนด
+เขียนบทที่ 1 โดยตอบเป็น JSON เท่านั้น ห้ามใส่ Markdown หรือ code fence
 
-เขียนบทที่ 1 ของนิยาย
+กฎการจัดประเภทเนื้อหาใน content:
+- การบรรยายทั่วไป ไม่ต้องใส่ marker
+- บทพูดของตัวละคร ให้ขึ้นต้นด้วย [dialogue]
+- ความคิดของตัวละคร ให้ขึ้นต้นด้วย [thought]
+- การกระทำหรือเหตุการณ์ที่เกิดขึ้น ให้ขึ้นต้นด้วย [action]
+- เหตุการณ์สำคัญหรือจุดที่ต้องการเน้น ให้ขึ้นต้นด้วย [important]
 
-ข้อกำหนด:
-- เขียนเป็นภาษาไทย
-- อย่าอธิบายว่าคุณเป็น AI
-- อย่าใส่คำว่า "บทที่ 1" ซ้ำในเนื้อหา
-- เนื้อหาต้องเป็นนิยายจริง
-- มีการเปิดเรื่องที่น่าสนใจ
-- ตัวละครต้องมีบุคลิกชัดเจน
-- สร้างบรรยากาศตามแนวและโทนที่กำหนด
-- จบบทด้วยเหตุการณ์ใหม่หรือสถานการณ์ที่เปิดโอกาสให้ผู้เล่นตัดสินใจว่าจะทำอะไรต่อ
-- ผู้เล่นสามารถพิมพ์การตัดสินใจของตัวเองเพื่อดำเนินเรื่องต่อได้
-- ตอนจบบท ให้เสนอแนวทางการตัดสินใจ 2–3 แนวทางที่สอดคล้องกับสถานการณ์ในเรื่อง
-- ก่อนส่วนคำถามให้ผู้เล่นตัดสินใจ ต้องแสดง "สถานะปัจจุบัน" ของผู้เล่น
-- สถานะปัจจุบันต้องสรุปจากเหตุการณ์ที่เกิดขึ้นจริงในบทนี้
-- ต้องแสดงข้อมูล 4 อย่าง:
-  1. สถานที่ปัจจุบัน
-  2. สภาพร่างกายของผู้เล่น
-  3. ของติ ดตัวของผู้เล่น
-  4. สถานการณ์สำคัญที่กำลังเกิดขึ้น (ถ้ามี)
-- หากไม่มีการเปลี่ยนแปลงจากข้อมูลเดิม ให้คงสถานะเดิมไว้
-- หากผู้เล่นได้รับบาดเจ็บ ให้แสดงอาการบาดเจ็บ
-- หากผู้เล่นได้รับ ใช้ สูญหาย หรือทำลายสิ่งของ ให้ปรับรายการของติดตัวให้ตรงกับเหตุการณ์
-- หากผู้เล่นเปลี่ยนสถานที่ ให้แสดงสถานที่ใหม่
-- ห้ามเพิ่มสิ่งของที่ผู้เล่นไม่ได้มีหรือไม่ได้รับในเรื่อง
-- ห้ามสร้างสถานะที่ขัดแย้งกับเหตุการณ์ก่อนหน้า
-- สถานะต้องสั้น กระชับ และอ่านง่าย
+ตัวอย่าง:
 
-ใช้รูปแบบดังนี้:
+ฝนตกหนักตั้งแต่ช่วงเย็น ถนนทั้งสายแทบไม่มีผู้คน
 
-สถานะปัจจุบัน
+[action] เขาหยุดเดินและมองไปยังบ้านหลังเก่า
 
-- สถานที่: ...
-- สภาพร่างกาย: ...
-- ของติดตัว: ...
-- สถานการณ์สำคัญ: ...
+[dialogue] "คุณยังกลับมาที่นี่อีกทำไม?"
 
-จากนั้นจึงแสดงส่วนการตัดสินใจของผู้เล่นตามรูปแบบเดิม
-- แนวทางการตัดสินใจต้องเป็นเพียงคำแนะนำให้ผู้เล่นนำไปคิดต่อ ไม่ใช่ปุ่มตัวเลือก
-- ผู้เล่นสามารถเลือกทำตามแนวทางที่เสนอ หรือพิมพ์การตัดสินใจของตัวเองได้
-- เขียนแนวทางในรูปแบบข้อความธรรมดา เช่น:
-  ควรตัดสินใจอย่างไร?
-  1. เดินตามเสียงที่ได้ยินจากในป่า
-  2. กลับไปที่หมู่บ้านเพื่อขอความช่วยเหลือ
-  3. ซ่อนตัวและรอดูสถานการณ์
-- ห้ามเขียนว่าเป็นตัวเลือกที่ระบบบังคับให้เลือก
-- ความยาวเหมาะสมสำหรับบทแรก
+[thought] ฉันรู้ดีว่าที่นี่ไม่ควรมีใครอยู่
+
+เสียงประตูชั้นบนดังขึ้นอย่างช้า ๆ
+
+[important] แล้วไฟทั้งบ้านก็ดับลงพร้อมกัน
+
+ข้อกำหนดสำคัญ:
+- marker ต้องอยู่ต้นย่อหน้า
+- ใช้เฉพาะ [dialogue], [thought], [action], [important]
+- ห้ามใช้ HTML
+- ห้ามใช้ CSS
+- ห้ามใส่สี
+- ห้ามใส่ emoji
+- ห้ามใช้ Markdown
+- ห้ามใส่ marker อื่นนอกเหนือจากที่กำหนด
+- อย่าใส่คำอธิบายประเภท เช่น "บทสนทนา:" หรือ "ความคิด:"
+- content ต้องเป็นเนื้อหานิยายจริงเท่านั้น
+
+รูปแบบ JSON ที่ต้องส่งกลับ:
+{
+  "title": "ชื่อบทที่เหมาะสม",
+  "content": "เนื้อหานิยายเท่านั้น ไม่ต้องใส่คำว่า บทที่ 1",
+  "choices": [
+    "แนวทางที่หนึ่ง",
+    "แนวทางที่สอง",
+    "แนวทางที่สาม"
+  ],
+  "status": {
+    "location": "สถานที่ปัจจุบันของผู้เล่น",
+    "physicalCondition": "สภาพร่างกายปัจจุบัน",
+    "inventory": ["สิ่งของที่ผู้เล่นมีอยู่จริง"],
+    "importantSituation": "สถานการณ์สำคัญที่กำลังเกิดขึ้น"
+  }
+}
+
+กฎของ choices:
+- ต้องมี 3 ตัวเลือกพอดี
+- ตัวเลือกต้องเกิดจากสถานการณ์จริงตอนจบบท
+- ทั้ง 3 ตัวเลือกควรนำไปสู่การดำเนินเรื่องที่แตกต่างกัน
+- ห้ามเป็นตัวเลือกซ้ำกันหรือเปลี่ยนคำเฉย ๆ
+- เป็นแนวทางการกระทำของผู้เล่น ไม่ใช่คำถามลอย ๆ
+- ผู้เล่นสามารถพิมพ์การตัดสินใจเองได้ แม้ไม่เลือกจาก 3 แนวทาง
+
+กฎของ status:
+- ต้องสะท้อนเหตุการณ์ที่เกิดขึ้นจริงในบทนี้
+- location คือสถานที่ที่ผู้เล่นอยู่เมื่อจบบท
+- physicalCondition คือสภาพร่างกายล่าสุด เช่น ปกติ เหนื่อย มีบาดแผลเล็กน้อย
+- inventory ต้องมีเฉพาะสิ่งของที่ผู้เล่นมีจริง ณ ตอนจบบท
+- ห้ามเพิ่มสิ่งของที่ไม่ได้รับหรือไม่ได้มีมาก่อน
+- importantSituation ต้องสรุปปัญหาหรือเหตุการณ์สำคัญที่กำลังดำเนินอยู่
+- status ต้องสั้นและอ่านง่าย
+
+ความยาวบท:
+- บทที่ 1 ต้องมีเนื้อหาค่อนข้างละเอียด ไม่ใช่บทสรุปสั้น ๆ
+- เขียนอย่างน้อยประมาณ 1,200–1,800 คำภาษาไทย หรือความยาวใกล้เคียงกัน
+- แบ่งเป็นหลายย่อหน้าอย่างเป็นธรรมชาติ ประมาณ 10–16 ย่อหน้า
+- แต่ละย่อหน้าควรมีรายละเอียดของฉาก การกระทำ ความคิด ความรู้สึก หรือบทสนทนาตามความเหมาะสม
+- ห้ามเร่งเหตุการณ์หลายเหตุการณ์จนจบภายในไม่กี่ย่อหน้า
+- อย่าใส่เนื้อหานอกเหนือจากนิยายลงใน content
+- ห้ามอธิบายว่าเป็น AI
 `;
 
       let generatedText = '';
@@ -1490,8 +1572,16 @@ ${formData.worldSetting || 'ไม่ระบุ'}
 
           const response =
             await ai.models.generateContent({
-              model: modelsToTry[i],
-              contents: systemPrompt,
+              model:
+                modelsToTry[i],
+
+              contents:
+                systemPrompt,
+
+              config: {
+                responseMimeType:
+                  'application/json',
+              },
             });
 
           generatedText =
@@ -1548,6 +1638,26 @@ ${formData.worldSetting || 'ไม่ระบุ'}
           { status: 500 }
         );
       }
+
+      let generatedChapter: GeneratedChapterResult;
+
+      try {
+        generatedChapter = parseGeneratedChapter(generatedText);
+      } catch (error) {
+        console.error('❌ Chapter 1 JSON Parse Error:', error);
+        return NextResponse.json(
+          {
+            success: false,
+            error:
+              error instanceof Error
+                ? error.message
+                : 'AI ส่งรูปแบบข้อมูลบทที่ 1 ไม่ถูกต้อง',
+          },
+          { status: 500 }
+        );
+      }
+
+      generatedText = generatedChapter.content;
 
       /* =====================================================
          Story Settings
@@ -1802,6 +1912,9 @@ ${formData.worldSetting || 'ไม่ระบุ'}
 
           content:
             generatedText.trim(),
+
+          choices:
+            generatedChapter.choices || [],
         })
         .select()
         .single();
@@ -1866,6 +1979,19 @@ ${formData.worldSetting || 'ไม่ระบุ'}
             current_chapter: 1,
             status:
               'in_progress',
+
+            current_location:
+              generatedChapter.status.location || null,
+
+            physical_condition:
+              generatedChapter.status.physicalCondition || null,
+
+            important_situation:
+              generatedChapter.status.importantSituation || null,
+
+            current_inventory:
+              generatedChapter.status.inventory,
+
             updated_at:
               new Date().toISOString(),
           })
@@ -2036,7 +2162,7 @@ ${formData.worldSetting || 'ไม่ระบุ'}
       } = await supabaseAdmin
         .from('game_sessions')
         .select(
-          'id, user_id, story_id, current_chapter, status, current_inventory, is_public'
+          'id, user_id, story_id, current_chapter, status, current_inventory, current_location, physical_condition, important_situation, is_public'
         )
         .eq(
           'user_id',
@@ -2184,7 +2310,7 @@ ${formData.worldSetting || 'ไม่ระบุ'}
       } = await supabaseAdmin
         .from('session_chapters')
         .select(
-          'id, session_id, chapter_number, title, content, user_choice, created_at'
+          'id, session_id, chapter_number, title, content, user_choice, choices, created_at'
         )
         .eq(
           'session_id',
@@ -2359,7 +2485,7 @@ ${formData.worldSetting || 'ไม่ระบุ'}
       } = await supabaseAdmin
         .from('session_chapters')
         .select(
-          'id, session_id, chapter_number, title, content, user_choice, created_at'
+          'id, session_id, chapter_number, title, content, user_choice, choices, created_at'
         )
         .eq(
           'session_id',
@@ -2455,6 +2581,11 @@ ${formData.worldSetting || 'ไม่ระบุ'}
 
             userChoice:
               existingNextChapter.user_choice,
+
+            choices:
+              Array.isArray(existingNextChapter.choices)
+                ? existingNextChapter.choices
+                : [],
 
             createdAt:
               existingNextChapter.created_at,
@@ -2585,108 +2716,128 @@ ${chapter.content || ''}
         isFinalChapter
           ? `
 นี่คือบทสุดท้ายของนิยาย
-
-ข้อกำหนดเพิ่มเติมสำหรับบทสุดท้าย:
 - ต้องจบเรื่องอย่างสมบูรณ์ภายในบทนี้
-- ดำเนินเรื่องต่อจากการตัดสินใจล่าสุดของผู้เล่นอย่างสมเหตุสมผล
-- คลี่คลายปมหลักและเหตุการณ์สำคัญของเรื่อง
-- สรุปผลลัพธ์ของตัวละครและเหตุการณ์สำคัญ
-- ห้ามเปิดปมใหม่ที่ต้องไปต่อในบทถัดไป
-- ห้ามจบแบบค้างคา
-- ห้ามเขียนเหมือนกำลังจะมีบทถัดไป
-- ตอนจบต้องให้ความรู้สึกว่าเรื่องราวสิ้นสุดลงแล้ว
-- ปิดเรื่องอย่างเป็นธรรมชาติและเหมาะสมกับเรื่อง
-- ไม่ต้องเสนอทางเลือกหรือคำถามสำหรับบทถัดไป
+- คลี่คลายปมหลักและผลจากการตัดสินใจล่าสุด
+- ห้ามเปิดปมใหม่ที่ต้องมีบทถัดไป
+- choices ต้องเป็น []
+- status ต้องสะท้อนสถานะสุดท้ายของผู้เล่น
 `
           : `
-นี่ไม่ใช่บทสุดท้ายของนิยาย
-
-ข้อกำหนด:
-- เขียนบทถัดไปโดยต่อเนื่องจากบทก่อนหน้า
-- การตัดสินใจของผู้เล่นต้องมีผลต่อเหตุการณ์ในบทนี้
-- ดำเนินเรื่องต่ออย่างสมเหตุสมผล
-- จบบทด้วยเหตุการณ์ใหม่หรือสถานการณ์ใหม่ที่เปิดโอกาสให้ผู้เล่นตัดสินใจต่อ
-- ตอนจบบท ให้เสนอแนวทางการตัดสินใจ 2–3 แนวทางที่สอดคล้องกับสถานการณ์ในเรื่อง
-- แนวทางการตัดสินใจต้องเป็นเพียงคำแนะนำให้ผู้เล่นนำไปคิดต่อ ไม่ใช่ปุ่มตัวเลือก
-- ผู้เล่นสามารถเลือกทำตามแนวทางที่เสนอ หรือพิมพ์การตัดสินใจของตัวเองได้
-- ใช้รูปแบบ:
-  ควรตัดสินใจอย่างไร?
-  1. แนวทางที่หนึ่ง
-  2. แนวทางที่สอง
-  3. แนวทางที่สาม
-- ห้ามเขียนว่าเป็นตัวเลือกที่ระบบบังคับให้เลือก
-- เริ่มเขียนเนื้อเรื่องทันที
+นี่ไม่ใช่บทสุดท้าย
+- ต่อเนื่องจากบทก่อนหน้าและการตัดสินใจล่าสุดของผู้เล่น
+- จบบทด้วยสถานการณ์ใหม่ที่ทำให้ผู้เล่นตัดสินใจต่อได้
+- ต้องสร้าง choices จำนวน 3 ตัวเลือกพอดี
+- choices ต้องเป็นการกระทำที่แตกต่างกันและสอดคล้องกับเหตุการณ์จริง
 `;
 
       const prompt = `
-คุณคือ AI นักเขียนนิยายของ GonnaTales
+คุณคือ AI นักเขียนนิยาย Interactive Novel ของ GonnaTales
 
-ชื่อเรื่อง:
-${story.title}
+ชื่อเรื่อง: ${story.title}
+แนว: ${genre || story.genre || ''}
+โทน: ${tone || story.tone || ''}
+เรื่องย่อ: ${story.synopsis || ''}
 
-แนว:
-${genre || story.genre || ''}
-
-โทน:
-${tone || story.tone || ''}
-
-เรื่องย่อ:
-${story.synopsis || ''}
-
-==================================================
-ข้อมูลตัวละครปัจจุบันของผู้เล่น
-==================================================
-
+ข้อมูลตัวละครปัจจุบันของผู้เล่น:
 ${characterContext}
 
-==================================================
-ความสัมพันธ์ของตัวละครปัจจุบัน
-==================================================
-
+ความสัมพันธ์ของตัวละครปัจจุบัน:
 ${relationshipContext}
 
-==================================================
-บทก่อนหน้า
-==================================================
-
+บทก่อนหน้า:
 ${chapterContext}
 
-==================================================
-การตัดสินใจล่าสุดของผู้เล่น
-==================================================
-
+การตัดสินใจล่าสุดของผู้เล่น:
 ${userChoice || 'ไม่มี'}
 
-==================================================
-กฎความต่อเนื่องของตัวละคร
-==================================================
+สถานะปัจจุบันของ Session:
+- สถานที่: ${session.current_location || 'ไม่ระบุ'}
+- สภาพร่างกาย: ${session.physical_condition || 'ไม่ระบุ'}
+- ของติดตัว: ${Array.isArray(session.current_inventory) && session.current_inventory.length > 0 ? session.current_inventory.join(', ') : 'ไม่มี'}
+- สถานการณ์สำคัญ: ${session.important_situation || 'ไม่มี'}
 
-- ต้องรักษาชื่อตัวละครให้ตรงกับข้อมูล Session
-- ต้องรักษาบุคลิกของตัวละครให้ต่อเนื่อง
-- ต้องรักษาความสัมพันธ์ระหว่างตัวละครให้ต่อเนื่อง
-- ห้ามเปลี่ยนความสัมพันธ์โดยไม่มีเหตุการณ์ในเรื่องรองรับ
-- ห้ามสร้างตัวละครสำคัญใหม่ที่ไม่ได้อยู่ในข้อมูลตัวละครปัจจุบัน
-- ตัวละครสำคัญที่มีชื่อและมีบทบาทต่อเนื่อง ต้องเป็นตัวละครที่อยู่ใน Session เท่านั้น
-- หากจำเป็นต้องกล่าวถึงบุคคลทั่วไป เช่น ชาวบ้าน ทหาร คนขายของ หรือฝูงชน สามารถกล่าวถึงได้
-  แต่บุคคลเหล่านี้ไม่ถือเป็นตัวละครสำคัญและห้ามสร้างเป็น Character
-- ห้ามเพิ่มตัวละครสำคัญใหม่ระหว่างการดำเนินเรื่อง
-- ตัวละครสำคัญทั้งหมดต้องมาจากตัวละครที่ผู้สร้างกำหนดไว้ตั้งแต่ตอนสร้างเรื่อง
-- การตัดสินใจของผู้เล่นต้องส่งผลต่อเรื่องราวอย่างสมเหตุสมผล
-- ห้ามนำข้อมูลตัวละครหรือความสัมพันธ์จากผู้เล่นคนอื่นมาใช้
-- ข้อมูล Session นี้เป็นข้อมูลเฉพาะของผู้เล่นคนปัจจุบัน
+กฎความต่อเนื่อง:
+- รักษาชื่อตัวละคร บุคลิก ความสัมพันธ์ และเหตุการณ์ให้ต่อเนื่อง
+- ห้ามสร้างตัวละครสำคัญใหม่ที่ไม่ได้อยู่ใน Session
+- ห้ามนำข้อมูลของผู้เล่นคนอื่นมาใช้
+- การตัดสินใจล่าสุดของผู้เล่นต้องส่งผลต่อบทนี้อย่างสมเหตุสมผล
+- ห้ามเปลี่ยนสถานะหรือสิ่งของโดยไม่มีเหตุการณ์รองรับ
 
-เขียนบทที่ ${nextChapterNumber}
+ตอบเป็น JSON เท่านั้น ห้ามใส่ Markdown หรือ code fence
 
-ข้อกำหนด:
-- ภาษาไทย
-- ต่อเนื่องจากบทก่อนหน้า
-- เคารพการตัดสินใจของผู้เล่น
-- ตัวละครและเหตุการณ์ต้องต่อเนื่อง
-- อย่าอธิบายว่าเป็น AI
-- เขียนเป็นนิยายจริง
-- ไม่ต้องใส่คำว่า "บทที่ ${nextChapterNumber}" ซ้ำในเนื้อหา
+กฎการจัดประเภทเนื้อหาใน content:
+- การบรรยายทั่วไป ไม่ต้องใส่ marker
+- บทพูดของตัวละคร ให้ขึ้นต้นด้วย [dialogue]
+- ความคิดของตัวละคร ให้ขึ้นต้นด้วย [thought]
+- การกระทำหรือเหตุการณ์ที่เกิดขึ้น ให้ขึ้นต้นด้วย [action]
+- เหตุการณ์สำคัญหรือจุดที่ต้องการเน้น ให้ขึ้นต้นด้วย [important]
+
+ตัวอย่าง:
+
+ทางเดินด้านหน้ามืดสนิท มีเพียงแสงจากหน้าต่างที่ส่องเข้ามาเป็นระยะ
+
+[action] เขาค่อย ๆ ยกมือขึ้นจับลูกบิดประตู
+
+[dialogue] "อย่าเพิ่งเปิด"
+
+[thought] เสียงนั้นมาจากด้านหลังฉันได้อย่างไร
+
+เขาหันกลับไปมอง แต่ไม่มีใครอยู่ตรงนั้น
+
+[important] เสียงฝีเท้าดังขึ้นจากชั้นบน
+
+ข้อกำหนดสำคัญ:
+- marker ต้องอยู่ต้นย่อหน้า
+- ใช้เฉพาะ [dialogue], [thought], [action], [important]
+- ห้ามใช้ HTML
+- ห้ามใช้ CSS
+- ห้ามใส่สี
+- ห้ามใส่ emoji
+- ห้ามใช้ Markdown
+- ห้ามใส่ marker อื่นนอกเหนือจากที่กำหนด
+- อย่าใส่คำอธิบายประเภท เช่น "บทสนทนา:" หรือ "ความคิด:"
+- content ต้องเป็นเนื้อหานิยายจริงเท่านั้น
+
+รูปแบบ JSON:
+{
+  "title": "ชื่อบท",
+  "content": "เนื้อหานิยายเท่านั้น",
+  "choices": ["ตัวเลือก 1", "ตัวเลือก 2", "ตัวเลือก 3"],
+  "status": {
+    "location": "สถานที่ปัจจุบัน",
+    "physicalCondition": "สภาพร่างกายปัจจุบัน",
+    "inventory": ["ของที่มีจริง"],
+    "importantSituation": "สถานการณ์สำคัญปัจจุบัน"
+  }
+}
+
+กฎ choices:
+- บทปกติ: 3 ตัวเลือกพอดี
+- แต่ละตัวเลือกต้องนำไปสู่แนวทางการดำเนินเรื่องที่แตกต่างกัน
+- ต้องอิงจากสถานการณ์จริงตอนจบบท
+- ห้ามบังคับว่าผู้เล่นต้องเลือกจากรายการ เพราะผู้เล่นสามารถพิมพ์การตัดสินใจเองได้
+- บทสุดท้าย: choices ต้องเป็น []
+
+กฎ status:
+- ต้องเป็นสถานะล่าสุด ณ ตอนจบบท
+- location ต้องตรงกับสถานที่จริงในเรื่อง
+- physicalCondition ต้องสะท้อนอาการล่าสุด
+- inventory ต้องมีเฉพาะของที่ผู้เล่นมีจริง
+- ถ้าได้รับ ใช้ สูญหาย หรือทำลายของ ต้องปรับรายการให้ถูกต้อง
+- importantSituation ต้องสรุปสถานการณ์ที่กำลังเกิดขึ้น
+- ถ้าไม่มีการเปลี่ยนแปลง ให้คงสถานะเดิม
 
 ${finalChapterInstruction}
+
+เขียนบทที่ ${nextChapterNumber}
+- ภาษาไทย
+- เขียนเป็นนิยายจริง ไม่ใช่บทสรุป
+- ความยาวประมาณ 1,200–1,800 คำภาษาไทย หรือความยาวใกล้เคียงกัน
+- แบ่งเป็นประมาณ 10–16 ย่อหน้าอย่างเป็นธรรมชาติ
+- ต้องมีรายละเอียดของฉาก การกระทำ ความคิด ความรู้สึก และบทสนทนาตามความเหมาะสม
+- อย่าเร่งเหตุการณ์ให้จบเร็วเกินไป
+- ไม่ต้องใส่คำว่า "บทที่ ${nextChapterNumber}" ซ้ำใน content
+- อย่าอธิบายว่าเป็น AI
 `;
 
       let generatedText = '';
@@ -2709,6 +2860,11 @@ ${finalChapterInstruction}
 
               contents:
                 prompt,
+
+              config: {
+                responseMimeType:
+                  'application/json',
+              },
             });
 
           generatedText =
@@ -2770,6 +2926,45 @@ ${finalChapterInstruction}
         );
       }
 
+      let generatedChapter: GeneratedChapterResult;
+
+      try {
+        generatedChapter = parseGeneratedChapter(generatedText);
+      } catch (error) {
+        console.error('❌ Next Chapter JSON Parse Error:', error);
+        return NextResponse.json(
+          {
+            success: false,
+            error:
+              error instanceof Error
+                ? error.message
+                : 'AI ส่งรูปแบบข้อมูลบทถัดไปไม่ถูกต้อง',
+          },
+          { status: 500 }
+        );
+      }
+
+      if (
+        !isFinalChapter &&
+        (!generatedChapter ||
+          !Array.isArray(generatedChapter.choices) ||
+          generatedChapter.choices.length !== 3)
+      ) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: 'AI สร้างตัวเลือกไม่ครบ 3 ตัวเลือก',
+          },
+          { status: 500 }
+        );
+      }
+
+      if (isFinalChapter) {
+        generatedChapter.choices = [];
+      }
+
+      generatedText = generatedChapter.content;
+
       /* =====================================================
          Save Next Chapter
  
@@ -2796,6 +2991,9 @@ ${finalChapterInstruction}
 
           content:
             generatedText.trim(),
+
+          choices:
+            generatedChapter.choices || [],
 
           user_choice:
             userChoice &&
@@ -2825,7 +3023,7 @@ ${finalChapterInstruction}
               'session_chapters'
             )
             .select(
-              'id, session_id, chapter_number, title, content, user_choice, created_at'
+              'id, session_id, chapter_number, title, content, user_choice, choices, created_at'
             )
             .eq(
               'session_id',
@@ -2864,6 +3062,11 @@ ${finalChapterInstruction}
 
                 userChoice:
                   duplicateChapter.user_choice,
+
+                choices:
+                  Array.isArray(duplicateChapter.choices)
+                    ? duplicateChapter.choices
+                    : [],
 
                 createdAt:
                   duplicateChapter.created_at,
@@ -2970,6 +3173,18 @@ ${finalChapterInstruction}
               ? 'completed'
               : 'in_progress',
 
+          current_location:
+            generatedChapter.status.location || null,
+
+          physical_condition:
+            generatedChapter.status.physicalCondition || null,
+
+          important_situation:
+            generatedChapter.status.importantSituation || null,
+
+          current_inventory:
+            generatedChapter.status.inventory,
+
           updated_at:
             new Date().toISOString(),
         })
@@ -3071,6 +3286,11 @@ ${finalChapterInstruction}
 
           userChoice:
             chapter.user_choice,
+
+          choices:
+            Array.isArray(chapter.choices)
+              ? chapter.choices
+              : [],
 
           createdAt:
             chapter.created_at,

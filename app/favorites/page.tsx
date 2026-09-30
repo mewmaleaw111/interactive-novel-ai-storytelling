@@ -24,8 +24,7 @@ import '@/styles/favorites.css';
 export default function FavoritesPage() {
   const router = useRouter();
 
-  const { session } =
-    useSession();
+  const { session } = useSession();
 
   const supabase = useMemo(
     () =>
@@ -37,11 +36,8 @@ export default function FavoritesPage() {
     [session]
   );
 
-  const [stories, setStories] =
-    useState<Story[]>([]);
-
-  const [isLoading, setIsLoading] =
-    useState(true);
+  const [stories, setStories] = useState<Story[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // ==========================================
   // LOAD FAVORITES
@@ -53,290 +49,198 @@ export default function FavoritesPage() {
       return;
     }
 
-    const loadFavorites =
-      async () => {
-        setIsLoading(true);
+    const loadFavorites = async () => {
+      setIsLoading(true);
 
-        try {
-          // ==========================================
-          // LOAD FAVORITE STORY IDS
-          // ==========================================
-          const favoriteResponse =
-            await fetch(
-              '/api/favorites',
-              {
-                cache: 'no-store',
-              }
-            );
-
-          const favoriteData =
-            await favoriteResponse.json();
-
-          if (
-            !favoriteResponse.ok ||
-            !favoriteData.success
-          ) {
-            setStories([]);
-            return;
+      try {
+        // ==========================================
+        // LOAD FAVORITE STORY IDS
+        // ==========================================
+        const favoriteResponse = await fetch(
+          '/api/favorites',
+          {
+            cache: 'no-store',
           }
+        );
 
-          const favoriteStoryIds: string[] =
-            favoriteData.favoriteStoryIds ||
-            [];
+        const favoriteData = await favoriteResponse.json();
 
-          // ==========================================
-          // NO FAVORITES
-          // ==========================================
-          if (
-            favoriteStoryIds.length ===
-            0
-          ) {
-            setStories([]);
-            return;
-          }
-
-          // ==========================================
-          // LOAD STORIES
-          // ==========================================
-          const {
-            data: storyData,
-            error: storyError,
-          } = await supabase
-            .from('stories')
-            .select('*')
-            .in(
-              'id',
-              favoriteStoryIds
-            )
-            .eq(
-              'is_banned',
-              false
-            )
-            .order(
-              'created_at',
-              {
-                ascending: false,
-              }
-            );
-
-          if (storyError) {
-            console.error(
-              'Favorite Stories Error:',
-              storyError
-            );
-
-            setStories([]);
-            return;
-          }
-
-          if (
-            !storyData ||
-            storyData.length === 0
-          ) {
-            setStories([]);
-            return;
-          }
-
-          // ==========================================
-          // STORY IDS
-          // ==========================================
-          const storyIds =
-            storyData.map(
-              (story) =>
-                story.id
-            );
-
-          // ==========================================
-          // LOAD CHAPTERS
-          // ==========================================
-          const {
-            data: chapterData,
-            error: chapterError,
-          } = await supabase
-            .from('chapters')
-            .select('*')
-            .in(
-              'story_id',
-              storyIds
-            )
-            .order(
-              'chapter_number',
-              {
-                ascending: true,
-              }
-            );
-
-          if (chapterError) {
-            console.error(
-              'Favorite Chapters Error:',
-              chapterError
-            );
-
-            setStories([]);
-            return;
-          }
-
-          const chapters =
-            chapterData || [];
-
-          // ==========================================
-          // MAP SUPABASE DATA → STORY TYPE
-          // ==========================================
-          const mappedStories: Story[] =
-            storyData.map(
-              (story) => {
-                const storyChapters: Chapter[] =
-                  chapters
-                    .filter(
-                      (chapter) =>
-                        chapter.story_id ===
-                        story.id
-                    )
-                    .map(
-                      (chapter) => ({
-                        id:
-                          chapter.id,
-
-                        chapterNumber:
-                          chapter.chapter_number,
-
-                        title:
-                          chapter.title ||
-                          `บทที่ ${chapter.chapter_number}`,
-
-                        content:
-                          chapter.content ||
-                          '',
-
-                        createdAt:
-                          chapter.created_at,
-                      })
-                    );
-
-                // ==========================================
-                // CURRENT CHAPTER
-                // ==========================================
-                const currentChapter =
-                  storyChapters.length >
-                  0
-                    ? storyChapters[
-                        storyChapters.length -
-                          1
-                      ]
-                        .chapterNumber
-                    : 0;
-
-                // ==========================================
-                // WORD COUNT
-                // ==========================================
-                const wordCount =
-                  storyChapters.reduce(
-                    (
-                      total,
-                      chapter
-                    ) =>
-                      total +
-                      chapter.content
-                        .length,
-                    0
-                  );
-
-                // ==========================================
-                // RETURN STORY
-                // ==========================================
-                return {
-                  id:
-                    story.id,
-
-                  title:
-                    story.title ||
-                    'นิยายไม่มีชื่อ',
-
-                  corePremise:
-                    story.synopsis ||
-                    '',
-
-                  genre:
-                    (story.genre ||
-                      'แฟนตาซี') as Genre,
-
-                  tone:
-                    (story.tone ||
-                      'มืดมนและสมจริง') as NarrativeTone,
-
-                  length:
-                    story.total_chapters <=
-                    5
-                      ? 'เรื่องสั้น'
-                      : story.total_chapters <=
-                          15
-                        ? 'นวนิยายขนาดกลาง'
-                        : 'นวนิยายยาว',
-
-                  protagonist:
-                    '',
-
-                  worldSetting:
-                    '',
-
-                  coverUrl:
-                    story.cover_image_url ||
-                    '',
-
-                  author:
-                    'นักเขียน',
-
-                  totalChapters:
-                    story.total_chapters ||
-                    0,
-
-                  currentChapter,
-
-                  wordCount,
-
-                  isFavorite:
-                    true,
-
-                  isTrending:
-                    false,
-
-                  isFresh:
-                    false,
-
-                  isBanned:
-                    story.is_banned ??
-                    false,
-
-                  isPublished:
-                    story.is_published ??
-                    false,
-
-                  chapters:
-                    storyChapters,
-                };
-              }
-            );
-
-          setStories(
-            mappedStories
-          );
-        } catch (error) {
-          console.error(
-            'Favorites Load Error:',
-            error
-          );
-
+        if (
+          !favoriteResponse.ok ||
+          !favoriteData.success
+        ) {
           setStories([]);
-        } finally {
-          setIsLoading(false);
+          return;
         }
-      };
+
+        const favoriteStoryIds: string[] =
+          favoriteData.favoriteStoryIds || [];
+
+        // ==========================================
+        // NO FAVORITES
+        // ==========================================
+        if (favoriteStoryIds.length === 0) {
+          setStories([]);
+          return;
+        }
+
+        // ==========================================
+        // LOAD STORIES
+        // ==========================================
+        const {
+          data: storyData,
+          error: storyError,
+        } = await supabase
+          .from('stories')
+          .select('*')
+          .in('id', favoriteStoryIds)
+          .eq('is_banned', false)
+          .order('created_at', {
+            ascending: false,
+          });
+
+        if (storyError) {
+          console.error(
+            'Favorite Stories Error:',
+            storyError
+          );
+          setStories([]);
+          return;
+        }
+
+        if (
+          !storyData ||
+          storyData.length === 0
+        ) {
+          setStories([]);
+          return;
+        }
+
+        // ==========================================
+        // STORY IDS
+        // ==========================================
+        const storyIds = storyData.map(
+          (story) => story.id
+        );
+
+        // ==========================================
+        // LOAD CHAPTERS
+        // ==========================================
+        const {
+          data: chapterData,
+          error: chapterError,
+        } = await supabase
+          .from('chapters')
+          .select('*')
+          .in('story_id', storyIds)
+          .order('chapter_number', {
+            ascending: true,
+          });
+
+        if (chapterError) {
+          console.error(
+            'Favorite Chapters Error:',
+            chapterError
+          );
+          setStories([]);
+          return;
+        }
+
+        const chapters = chapterData || [];
+
+        // ==========================================
+        // MAP SUPABASE DATA → STORY TYPE
+        // ==========================================
+        const mappedStories: Story[] = storyData.map(
+          (story) => {
+            const storyChapters: Chapter[] = chapters
+              .filter(
+                (chapter) =>
+                  chapter.story_id === story.id
+              )
+              .map((chapter) => ({
+                id: chapter.id,
+                chapterNumber: chapter.chapter_number,
+                title:
+                  chapter.title ||
+                  `บทที่ ${chapter.chapter_number}`,
+                content: chapter.content || '',
+                createdAt: chapter.created_at,
+              }));
+
+            // ==========================================
+            // CURRENT CHAPTER
+            // ==========================================
+            const currentChapter =
+              storyChapters.length > 0
+                ? storyChapters[
+                    storyChapters.length - 1
+                  ].chapterNumber
+                : 0;
+
+            // ==========================================
+            // WORD COUNT
+            // ==========================================
+            const wordCount = storyChapters.reduce(
+              (total, chapter) =>
+                total + chapter.content.length,
+              0
+            );
+
+            // ==========================================
+            // RETURN STORY
+            // ==========================================
+            return {
+              id: story.id,
+              title:
+                story.title || 'นิยายไม่มีชื่อ',
+              corePremise:
+                story.synopsis || '',
+              genre: (story.genre ||
+                'แฟนตาซี') as Genre,
+              tone: (story.tone ||
+                'มืดมนและสมจริง') as NarrativeTone,
+              length:
+                story.total_chapters <= 5
+                  ? 'เรื่องสั้น'
+                  : story.total_chapters <= 15
+                  ? 'นวนิยายขนาดกลาง'
+                  : 'นวนิยายยาว',
+              protagonist: '',
+              worldSetting: '',
+              coverUrl:
+                story.cover_image_url || '',
+              author: 'นักเขียน',
+              totalChapters:
+                story.total_chapters || 0,
+              currentChapter,
+              wordCount,
+              isFavorite: true,
+              isTrending: false,
+              isFresh: false,
+              isBanned:
+                story.is_banned ?? false,
+              isPublished:
+                story.is_published ?? false,
+              chapters: storyChapters,
+            };
+          }
+        );
+
+        setStories(mappedStories);
+      } catch (error) {
+        console.error(
+          'Favorites Load Error:',
+          error
+        );
+        setStories([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
     loadFavorites();
-  }, [
-    session,
-    supabase,
-  ]);
+  }, [session, supabase]);
 
   // ==========================================
   // FAVORITE CHANGE
@@ -346,62 +250,92 @@ export default function FavoritesPage() {
     isFavorite: boolean
   ) => {
     if (!isFavorite) {
-      setStories(
-        (currentStories) =>
-          currentStories.filter(
-            (story) =>
-              story.id !==
-              storyId
-          )
+      setStories((currentStories) =>
+        currentStories.filter(
+          (story) => story.id !== storyId
+        )
       );
     }
   };
 
   // ==========================================
-  // LOADING
+  // LOADING SKELETON
   // ==========================================
   if (isLoading) {
     return (
       <main className="favorites-page">
         <div className="favorites-container">
-          <div className="favorites-loading">
-            กำลังโหลดเรื่องโปรด...
-          </div>
+          {/* Skeleton Back Button */}
+          <div className="favorites-skeleton-back" />
+
+          {/* Skeleton Header Card (ปรับให้มีโครงสร้างเท่ากับกล่องจริง) */}
+          <header className="favorites-skeleton-header">
+            <div className="favorites-skeleton-heading">
+              <div className="favorites-skeleton-eyebrow" />
+              <div className="favorites-skeleton-title" />
+              <div className="favorites-skeleton-description" />
+            </div>
+
+            <div className="favorites-skeleton-count">
+              <div className="favorites-skeleton-count-number" />
+              <div className="favorites-skeleton-count-label" />
+            </div>
+          </header>
+
+          <div className="favorites-skeleton-divider" />
+
+          {/* Skeleton List Section */}
+          <section className="favorites-list-section">
+            <div className="favorites-skeleton-list-header">
+              <div>
+                <div className="favorites-skeleton-list-title" />
+                <div className="favorites-skeleton-list-description" />
+              </div>
+              <div className="favorites-skeleton-button" />
+            </div>
+
+            {/* Skeleton Grid (แสดง 8 การ์ดจำลอง) */}
+            <div className="favorites-skeleton-grid">
+              {Array.from({ length: 8 }).map((_, index) => (
+                <div key={index} className="favorites-skeleton-card">
+                  <div className="favorites-skeleton-cover" />
+                  <div className="favorites-skeleton-content">
+                    <div className="favorites-skeleton-card-title" />
+                    <div className="favorites-skeleton-card-author" />
+                    <div className="favorites-skeleton-card-meta" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
         </div>
       </main>
     );
   }
 
   // ==========================================
-  // RENDER
+  // RENDER MAIN CONTENT
   // ==========================================
   return (
     <main className="favorites-page">
       <div className="favorites-container">
-
         {/* Back to Profile */}
         <button
           type="button"
           className="favorites-back-button"
-          onClick={() =>
-            router.push(
-              '/profile'
-            )
-          }
+          onClick={() => router.push('/profile')}
         >
           ‹ กลับสู่โปรไฟล์
         </button>
 
-        {/* Header */}
+        {/* Header Card */}
         <header className="favorites-header">
           <div className="favorites-heading">
             <span className="favorites-eyebrow">
               เรื่องราวที่คุณเลือกเก็บไว้
             </span>
 
-            <h1>
-              เรื่องโปรด
-            </h1>
+            <h1>เรื่องโปรด</h1>
 
             <p>
               รวมเรื่องที่คุณบันทึกไว้
@@ -410,22 +344,16 @@ export default function FavoritesPage() {
           </div>
 
           <div className="favorites-count">
-            <strong>
-              {stories.length}
-            </strong>
-
-            <span>
-              เรื่องที่บันทึกไว้
-            </span>
+            <strong>{stories.length}</strong>
+            <span>เรื่องที่บันทึกไว้</span>
           </div>
         </header>
 
         {/* Divider */}
         <div className="favorites-divider" />
 
-        {/* Empty */}
-        {stories.length ===
-        0 ? (
+        {/* Empty or Story Grid */}
+        {stories.length === 0 ? (
           <section className="favorites-empty">
             <div className="favorites-empty-line" />
 
@@ -433,9 +361,7 @@ export default function FavoritesPage() {
               YOUR LIBRARY
             </span>
 
-            <h2>
-              ยังไม่มีเรื่องโปรด
-            </h2>
+            <h2>ยังไม่มีเรื่องโปรด</h2>
 
             <p>
               เมื่อคุณพบเรื่องที่ชอบ
@@ -444,24 +370,17 @@ export default function FavoritesPage() {
 
             <button
               type="button"
-              onClick={() =>
-                router.push(
-                  '/discover'
-                )
-              }
+              onClick={() => router.push('/discover')}
             >
               ไปสำรวจนิยาย
             </button>
           </section>
         ) : (
           <section className="favorites-list-section">
-
             {/* List Header */}
             <div className="favorites-list-header">
               <div>
-                <h2>
-                  เรื่องโปรดของคุณ
-                </h2>
+                <h2>เรื่องโปรดของคุณ</h2>
 
                 <p>
                   เรื่องที่คุณเลือกเก็บไว้สำหรับอ่าน
@@ -471,11 +390,7 @@ export default function FavoritesPage() {
               <button
                 type="button"
                 className="favorites-discover-button"
-                onClick={() =>
-                  router.push(
-                    '/discover'
-                  )
-                }
+                onClick={() => router.push('/discover')}
               >
                 ค้นหาเรื่องอื่น
               </button>
@@ -483,28 +398,14 @@ export default function FavoritesPage() {
 
             {/* Story Grid */}
             <div className="favorites-story-grid">
-              {stories.map(
-                (story) => (
-                  <StoryCard
-                    key={
-                      story.id
-                    }
-                    story={
-                      story
-                    }
-                    onClick={(
-                      id
-                    ) =>
-                      router.push(
-                        `/story/${id}`
-                      )
-                    }
-                    onFavoriteChange={
-                      handleFavoriteChange
-                    }
-                  />
-                )
-              )}
+              {stories.map((story) => (
+                <StoryCard
+                  key={story.id}
+                  story={story}
+                  onClick={(id) => router.push(`/story/${id}`)}
+                  onFavoriteChange={handleFavoriteChange}
+                />
+              ))}
             </div>
           </section>
         )}

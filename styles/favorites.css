@@ -631,3 +631,912 @@
   }
 }
 
+/* =========================================
+   Favorites Loading Skeleton (Matched Exact Image Tone)
+   ========================================= */
+
+.favorites-loading {
+  width: 100%;
+  padding: 0;
+}
+
+/* Header Skeleton - ปรับเป็นแบบไม่มีขอบ ให้เนียนไปกับพื้นหลังตามรูป */
+.favorites-skeleton-header {
+  width: 100%;
+  padding: 36px 42px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+}
+
+.favorites-skeleton-heading {
+  flex: 1;
+}
+
+/* Base style สำหรับทุกชิ้นส่วน Skeleton ให้ใช้สี #E8E2D9 ตามภาพ */
+.favorites-skeleton-line,
+.favorites-skeleton-eyebrow,
+.favorites-skeleton-title,
+.favorites-skeleton-description,
+.favorites-skeleton-count-number,
+.favorites-skeleton-count-label,
+.favorites-skeleton-list-title,
+.favorites-skeleton-list-description,
+.favorites-skeleton-button,
+.favorites-skeleton-cover,
+.favorites-skeleton-card-title,
+.favorites-skeleton-card-author,
+.favorites-skeleton-card-meta {
+  position: relative;
+  overflow: hidden;
+  background-color: #E8E2D9 !important;
+  border: none !important;
+  border-radius: 12px;
+}
+
+/* Shimmer Animation - แสงวิ้งโทนเบจอุ่นไล่ระดับนุ่มนวล */
+.favorites-skeleton-line::after,
+.favorites-skeleton-eyebrow::after,
+.favorites-skeleton-title::after,
+.favorites-skeleton-description::after,
+.favorites-skeleton-count-number::after,
+.favorites-skeleton-count-label::after,
+.favorites-skeleton-list-title::after,
+.favorites-skeleton-list-description::after,
+.favorites-skeleton-button::after,
+.favorites-skeleton-cover::after,
+.favorites-skeleton-card-title::after,
+.favorites-skeleton-card-author::after,
+.favorites-skeleton-card-meta::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(242, 236, 228, 0.7) 50%,
+    transparent 100%
+  );
+
+  transform: translateX(-100%);
+  animation: favorites-shimmer 1.8s ease-in-out infinite;
+}
+
+/* Sizes & Margins */
+.favorites-skeleton-eyebrow {
+  width: 170px;
+  height: 14px;
+  margin-bottom: 14px;
+  border-radius: 999px;
+}
+
+.favorites-skeleton-title {
+  width: 220px;
+  height: 36px;
+  margin-bottom: 14px;
+  border-radius: 12px;
+}
+
+.favorites-skeleton-description {
+  width: min(420px, 80%);
+  height: 16px;
+  border-radius: 999px;
+}
+
+/* Count Skeleton */
+.favorites-skeleton-count {
+  flex-shrink: 0;
+  width: 120px;
+  padding-left: 30px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.favorites-skeleton-count-number {
+  width: 52px;
+  height: 32px;
+  border-radius: 10px;
+}
+
+.favorites-skeleton-count-label {
+  width: 82px;
+  height: 14px;
+  border-radius: 999px;
+}
+
+/* Divider */
+.favorites-skeleton-divider {
+  height: 1px;
+  margin: 34px 0;
+  background: transparent;
+}
+
+/* List Header Skeleton */
+.favorites-skeleton-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 26px;
+}
+
+.favorites-skeleton-list-title {
+  width: 180px;
+  height: 26px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+}
+
+.favorites-skeleton-list-description {
+  width: 220px;
+  height: 14px;
+  border-radius: 999px;
+}
+
+/* Button Skeleton */
+.favorites-skeleton-button {
+  width: 110px;
+  height: 36px;
+  border-radius: 999px;
+}
+
+/* Story Grid Skeleton */
+.favorites-skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 26px 20px;
+}
+
+/* Story Card Skeleton - เอาเส้นขอบและกรอบการ์ดออกให้เหมือนในรูป */
+.favorites-skeleton-card {
+  width: 100%;
+  overflow: hidden;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* Cover Skeleton */
+.favorites-skeleton-cover {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 18px;
+}
+
+/* Card Content Skeleton */
+.favorites-skeleton-content {
+  padding: 14px 2px 0;
+}
+
+.favorites-skeleton-card-title {
+  width: 85%;
+  height: 18px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
+
+.favorites-skeleton-card-author {
+  width: 55%;
+  height: 14px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+}
+
+.favorites-skeleton-card-meta {
+  width: 40%;
+  height: 12px;
+  border-radius: 6px;
+}
+
+/* Shimmer Animation */
+@keyframes favorites-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* =========================================================
+   FORCE OVERRIDE SKELETON COLOR (CRITICAL FIX)
+   ========================================================= */
+
+/* 1. บังคับพื้นหลังของ Card Header ให้เป็นใสนุ่มนวลตามแบบ */
+.favorites-loading .favorites-skeleton-header,
+.favorites-loading .favorites-header-skeleton {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* 2. บังคับเปลี่ยนสีแท่ง Skeleton ทุกตัว และลูกๆ ข้างในให้เป็นสีครีมเบจ #E8E2D9 */
+.favorites-loading [class*="skeleton"],
+.favorites-loading [class*="skeleton"] *,
+.favorites-skeleton-line,
+.favorites-skeleton-eyebrow,
+.favorites-skeleton-title,
+.favorites-skeleton-description,
+.favorites-skeleton-count-number,
+.favorites-skeleton-count-label,
+.favorites-skeleton-list-title,
+.favorites-skeleton-list-description,
+.favorites-skeleton-button,
+.favorites-skeleton-cover,
+.favorites-skeleton-card-title,
+.favorites-skeleton-card-author,
+.favorites-skeleton-card-meta {
+  background: #E8E2D9 !important;
+  background-color: #E8E2D9 !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* 3. ล้างสี Pseudo-elements (::before, ::after) ที่อาจสร้างสีฟ้าเทาซ้อนอยู่ */
+.favorites-loading [class*="skeleton"]::before,
+.favorites-loading [class*="skeleton"] *::before {
+  display: none !important;
+}
+
+/* 4. กำหนด Shimmer แสงวิ้งสีครีมสว่างทับ */
+.favorites-loading [class*="skeleton"]::after,
+.favorites-loading [class*="skeleton"] *::after,
+.favorites-skeleton-line::after,
+.favorites-skeleton-cover::after {
+  content: "" !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(245, 239, 230, 0.75) 50%,
+    transparent 100%
+  ) !important;
+  transform: translateX(-100%) !important;
+  animation: favorites-shimmer-force 1.6s ease-in-out infinite !important;
+}
+
+@keyframes favorites-shimmer-force {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* =========================================
+   FAVORITES SKELETON LOADING (MATCHED DESIGN)
+   ========================================= */
+
+/* 1. Base Skeleton Element (เฉพาะแท่ง/ชิ้นส่วนที่ต้องการใส่สี) */
+.favorites-skeleton-eyebrow,
+.favorites-skeleton-title,
+.favorites-skeleton-description,
+.favorites-skeleton-count-number,
+.favorites-skeleton-count-label,
+.favorites-skeleton-list-title,
+.favorites-skeleton-list-description,
+.favorites-skeleton-button,
+.favorites-skeleton-cover,
+.favorites-skeleton-card-title,
+.favorites-skeleton-card-author,
+.favorites-skeleton-card-meta {
+  position: relative;
+  overflow: hidden;
+  background-color: #E8E2D9; /* สีเบจอุ่นตรงตามภาพ */
+  border-radius: 999px; /* ทรง Capsule มนกลมตามภาพ */
+}
+
+/* 2. Shimmer Light Effect (แสงวิ้งนุ่มนวล) */
+.favorites-skeleton-eyebrow::after,
+.favorites-skeleton-title::after,
+.favorites-skeleton-description::after,
+.favorites-skeleton-count-number::after,
+.favorites-skeleton-count-label::after,
+.favorites-skeleton-list-title::after,
+.favorites-skeleton-list-description::after,
+.favorites-skeleton-button::after,
+.favorites-skeleton-cover::after,
+.favorites-skeleton-card-title::after,
+.favorites-skeleton-card-author::after,
+.favorites-skeleton-card-meta::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.45) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  animation: favorites-shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes favorites-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* 3. Layout Wrappers (โปร่งใส ไม่ระบายสีทึบ) */
+.favorites-skeleton-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
+  width: 100%;
+  padding: 10px 0 20px;
+  background: transparent;
+}
+
+.favorites-skeleton-heading {
+  flex: 1;
+}
+
+.favorites-skeleton-count {
+  flex-shrink: 0;
+  width: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  background: transparent;
+}
+
+/* 4. Sizing & Spacing */
+.favorites-skeleton-eyebrow {
+  width: 140px;
+  height: 16px;
+  margin-bottom: 14px;
+}
+
+.favorites-skeleton-title {
+  width: 260px;
+  height: 32px;
+  margin-bottom: 14px;
+  border-radius: 12px;
+}
+
+.favorites-skeleton-description {
+  width: min(400px, 80%);
+  height: 16px;
+}
+
+.favorites-skeleton-count-number {
+  width: 130px;
+  height: 38px;
+  border-radius: 999px;
+}
+
+.favorites-skeleton-count-label {
+  width: 80px;
+  height: 14px;
+}
+
+/* Divider Space */
+.favorites-skeleton-divider {
+  height: 1px;
+  margin: 20px 0 30px;
+  background: transparent;
+}
+
+/* List Header Skeleton */
+.favorites-skeleton-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 26px;
+  background: transparent;
+}
+
+.favorites-skeleton-list-title {
+  width: 200px;
+  height: 24px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+}
+
+.favorites-skeleton-list-description {
+  width: 160px;
+  height: 14px;
+}
+
+.favorites-skeleton-button {
+  width: 90px;
+  height: 24px;
+}
+
+/* Story Grid & Card Skeleton */
+.favorites-skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 26px 20px;
+  background: transparent;
+}
+
+.favorites-skeleton-card {
+  width: 100%;
+  background: transparent;
+}
+
+.favorites-skeleton-cover {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 20px; /* มุมโค้งมนมนกลมแบบการ์ดในรูป */
+}
+
+.favorites-skeleton-content {
+  padding: 14px 2px 0;
+  background: transparent;
+}
+
+.favorites-skeleton-card-title {
+  width: 85%;
+  height: 16px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+}
+
+.favorites-skeleton-card-author {
+  width: 55%;
+  height: 14px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+}
+
+.favorites-skeleton-card-meta {
+  width: 35%;
+  height: 12px;
+  border-radius: 6px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 900px) {
+  .favorites-skeleton-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 16px;
+  }
+}
+
+@media (max-width: 650px) {
+  .favorites-skeleton-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .favorites-skeleton-count {
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .favorites-skeleton-grid {
+    gap: 18px 10px;
+  }
+}
+
+/* =========================================
+   FAVORITES PAGE BASE STYLES
+   ========================================= */
+
+.favorites-page {
+  min-height: calc(100vh - 72px);
+  background: var(--bg-main, #f9f8f6);
+  color: var(--text-primary, #2b2b2b);
+}
+
+.favorites-container {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 48px 0 80px;
+}
+
+/* Back Button */
+.favorites-back-button {
+  display: inline-flex;
+  align-items: center;
+  background: none;
+  color: var(--accent-color, #705335);
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0;
+  margin-bottom: 1.8rem;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.favorites-back-button:hover {
+  color: var(--accent-hover, #4a3520);
+  transform: translateX(-2px);
+}
+
+/* Header Card ( Real UI ) */
+.favorites-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  padding: 36px 42px;
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-color, #eae6df);
+  border-radius: var(--radius-lg, 20px);
+  box-shadow: var(--shadow-sm, 0 4px 12px rgba(0,0,0,0.03));
+}
+
+.favorites-heading {
+  flex: 1;
+  min-width: 0;
+}
+
+.favorites-eyebrow {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--accent-color, #8b6e4e);
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+
+.favorites-heading h1 {
+  margin: 0;
+  color: var(--text-primary, #222222);
+  font-size: 2.1rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.favorites-heading p {
+  margin-top: 8px;
+  color: var(--text-secondary, #666666);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+/* Favorite Count Section */
+.favorites-count {
+  flex-shrink: 0;
+  min-width: 130px;
+  padding-left: 32px;
+  border-left: 1px solid var(--border-color, #eae6df);
+  text-align: center;
+}
+
+.favorites-count strong {
+  display: block;
+  color: var(--accent-color, #705335);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.favorites-count span {
+  display: block;
+  margin-top: 6px;
+  color: var(--text-muted, #888888);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.favorites-divider {
+  height: 1px;
+  margin: 32px 0;
+}
+
+/* Favorite List Section */
+.favorites-list-section {
+  margin-top: 10px;
+}
+
+.favorites-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.favorites-list-header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.favorites-list-header p {
+  margin-top: 4px;
+  color: var(--text-muted, #777777);
+  font-size: 0.85rem;
+}
+
+.favorites-discover-button {
+  background: transparent;
+  color: var(--accent-color, #705335);
+  font-weight: 600;
+  font-size: 0.88rem;
+  border: none;
+  cursor: pointer;
+}
+
+.favorites-story-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 24px 20px;
+}
+
+/* Empty State */
+.favorites-empty {
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding-left: 36px;
+  border-left: 2px solid var(--accent-color, #705335);
+}
+
+.favorites-empty-line {
+  width: 30px;
+  height: 2px;
+  background: var(--accent-color, #705335);
+  margin-bottom: 16px;
+}
+
+.favorites-empty-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--accent-color, #705335);
+}
+
+.favorites-empty h2 {
+  margin: 10px 0 6px;
+  font-size: 1.8rem;
+}
+
+.favorites-empty p {
+  color: var(--text-secondary, #666666);
+  font-size: 0.92rem;
+}
+
+.favorites-empty button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: var(--accent-color, #705335);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* =========================================
+   SKELETON LOADING STYLES (แก้กล่องไม่ตรง + เพิ่ม Loading)
+   ========================================= */
+
+/* Shimmer Keyframes */
+@keyframes favorites-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.favorites-skeleton-back,
+.favorites-skeleton-eyebrow,
+.favorites-skeleton-title,
+.favorites-skeleton-description,
+.favorites-skeleton-count-number,
+.favorites-skeleton-count-label,
+.favorites-skeleton-list-title,
+.favorites-skeleton-list-description,
+.favorites-skeleton-button,
+.favorites-skeleton-cover,
+.favorites-skeleton-card-title,
+.favorites-skeleton-card-author,
+.favorites-skeleton-card-meta {
+  position: relative;
+  overflow: hidden;
+  background-color: #e2ddd5;
+  border-radius: 6px;
+}
+
+.favorites-skeleton-back::after,
+.favorites-skeleton-eyebrow::after,
+.favorites-skeleton-title::after,
+.favorites-skeleton-description::after,
+.favorites-skeleton-count-number::after,
+.favorites-skeleton-count-label::after,
+.favorites-skeleton-list-title::after,
+.favorites-skeleton-list-description::after,
+.favorites-skeleton-button::after,
+.favorites-skeleton-cover::after,
+.favorites-skeleton-card-title::after,
+.favorites-skeleton-card-author::after,
+.favorites-skeleton-card-meta::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.55) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: favorites-shimmer 1.5s infinite;
+}
+
+/* Skeleton Back Button */
+.favorites-skeleton-back {
+  width: 110px;
+  height: 18px;
+  margin-bottom: 1.8rem;
+  border-radius: 12px;
+}
+
+/* Skeleton Header Card (ทำกรอบขาว เส้นขอบ และ Padding ให้เท่ากับ .favorites-header) */
+.favorites-skeleton-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  padding: 36px 42px;
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-color, #eae6df);
+  border-radius: var(--radius-lg, 20px);
+  box-shadow: var(--shadow-sm, 0 4px 12px rgba(0,0,0,0.03));
+}
+
+.favorites-skeleton-heading {
+  flex: 1;
+  min-width: 0;
+}
+
+.favorites-skeleton-eyebrow {
+  width: 160px;
+  height: 14px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+}
+
+.favorites-skeleton-title {
+  width: 180px;
+  height: 32px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+}
+
+.favorites-skeleton-description {
+  width: min(360px, 80%);
+  height: 14px;
+  border-radius: 10px;
+}
+
+/* Skeleton Count (ส่วนนับจำนวนขวา) */
+.favorites-skeleton-count {
+  flex-shrink: 0;
+  min-width: 130px;
+  padding-left: 32px;
+  border-left: 1px solid var(--border-color, #eae6df);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.favorites-skeleton-count-number {
+  width: 42px;
+  height: 32px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+}
+
+.favorites-skeleton-count-label {
+  width: 90px;
+  height: 12px;
+  border-radius: 10px;
+}
+
+.favorites-skeleton-divider {
+  height: 1px;
+  margin: 32px 0;
+}
+
+/* Skeleton List Header */
+.favorites-skeleton-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.favorites-skeleton-list-title {
+  width: 160px;
+  height: 20px;
+  margin-bottom: 8px;
+  border-radius: 6px;
+}
+
+.favorites-skeleton-list-description {
+  width: 210px;
+  height: 14px;
+  border-radius: 6px;
+}
+
+.favorites-skeleton-button {
+  width: 90px;
+  height: 18px;
+  border-radius: 6px;
+}
+
+/* Skeleton Grid */
+.favorites-skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 24px 20px;
+}
+
+.favorites-skeleton-card {
+  width: 100%;
+}
+
+.favorites-skeleton-cover {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 16px;
+}
+
+.favorites-skeleton-content {
+  padding: 12px 2px 0;
+}
+
+.favorites-skeleton-card-title {
+  width: 80%;
+  height: 16px;
+  margin-bottom: 8px;
+}
+
+.favorites-skeleton-card-author {
+  width: 50%;
+  height: 14px;
+  margin-bottom: 8px;
+}
+
+.favorites-skeleton-card-meta {
+  width: 35%;
+  height: 12px;
+}
+
+/* Responsive Support */
+@media (max-width: 650px) {
+  .favorites-header,
+  .favorites-skeleton-header {
+    display: block;
+    padding: 24px 20px;
+    border-radius: 16px;
+  }
+
+  .favorites-count,
+  .favorites-skeleton-count {
+    min-width: 0;
+    margin-top: 18px;
+    padding: 16px 0 0;
+    border-left: none;
+    border-top: 1px solid var(--border-color, #eae6df);
+    align-items: flex-start;
+    text-align: left;
+  }
+}

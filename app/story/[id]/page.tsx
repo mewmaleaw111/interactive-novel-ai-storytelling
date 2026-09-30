@@ -36,7 +36,6 @@ function StoryDetailLoading() {
     <div className="reader-loading">
       <div className="reader-loading-content">
 
-        {/* Header */}
         <header className="reader-header story-reader-header">
           <div className="story-reader-header-inner">
             <div className="reader-loading-back" />
@@ -53,10 +52,8 @@ function StoryDetailLoading() {
           </div>
         </header>
 
-        {/* Reader */}
         <main className="reader-content">
 
-          {/* Story Meta */}
           <div className="story-meta-banner">
 
             <div className="reader-loading-title" />
@@ -77,7 +74,6 @@ function StoryDetailLoading() {
 
           </div>
 
-          {/* Chapter */}
           <article className="chapter-block">
 
             <div className="chapter-heading">
@@ -107,7 +103,6 @@ function StoryDetailLoading() {
 
           </article>
 
-          {/* Navigation */}
           <div className="chapter-navigation">
             <div className="reader-loading-nav-button" />
 
@@ -118,7 +113,6 @@ function StoryDetailLoading() {
 
         </main>
 
-        {/* Bottom Interaction */}
         <div className="reader-interactive-bar">
           <div className="interactive-container">
 
@@ -263,26 +257,6 @@ export default function StoryDetailPage() {
         const isPublished =
           storyData.is_published === true;
 
-        console.log(
-          'Story Published:',
-          isPublished
-        );
-
-        console.log(
-          'Story Owner:',
-          storyData.user_id
-        );
-
-        console.log(
-          'Current User:',
-          user.id
-        );
-
-        console.log(
-          'Is Owner:',
-          isOwner
-        );
-
         if (!isOwner && !isPublished) {
           console.warn(
             'Access denied: story is not published'
@@ -328,11 +302,6 @@ export default function StoryDetailPage() {
           );
         }
 
-        console.log(
-          'Story creator username:',
-          creatorName
-        );
-
         /* =========================
            Load Shared Chapters
         ========================= */
@@ -348,6 +317,7 @@ export default function StoryDetailPage() {
             chapter_number,
             title,
             content,
+            choices,
             created_at
           `)
           .eq(
@@ -387,6 +357,13 @@ export default function StoryDetailPage() {
               content:
                 chapter.content,
 
+              choices:
+                Array.isArray(
+                  chapter.choices
+                )
+                  ? chapter.choices
+                  : undefined,
+
               createdAt:
                 chapter.created_at,
             })
@@ -418,6 +395,9 @@ export default function StoryDetailPage() {
             current_chapter,
             status,
             current_inventory,
+            current_location,
+            physical_condition,
+            important_situation,
             is_public
           `)
           .eq(
@@ -469,6 +449,15 @@ export default function StoryDetailPage() {
               current_inventory:
                 [],
 
+              current_location:
+                '',
+
+              physical_condition:
+                '',
+
+              important_situation:
+                '',
+
               is_public:
                 false,
             })
@@ -479,6 +468,9 @@ export default function StoryDetailPage() {
               current_chapter,
               status,
               current_inventory,
+              current_location,
+              physical_condition,
+              important_situation,
               is_public
             `)
             .single();
@@ -490,10 +482,6 @@ export default function StoryDetailPage() {
               createSessionError.code ===
               '23505'
             ) {
-              console.log(
-                'Session already exists, loading existing session...'
-              );
-
               const {
                 data:
                   existingSessionAfterConflict,
@@ -510,6 +498,9 @@ export default function StoryDetailPage() {
                   current_chapter,
                   status,
                   current_inventory,
+                  current_location,
+                  physical_condition,
+                  important_situation,
                   is_public
                 `)
                 .eq(
@@ -545,11 +536,6 @@ export default function StoryDetailPage() {
 
               currentSession =
                 existingSessionAfterConflict;
-
-              console.log(
-                'Using existing game session after conflict:',
-                currentSession.id
-              );
             } else {
               console.error(
                 'Error creating game session:',
@@ -569,11 +555,6 @@ export default function StoryDetailPage() {
 
             currentSession =
               newSession;
-
-            console.log(
-              'Game session created:',
-              newSession.id
-            );
           }
         }
 
@@ -583,21 +564,6 @@ export default function StoryDetailPage() {
 
         setSessionId(
           currentSession.id
-        );
-
-        console.log(
-          'Using game session:',
-          currentSession.id
-        );
-
-        console.log(
-          'Session current chapter:',
-          currentSession.current_chapter
-        );
-
-        console.log(
-          'Session is public:',
-          currentSession.is_public
         );
 
         /* =========================
@@ -637,16 +603,6 @@ export default function StoryDetailPage() {
             setSessionRelationships(
               loadedRelationships
             );
-
-            console.log(
-              'Session Characters:',
-              loadedCharacters.length
-            );
-
-            console.log(
-              'Session Relationships:',
-              loadedRelationships.length
-            );
           } else {
             console.error(
               'Error loading session characters:',
@@ -680,6 +636,7 @@ export default function StoryDetailPage() {
             title,
             content,
             user_choice,
+            choices,
             created_at
           `)
           .eq(
@@ -719,6 +676,13 @@ export default function StoryDetailPage() {
 
               content:
                 chapter.content,
+
+              choices:
+                Array.isArray(
+                  chapter.choices
+                )
+                  ? chapter.choices
+                  : undefined,
 
               userPromptChoice:
                 chapter.user_choice ||
@@ -786,21 +750,6 @@ export default function StoryDetailPage() {
             sessionCurrentChapter,
             latestLoadedChapter
           );
-
-        console.log(
-          'Session current chapter:',
-          sessionCurrentChapter
-        );
-
-        console.log(
-          'Latest loaded chapter:',
-          latestLoadedChapter
-        );
-
-        console.log(
-          'Final current chapter:',
-          currentChapter
-        );
 
         /* =========================
            Sync Session Chapter
@@ -905,98 +854,35 @@ export default function StoryDetailPage() {
               0
             ),
 
+          /* =========================
+             Current Story Status
+          ========================= */
+
+          currentLocation:
+            currentSession.current_location ||
+            '',
+
+          physicalCondition:
+            currentSession.physical_condition ||
+            '',
+
+          currentInventory:
+            Array.isArray(
+              currentSession.current_inventory
+            )
+              ? currentSession.current_inventory
+              : [],
+
+          importantSituation:
+            currentSession.important_situation ||
+            '',
+
           isFavorite:
             storyData.is_favorite ||
             false,
 
           chapters,
         };
-
-        /* =========================
-           Debug Information
-        ========================= */
-
-        console.log(
-          '========================================'
-        );
-
-        console.log(
-          'STORY LOADED'
-        );
-
-        console.log(
-          'Story ID:',
-          storyId
-        );
-
-        console.log(
-          'Current User ID:',
-          user.id
-        );
-
-        console.log(
-          'Story Owner ID:',
-          storyData.user_id
-        );
-
-        console.log(
-          'Story Creator Name:',
-          creatorName
-        );
-
-        console.log(
-          'Session ID:',
-          currentSession.id
-        );
-
-        console.log(
-          'Session Public:',
-          currentSession.is_public
-        );
-
-        console.log(
-          'Session Current Chapter:',
-          sessionCurrentChapter
-        );
-
-        console.log(
-          'Latest Loaded Chapter:',
-          latestLoadedChapter
-        );
-
-        console.log(
-          'Final Current Chapter:',
-          currentChapter
-        );
-
-        console.log(
-          'Shared Chapters:',
-          sharedChapters.length
-        );
-
-        console.log(
-          'Session Chapters:',
-          sessionChapters.length
-        );
-
-        console.log(
-          'Total Loaded Chapters:',
-          chapters.length
-        );
-
-        console.log(
-          'Session Characters:',
-          sessionCharacters.length
-        );
-
-        console.log(
-          'Session Relationships:',
-          sessionRelationships.length
-        );
-
-        console.log(
-          '========================================'
-        );
 
         setStory(
           loadedStory
@@ -1059,6 +945,22 @@ export default function StoryDetailPage() {
           current_chapter:
             updatedStory.currentChapter,
 
+          current_location:
+            updatedStory.currentLocation ||
+            '',
+
+          physical_condition:
+            updatedStory.physicalCondition ||
+            '',
+
+          current_inventory:
+            updatedStory.currentInventory ||
+            [],
+
+          important_situation:
+            updatedStory.importantSituation ||
+            '',
+
           updated_at:
             new Date().toISOString(),
         })
@@ -1102,6 +1004,7 @@ export default function StoryDetailPage() {
   if (!story) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen gap-4 px-4 text-center">
+
         <h2 className="text-xl font-bold">
           ไม่พบเนื้อเรื่องที่คุณต้องการ
         </h2>
@@ -1119,6 +1022,7 @@ export default function StoryDetailPage() {
         >
           ย้อนกลับหน้าหลัก
         </button>
+
       </div>
     );
   }
@@ -1131,6 +1035,9 @@ export default function StoryDetailPage() {
     <ReaderView
       story={story}
       sessionId={sessionId ?? ''}
+      sessionCharacters={
+        sessionCharacters
+      }
       onBack={() =>
         router.push('/')
       }
