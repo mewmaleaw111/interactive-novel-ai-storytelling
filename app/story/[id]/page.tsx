@@ -30,103 +30,358 @@ import {
 
 /* =========================================================
    Loading Skeleton
+   Mirror ReaderView DOM structure
 ========================================================= */
 function StoryDetailLoading() {
   return (
-    <div className="reader-loading">
-      <div className="reader-loading-content">
+    <div className="story-reader-page">
+      {/* =====================================================
+          TOP BAR
+      ===================================================== */}
+      <header className="story-reader-topbar">
+        <div className="story-reader-topbar-inner">
 
-        <header className="reader-header story-reader-header">
-          <div className="story-reader-header-inner">
-            <div className="reader-loading-back" />
+          <div className="reader-loading-back" />
 
-            <div className="reader-loading-header-actions">
-              <div className="reader-loading-branch" />
+          <div className="story-reader-top-actions">
 
-              <div className="reader-loading-font">
-                <span />
-                <span />
-                <span />
-              </div>
-            </div>
-          </div>
-        </header>
+            <div className="reader-loading-branch" />
 
-        <main className="reader-content">
-
-          <div className="story-meta-banner">
-
-            <div className="reader-loading-title" />
-
-            <div className="reader-loading-badges">
+            <div className="story-reader-font-controls reader-loading-font">
+              <span />
               <span />
               <span />
             </div>
-
-            <div className="reader-loading-premise">
-              <span />
-              <span />
-            </div>
-
-            <div className="reader-loading-author" />
-
-            <div className="reader-loading-counter" />
 
           </div>
+        </div>
+      </header>
 
-          <article className="chapter-block">
+      {/* =====================================================
+          MAIN READER LAYOUT
+      ===================================================== */}
+      <main className="story-reader-layout">
 
-            <div className="chapter-heading">
+        {/* ===================================================
+            MAIN READING COLUMN
+        =================================================== */}
+        <section className="story-reader-main">
+
+          {/* =================================================
+              CHAPTER HEADER
+          ================================================= */}
+          <div className="story-reader-chapter-header">
+
+            <div className="story-reader-chapter-top">
+
               <div className="reader-loading-chapter-number" />
 
-              <div className="reader-loading-chapter-title" />
+              <div className="story-reader-progress">
+
+                <div className="story-reader-progress-track">
+                  <div className="reader-loading-progress" />
+                </div>
+
+                <span className="reader-loading-progress-text" />
+
+              </div>
             </div>
 
-            <div className="chapter-text">
-              <div className="reader-loading-lines">
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
+            <div className="reader-loading-chapter-title" />
 
-                <span />
-                <span />
-                <span />
-                <span />
+            <div className="story-reader-chapter-divider" />
 
+          </div>
+
+          {/* =================================================
+              ARTICLE
+          ================================================= */}
+          <article className="story-reader-article">
+
+            <div className="story-reader-text font-serif">
+
+              <div className="reader-loading-story">
+                <span />
+                <span />
+                <span />
+                <span />
+                <span />
+                <span />
+                <span />
+                <span />
+                <span />
+                <span />
+                <span />
+                <span />
+                <span />
                 <span />
                 <span />
                 <span />
               </div>
+
             </div>
 
           </article>
 
-          <div className="chapter-navigation">
+          {/* =================================================
+              CHAPTER NAVIGATION
+          ================================================= */}
+          <div className="story-reader-navigation">
+
             <div className="reader-loading-nav-button" />
 
             <div className="reader-loading-nav-counter" />
 
             <div className="reader-loading-nav-button" />
+
           </div>
 
-        </main>
+          {/* =================================================
+              CHOICE SECTION
+              Keep the same space as latest chapter reader
+          ================================================= */}
+          <section className="story-reader-choice-section">
 
-        <div className="reader-interactive-bar">
-          <div className="interactive-container">
+            <div className="story-reader-choice-heading">
 
-            <div className="reader-loading-interactive-label" />
+              <div className="reader-loading-choice-icon" />
 
-            <div className="reader-loading-input-group">
-              <div className="reader-loading-input" />
-              <div className="reader-loading-submit" />
+              <div className="reader-loading-choice-heading">
+                <div className="reader-loading-choice-title" />
+                <div className="reader-loading-choice-subtitle" />
+              </div>
+
             </div>
 
-          </div>
-        </div>
+            <div className="story-reader-choice-list">
 
-      </div>
+              <div className="reader-loading-choice-button">
+                <span className="reader-loading-choice-number" />
+                <span className="reader-loading-choice-text" />
+              </div>
+
+              <div className="reader-loading-choice-button">
+                <span className="reader-loading-choice-number" />
+                <span className="reader-loading-choice-text" />
+              </div>
+
+              <div className="reader-loading-choice-button">
+                <span className="reader-loading-choice-number" />
+                <span className="reader-loading-choice-text" />
+              </div>
+
+            </div>
+
+            <div className="reader-loading-choice-fallback">
+
+              <div className="reader-loading-choice-input" />
+
+              <div className="reader-loading-choice-submit" />
+
+            </div>
+
+          </section>
+
+        </section>
+
+        {/* ===================================================
+            RIGHT SIDEBAR
+        =================================================== */}
+        <aside className="story-reader-sidebar">
+
+          {/* =================================================
+              STORY INFORMATION
+          ================================================= */}
+          <section className="story-sidebar-card story-sidebar-story">
+
+            <div className="story-sidebar-cover">
+              <div className="reader-loading-cover" />
+            </div>
+
+            <div className="story-sidebar-story-info">
+
+              <div className="reader-loading-story-title" />
+
+              <div className="reader-loading-story-tags">
+                <span />
+                <span />
+              </div>
+
+              <div className="reader-loading-synopsis">
+                <span />
+                <span />
+                <span />
+                <span />
+              </div>
+
+              <div className="reader-loading-author" />
+
+            </div>
+
+          </section>
+
+          {/* =================================================
+              CURRENT STATUS
+          ================================================= */}
+          <section className="story-sidebar-card">
+
+            <div className="story-sidebar-section-title">
+
+              <span className="sidebar-section-icon">
+                <span className="reader-loading-section-icon" />
+              </span>
+
+              <span className="reader-loading-section-title" />
+
+            </div>
+
+            <div className="story-sidebar-status-list">
+
+              <div className="story-sidebar-status-item reader-loading-status-item">
+
+                <span className="status-icon">
+                  <span className="reader-loading-status-icon" />
+                </span>
+
+                <div>
+                  <small />
+                  <strong />
+                </div>
+
+              </div>
+
+              <div className="story-sidebar-status-item reader-loading-status-item">
+
+                <span className="status-icon">
+                  <span className="reader-loading-status-icon" />
+                </span>
+
+                <div>
+                  <small />
+                  <strong />
+                </div>
+
+              </div>
+
+              <div className="story-sidebar-status-item reader-loading-status-item">
+
+                <span className="status-icon">
+                  <span className="reader-loading-status-icon" />
+                </span>
+
+                <div>
+                  <small />
+                  <strong />
+                </div>
+
+              </div>
+
+              <div className="story-sidebar-status-item reader-loading-status-item">
+
+                <span className="status-icon">
+                  <span className="reader-loading-status-icon" />
+                </span>
+
+                <div>
+                  <small />
+                  <strong />
+                </div>
+
+              </div>
+
+            </div>
+
+          </section>
+
+          {/* =================================================
+              CHARACTERS
+          ================================================= */}
+          <section className="story-sidebar-card">
+
+            <div className="story-sidebar-section-title">
+
+              <span className="sidebar-section-icon">
+                <span className="reader-loading-section-icon" />
+              </span>
+
+              <span className="reader-loading-section-title" />
+
+            </div>
+
+            <div className="story-sidebar-characters">
+
+              <div className="story-sidebar-character reader-loading-character">
+
+                <div>
+                  <strong />
+                  <small />
+                </div>
+
+              </div>
+
+              <div className="story-sidebar-character reader-loading-character">
+
+                <div>
+                  <strong />
+                  <small />
+                </div>
+
+              </div>
+
+              <div className="story-sidebar-character reader-loading-character">
+
+                <div>
+                  <strong />
+                  <small />
+                </div>
+
+              </div>
+
+              <div className="story-sidebar-character reader-loading-character">
+
+                <div>
+                  <strong />
+                  <small />
+                </div>
+
+              </div>
+
+            </div>
+
+          </section>
+
+          {/* =================================================
+              STORY PATH
+          ================================================= */}
+          <section className="story-sidebar-card">
+
+            <div className="story-sidebar-section-title">
+
+              <span className="sidebar-section-icon">
+                <span className="reader-loading-section-icon" />
+              </span>
+
+              <span className="reader-loading-section-title" />
+
+            </div>
+
+            <div className="story-path">
+
+              <div className="reader-loading-path">
+                <span />
+                <span />
+                <span />
+                <span />
+                <span />
+              </div>
+
+            </div>
+
+          </section>
+
+        </aside>
+
+      </main>
     </div>
   );
 }

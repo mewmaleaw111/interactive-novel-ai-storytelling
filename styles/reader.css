@@ -1653,7 +1653,7 @@
   top: 0;
   z-index: 90;
 
-  background-color: rgba(249, 246, 240, 0.95);
+  background-color: var(--bg-color);
   backdrop-filter: blur(8px);
 
   border-bottom: none !important;

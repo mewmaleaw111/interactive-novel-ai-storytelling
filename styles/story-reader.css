@@ -1824,3 +1824,499 @@
 
     border-radius: 0 8px 8px 0;
 }
+
+/* =========================================================
+   BRANCH READER PAGE
+========================================================= */
+
+.branches-reader-page {
+    position: relative;
+    min-height: 100vh;
+    isolation: isolate;
+}
+
+.branches-reader-page::before {
+    content: "";
+
+    position: fixed;
+    inset: 0;
+
+    z-index: 0;
+
+    pointer-events: none;
+
+    background:
+        linear-gradient(90deg,
+            rgba(104, 69, 59, 0.18),
+            rgba(139, 94, 79, 0.08) 45%,
+            rgba(244, 235, 224, 0.02) 82%,
+            transparent);
+}
+
+.branches-reader-page>* {
+    position: relative;
+    z-index: 1;
+}
+
+/* =========================================================
+   READER LOADING SKELETON
+========================================================= */
+
+.reader-loading-back,
+.reader-loading-font span,
+.reader-loading-visibility,
+.reader-loading-chapter-number,
+.reader-loading-chapter-title,
+.reader-loading-progress,
+.reader-loading-progress-text,
+.reader-loading-story span,
+.reader-loading-nav-button,
+.reader-loading-nav-counter,
+.reader-loading-cover,
+.reader-loading-story-title,
+.reader-loading-story-tags span,
+.reader-loading-synopsis span,
+.reader-loading-author,
+.reader-loading-section-title,
+.reader-loading-status-item>span,
+.reader-loading-status-item small,
+.reader-loading-status-item strong,
+.reader-loading-character>span,
+.reader-loading-character strong,
+.reader-loading-character small,
+.reader-loading-path span {
+    background: linear-gradient(90deg,
+            rgba(126, 78, 53, 0.08) 25%,
+            rgba(126, 78, 53, 0.15) 50%,
+            rgba(126, 78, 53, 0.08) 75%);
+    background-size: 200% 100%;
+    animation: reader-loading-shimmer 1.5s ease-in-out infinite;
+}
+
+/* =========================================================
+   Topbar
+========================================================= */
+
+.reader-loading-back {
+    width: 130px;
+    height: 20px;
+    border-radius: 6px;
+}
+
+.reader-loading-visibility {
+    width: 76px;
+    height: 34px;
+    border-radius: 8px;
+}
+
+.reader-loading-font {
+    pointer-events: none;
+}
+
+.reader-loading-font span {
+    display: block;
+    width: 1.9rem;
+    height: 1.75rem;
+    border-radius: 6px;
+}
+
+/* =========================================================
+   Chapter header
+========================================================= */
+
+.reader-loading-chapter-number {
+    width: 90px;
+    height: 14px;
+    border-radius: 5px;
+}
+
+.reader-loading-progress {
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+}
+
+.reader-loading-progress-text {
+    display: block;
+    width: 28px;
+    height: 10px;
+    border-radius: 4px;
+}
+
+.reader-loading-chapter-title {
+    width: 62%;
+    height: 44px;
+    margin-top: 0.15rem;
+    border-radius: 8px;
+}
+
+/* =========================================================
+   Story
+========================================================= */
+
+.reader-loading-story {
+    display: flex;
+    flex-direction: column;
+    gap: 1.18rem;
+    padding-top: 0.25rem;
+}
+
+.reader-loading-story span {
+    display: block;
+    width: 100%;
+    height: 17px;
+    border-radius: 5px;
+}
+
+.reader-loading-story span:nth-child(3),
+.reader-loading-story span:nth-child(8),
+.reader-loading-story span:nth-child(13) {
+    width: 76%;
+}
+
+.reader-loading-story span:nth-child(6),
+.reader-loading-story span:nth-child(11),
+.reader-loading-story span:nth-child(16) {
+    width: 88%;
+}
+
+/* =========================================================
+   Navigation
+========================================================= */
+
+.reader-loading-nav-button {
+    width: 82px;
+    height: 16px;
+    border-radius: 5px;
+}
+
+.reader-loading-nav-counter {
+    width: 42px;
+    height: 12px;
+    border-radius: 4px;
+}
+
+/* =========================================================
+   Sidebar — Story info
+========================================================= */
+
+.reader-loading-cover {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    border-radius: 12px;
+}
+
+.reader-loading-story-title {
+    width: 72%;
+    height: 18px;
+    margin-bottom: 0.42rem;
+    border-radius: 5px;
+}
+
+.reader-loading-story-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.28rem;
+    margin-bottom: 0.48rem;
+}
+
+.reader-loading-story-tags span {
+    display: block;
+    width: 48px;
+    height: 15px;
+    border-radius: 999px;
+}
+
+.reader-loading-story-tags span:nth-child(2) {
+    width: 62px;
+}
+
+.reader-loading-synopsis {
+    display: flex;
+    flex-direction: column;
+    gap: 0.38rem;
+}
+
+.reader-loading-synopsis span {
+    display: block;
+    width: 100%;
+    height: 9px;
+    border-radius: 4px;
+}
+
+.reader-loading-synopsis span:last-child {
+    width: 72%;
+}
+
+.reader-loading-author {
+    width: 46%;
+    height: 10px;
+    margin-top: auto;
+    border-radius: 4px;
+}
+
+/* =========================================================
+   Sidebar — Section title
+========================================================= */
+
+.reader-loading-section-title {
+    height: 17px;
+    margin: 0.68rem 0.85rem;
+    width: 34%;
+    border-radius: 5px;
+}
+
+/* =========================================================
+   Sidebar — Status
+========================================================= */
+
+.reader-loading-status-item {
+    display: flex;
+    align-items: center;
+    gap: 0.62rem;
+    padding: 0.42rem 0.22rem;
+}
+
+.reader-loading-status-item>span {
+    width: 2rem;
+    height: 2rem;
+    flex: 0 0 2rem;
+    border-radius: 50%;
+}
+
+.reader-loading-status-item>div {
+    min-width: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.reader-loading-status-item small {
+    display: block;
+    width: 34%;
+    height: 8px;
+    border-radius: 4px;
+}
+
+.reader-loading-status-item strong {
+    display: block;
+    width: 68%;
+    height: 10px;
+    border-radius: 4px;
+}
+
+.reader-loading-status-item:nth-child(3) strong {
+    width: 52%;
+}
+
+/* =========================================================
+   Sidebar — Characters
+========================================================= */
+
+.reader-loading-character {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.62rem;
+    padding: 0.58rem 0.2rem;
+}
+
+.reader-loading-character>span {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    border-radius: 50%;
+}
+
+.reader-loading-character>div {
+    min-width: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.32rem;
+}
+
+.reader-loading-character strong {
+    display: block;
+    width: 56%;
+    height: 11px;
+    border-radius: 4px;
+}
+
+.reader-loading-character small {
+    display: block;
+    width: 38%;
+    height: 8px;
+    border-radius: 4px;
+}
+
+/* =========================================================
+   Sidebar — Story path
+========================================================= */
+
+.reader-loading-path {
+    display: flex;
+    align-items: flex-start;
+    overflow: hidden;
+    padding: 0.85rem 0.68rem;
+}
+
+.reader-loading-path span {
+    position: relative;
+    display: block;
+    width: 28px;
+    height: 28px;
+    flex: 0 0 28px;
+    margin-right: 24px;
+    border-radius: 50%;
+}
+
+.reader-loading-path span:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 13px;
+    left: 28px;
+    width: 24px;
+    height: 1px;
+    background: rgba(126, 78, 53, 0.12);
+}
+
+/* =========================================================
+   Animation
+========================================================= */
+
+@keyframes reader-loading-shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* =========================================================
+   Responsive
+========================================================= */
+
+@media (max-width: 920px) {
+    .reader-loading-chapter-title {
+        width: 85%;
+        height: 36px;
+    }
+
+    .reader-loading-story span {
+        height: 16px;
+    }
+
+    .reader-loading-cover {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+@media (max-width: 760px) {
+    .reader-loading-back {
+        width: 105px;
+        height: 17px;
+    }
+
+    .reader-loading-visibility {
+        width: 64px;
+        height: 30px;
+    }
+
+    .reader-loading-font span {
+        width: 1.55rem;
+        height: 1.48rem;
+    }
+
+    .reader-loading-chapter-number {
+        width: 78px;
+    }
+
+    .reader-loading-chapter-title {
+        width: 88%;
+        height: 31px;
+    }
+
+    .reader-loading-story {
+        gap: 1.05rem;
+    }
+
+    .reader-loading-story span {
+        height: 15px;
+    }
+
+    .reader-loading-nav-button {
+        width: 70px;
+        height: 14px;
+    }
+
+    .reader-loading-cover {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+@media (max-width: 420px) {
+    .reader-loading-back {
+        width: 90px;
+    }
+
+    .reader-loading-chapter-title {
+        width: 92%;
+        height: 28px;
+    }
+
+    .reader-loading-story span {
+        height: 14px;
+    }
+
+    .reader-loading-nav-button {
+        width: 62px;
+    }
+
+    .reader-loading-nav-counter {
+        width: 36px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .reader-loading-back,
+    .reader-loading-font span,
+    .reader-loading-visibility,
+    .reader-loading-chapter-number,
+    .reader-loading-chapter-title,
+    .reader-loading-progress,
+    .reader-loading-progress-text,
+    .reader-loading-story span,
+    .reader-loading-nav-button,
+    .reader-loading-nav-counter,
+    .reader-loading-cover,
+    .reader-loading-story-title,
+    .reader-loading-story-tags span,
+    .reader-loading-synopsis span,
+    .reader-loading-author,
+    .reader-loading-section-title,
+    .reader-loading-status-item>span,
+    .reader-loading-status-item small,
+    .reader-loading-status-item strong,
+    .reader-loading-character>span,
+    .reader-loading-character strong,
+    .reader-loading-character small,
+    .reader-loading-path span,
+    .reader-loading-choice-icon,
+    .reader-loading-choice-heading,
+    .reader-loading-choice-title,
+    .reader-loading-choice-subtitle,
+    .reader-loading-choice-button,
+    .reader-loading-choice-number,
+    .reader-loading-choice-text,
+    .reader-loading-choice-input,
+    .reader-loading-choice-submit {
+        animation: none;
+    }
+}

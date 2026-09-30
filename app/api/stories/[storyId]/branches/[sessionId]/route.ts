@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
-
 import { auth } from '@clerk/nextjs/server';
-
 import { supabaseAdmin } from '@/lib/supabaseAdmin';
 
 export async function GET(
@@ -25,8 +23,7 @@ export async function GET(
       return NextResponse.json(
         {
           success: false,
-          error:
-            'Missing storyId or sessionId',
+          error: 'Missing storyId or sessionId',
         },
         { status: 400 }
       );
@@ -83,12 +80,6 @@ export async function GET(
 
     // ==================================================
     // 2. โหลด Username ของเจ้าของ Story
-    //
-    // stories.user_id
-    //        ↓
-    // profiles.user_id
-    //        ↓
-    // profiles.display_name
     // ==================================================
 
     let creatorName = 'ไม่ระบุชื่อ';
@@ -141,6 +132,10 @@ export async function GET(
         current_chapter,
         status,
         is_public,
+        current_location,
+        physical_condition,
+        current_inventory,
+        important_situation,
         created_at,
         updated_at
         `
@@ -166,20 +161,10 @@ export async function GET(
     // 4. ตรวจสอบสิทธิ์การเข้าถึง Branch
     // ==================================================
 
-    // เจ้าของ Session สามารถเข้าดูได้เสมอ
     const isOwner =
       userId === session.user_id;
 
-    // ==================================================
-    // กรณีไม่ใช่เจ้าของ
-    //
-    // ต้องผ่านทั้ง 2 เงื่อนไข:
-    // 1. Story ต้อง Publish
-    // 2. Session ต้อง Public
-    // ==================================================
-
     if (!isOwner) {
-      // Story ยังไม่ Publish
       if (!story.is_published) {
         return NextResponse.json(
           {
@@ -191,7 +176,6 @@ export async function GET(
         );
       }
 
-      // Session เป็น Private
       if (!session.is_public) {
         return NextResponse.json(
           {
@@ -206,12 +190,6 @@ export async function GET(
 
     // ==================================================
     // 5. โหลด Username ของเจ้าของ Branch
-    //
-    // game_sessions.user_id
-    //        ↓
-    // profiles.user_id
-    //        ↓
-    // profiles.display_name
     // ==================================================
 
     let userName = 'ไม่ระบุชื่อ';
@@ -248,7 +226,52 @@ export async function GET(
     }
 
     // ==================================================
-    // 6. โหลด Chapter กลางของ Story
+    // 6. โหลด Characters ของ Branch
+    // ==================================================
+
+    const {
+      data: sessionCharacters,
+      error: charactersError,
+    } = await supabaseAdmin
+      .from('session_characters')
+      .select(
+        `
+        id,
+        name,
+        gender,
+        role,
+        appearance,
+        personality,
+        initial_items,
+        created_at
+        `
+      )
+      .eq(
+        'session_id',
+        sessionId
+      )
+      .order('created_at', {
+        ascending: true,
+      });
+
+    if (charactersError) {
+      console.error(
+        'Error loading session characters:',
+        charactersError
+      );
+
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            'Failed to load branch characters',
+        },
+        { status: 500 }
+      );
+    }
+
+    // ==================================================
+    // 7. โหลด Chapter กลางของ Story
     // ==================================================
 
     const {
@@ -287,7 +310,7 @@ export async function GET(
     }
 
     // ==================================================
-    // 7. โหลด Chapter ของ Branch
+    // 8. โหลด Chapter ของ Branch
     // ==================================================
 
     const {
@@ -331,7 +354,7 @@ export async function GET(
     }
 
     // ==================================================
-    // 8. รวม Chapter กลาง + Branch
+    // 9. รวม Chapter กลาง + Branch
     // ==================================================
 
     const chapterMap = new Map<
@@ -377,9 +400,6 @@ export async function GET(
 
     // ==================================================
     // Branch Chapters
-    //
-    // ถ้ามีเลขบทเดียวกัน
-    // Branch จะทับ Shared Chapter
     // ==================================================
 
     for (
@@ -421,7 +441,30 @@ export async function GET(
       );
 
     // ==================================================
-    // 9. Response
+    // 10. จัดรูปข้อมูล Characters
+    // ==================================================
+
+    const characters = (
+      sessionCharacters ?? []
+    ).map((character) => ({
+      id: character.id,
+      name: character.name,
+      gender: character.gender ?? '',
+      role: character.role ?? 'npc',
+      appearance:
+        character.appearance ?? '',
+      personality:
+        character.personality ?? '',
+      initial_items:
+        Array.isArray(
+          character.initial_items
+        )
+          ? character.initial_items
+          : [],
+    }));
+
+    // ==================================================
+    // 11. Response
     // ==================================================
 
     return NextResponse.json({
@@ -450,7 +493,6 @@ export async function GET(
         isPublished:
           story.is_published,
 
-        // Username ของเจ้าของ Story
         creatorName,
       },
 
@@ -468,7 +510,6 @@ export async function GET(
 
         isOwner,
 
-        // ใช้ Current Chapter จริงจาก Session
         currentChapter:
           session.current_chapter,
 
@@ -481,6 +522,38 @@ export async function GET(
         updatedAt:
           session.updated_at,
       },
+
+      // ==================================================
+      // สถานะปัจจุบันของเส้นเรื่อง
+      // ==================================================
+
+      currentStatus: {
+        location:
+          session.current_location ?? '',
+
+        physicalCondition:
+          session.physical_condition ?? '',
+
+        inventory:
+          Array.isArray(
+            session.current_inventory
+          )
+            ? session.current_inventory
+            : [],
+
+        importantSituation:
+          session.important_situation ?? '',
+      },
+
+      // ==================================================
+      // ตัวละครใน Session
+      // ==================================================
+
+      characters,
+
+      // ==================================================
+      // Chapters
+      // ==================================================
 
       chapters,
     });
