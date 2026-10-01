@@ -81,16 +81,17 @@ export async function GET(req: Request) {
     } = await supabaseAdmin
       .from('session_characters')
       .select(`
-        id,
-        session_id,
-        base_character_id,
-        name,
-        role,
-        appearance,
-        personality,
-        initial_items,
-        created_at
-      `)
+  id,
+  session_id,
+  base_character_id,
+  name,
+  gender,
+  role,
+  appearance,
+  personality,
+  initial_items,
+  created_at
+`)
       .eq('session_id', session.id)
       .order('created_at', {
         ascending: true,

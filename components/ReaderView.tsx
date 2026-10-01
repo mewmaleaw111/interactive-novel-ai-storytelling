@@ -5,14 +5,11 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-
 import { useRouter } from 'next/navigation';
-
 import type {
   Story,
   Chapter,
 } from '@/types/story';
-
 import '@/styles/reader.css';
 import '@/styles/story-reader.css';
 
@@ -21,9 +18,7 @@ interface ReaderViewProps {
   sessionId: string;
   sessionCharacters: any[];
   onBack: () => void;
-  onUpdateStory: (
-    updatedStory: Story
-  ) => void;
+  onUpdateStory: (updatedStory: Story) => void;
 }
 
 /* =========================================================
@@ -177,7 +172,6 @@ const parseStoryContent = (
     .map((rawText): StoryParagraph => {
       const text = rawText.trim();
 
-      /* [dialogue] */
       if (/^\[dialogue\]\s*/i.test(text)) {
         return {
           type: 'dialogue',
@@ -187,7 +181,6 @@ const parseStoryContent = (
         };
       }
 
-      /* [thought] */
       if (/^\[thought\]\s*/i.test(text)) {
         return {
           type: 'thought',
@@ -197,7 +190,6 @@ const parseStoryContent = (
         };
       }
 
-      /* [action] */
       if (/^\[action\]\s*/i.test(text)) {
         return {
           type: 'action',
@@ -207,7 +199,6 @@ const parseStoryContent = (
         };
       }
 
-      /* [important] */
       if (/^\[important\]\s*/i.test(text)) {
         return {
           type: 'important',
@@ -217,8 +208,9 @@ const parseStoryContent = (
         };
       }
 
-      /* รองรับ marker ภาษาไทยจาก content เก่า */
-      if (/^เหตุการณ์สำคัญ\s*[:：]\s*/i.test(text)) {
+      if (
+        /^เหตุการณ์สำคัญ\s*[:：]\s*/i.test(text)
+      ) {
         return {
           type: 'important',
           text: text
@@ -254,7 +246,6 @@ const parseStoryContent = (
         };
       }
 
-      /* *ความคิด* */
       if (
         text.startsWith('*') &&
         text.endsWith('*') &&
@@ -266,7 +257,6 @@ const parseStoryContent = (
         };
       }
 
-      /* (ความคิด) */
       if (
         text.startsWith('(') &&
         text.endsWith(')') &&
@@ -278,7 +268,6 @@ const parseStoryContent = (
         };
       }
 
-      /* บทพูด */
       const isDialogue =
         /^["“「『].*["”」』]$/.test(text);
 
@@ -289,7 +278,6 @@ const parseStoryContent = (
         };
       }
 
-      /* ปกติ = narration */
       return {
         type: 'narration',
         text,
@@ -303,16 +291,12 @@ const getParagraphIcon = (
   switch (type) {
     case 'dialogue':
       return <DialogueIcon />;
-
     case 'thought':
       return <ThoughtIcon />;
-
     case 'action':
       return <ActionIcon />;
-
     case 'important':
       return <WarningIcon />;
-
     default:
       return <NarrationIcon />;
   }
@@ -331,1056 +315,1134 @@ export const ReaderView: React.FC<
   onBack,
   onUpdateStory,
 }) => {
-  const router = useRouter();
+    const router = useRouter();
 
-  const [userPrompt, setUserPrompt] =
-    useState('');
+    const [userPrompt, setUserPrompt] =
+      useState('');
 
-  const [selectedChoice, setSelectedChoice] =
-    useState<string | null>(null);
+    const [selectedChoice, setSelectedChoice] =
+      useState<string | null>(null);
 
-  const [isGeneratingNext, setIsGeneratingNext] =
-    useState(false);
+    const [isGeneratingNext, setIsGeneratingNext] =
+      useState(false);
 
-  const [fontSize, setFontSize] =
-    useState<'sm' | 'md' | 'lg'>('md');
+    const [fontSize, setFontSize] =
+      useState<'sm' | 'md' | 'lg'>('md');
 
-  const [selectedChapter, setSelectedChapter] =
-    useState(story.currentChapter);
+    const [selectedChapter, setSelectedChapter] =
+      useState(story.currentChapter);
 
-  useEffect(() => {
-    setSelectedChapter(story.currentChapter);
-    setSelectedChoice(null);
-    setUserPrompt('');
-  }, [story.currentChapter]);
-
-  const currentChapter =
-    story.chapters.find(
-      (chapter) =>
-        chapter.chapterNumber === selectedChapter
-    ) ||
-    story.chapters[story.chapters.length - 1];
-
-  const isLatestChapter =
-    selectedChapter === story.currentChapter;
-
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
-  };
-
-  const genreClassMap: Record<string, string> = {
-    'แฟนตาซี': 'genre-fantasy',
-    'โรแมนติก': 'genre-romance',
-    'สืบสวนสอบสวน': 'genre-mystery',
-    'สืบสวน': 'genre-mystery',
-    'ไซไฟ': 'genre-sci-fi',
-    'ประวัติศาสตร์': 'genre-history',
-    'สยองขวัญ': 'genre-horror',
-    'ดราม่า': 'genre-drama',
-    'แอ็กชัน': 'genre-action',
-    'แอคชัน': 'genre-action',
-    'ผจญภัย': 'genre-adventure',
-  };
-
-  const genreClass =
-    genreClassMap[story.genre?.trim()] ||
-    'genre-default';
-
-  const progressPercent = useMemo(() => {
-    if (!story.totalChapters) {
-      return 0;
-    }
-
-    return Math.min(
-      100,
-      Math.round(
-        (story.currentChapter /
-          story.totalChapters) *
-          100
-      )
-    );
-  }, [
-    story.currentChapter,
-    story.totalChapters,
-  ]);
-
-  const chapterChoices =
-    Array.isArray(
-      (
-        currentChapter as Chapter & {
-          choices?: string[];
-        }
-      ).choices
-    )
-      ? (
-          currentChapter as Chapter & {
-            choices?: string[];
-          }
-        ).choices?.slice(0, 3) || []
-      : [];
-
-  const storyParagraphs = useMemo(() => {
-    if (!currentChapter) {
-      return [];
-    }
-
-    return parseStoryContent(
-      currentChapter.content
-    );
-  }, [currentChapter]);
-
-  /* =========================================================
-     SORT CHARACTERS
-     
-     ลำดับ:
-     1. Player
-     2. ตัวประกอบ 1
-     3. ตัวประกอบ 2
-     4. ตัวประกอบ 3
-     ...
-     5. ตัวละครอื่น
-  ========================================================= */
-
-  const sortedSessionCharacters = useMemo(() => {
-    return sessionCharacters
-      .map((character, originalIndex) => ({
-        character,
-        originalIndex,
-      }))
-      .sort((a, b) => {
-        const getCharacterOrder = (
-          character: any,
-          originalIndex: number
-        ) => {
-          const role = String(
-            character?.role || ''
-          )
-            .trim()
-            .toLowerCase();
-
-          const name = String(
-            character?.name || ''
-          ).trim();
-
-          /* Player ต้องอยู่ตัวแรก */
-          if (
-            role === 'player' ||
-            role === 'ผู้เล่น' ||
-            role === 'protagonist' ||
-            name.toLowerCase() === 'player'
-          ) {
-            return 0;
-          }
-
-          /* ตัวประกอบ 1, 2, 3, ... */
-          const supportingMatch = name.match(
-            /ตัวประกอบ\s*(\d+)/i
-          );
-
-          if (supportingMatch) {
-            return Number(supportingMatch[1]);
-          }
-
-          /*
-           * รองรับชื่อภาษาอังกฤษ เช่น
-           * Supporting 1
-           * Supporting 2
-           * Side Character 1
-           */
-          const supportingEnglishMatch =
-            name.match(
-              /(?:supporting|side\s*character)\s*(\d+)/i
-            );
-
-          if (supportingEnglishMatch) {
-            return Number(
-              supportingEnglishMatch[1]
-            );
-          }
-
-          /*
-           * ถ้ามี role เป็นตัวประกอบ
-           * และมีเลขอยู่ในชื่อ ให้เรียงตามเลข
-           */
-          if (
-            role.includes('ตัวประกอบ') ||
-            role.includes('supporting')
-          ) {
-            const numberMatch =
-              name.match(/\d+/);
-
-            if (numberMatch) {
-              return Number(
-                numberMatch[0]
-              );
-            }
-          }
-
-          /*
-           * ตัวละครอื่นให้อยู่หลังตัวประกอบ
-           * และรักษาลำดับเดิมของข้อมูล
-           */
-          return (
-            1000 + originalIndex
-          );
-        };
-
-        return (
-          getCharacterOrder(
-            a.character,
-            a.originalIndex
-          ) -
-          getCharacterOrder(
-            b.character,
-            b.originalIndex
-          )
-        );
-      })
-      .map((item) => item.character);
-  }, [sessionCharacters]);
-
-  const handleOpenBranchReader = () => {
-    router.push(
-      `/story/${story.id}/branches/${sessionId}`
-    );
-  };
-
-  const handlePreviousChapter = () => {
-    if (selectedChapter <= 1) {
-      return;
-    }
-
-    setSelectedChapter(
-      selectedChapter - 1
-    );
-    setSelectedChoice(null);
-    setUserPrompt('');
-    scrollToTop();
-  };
-
-  const handleNextChapter = () => {
-    if (
-      selectedChapter >=
-      story.currentChapter
-    ) {
-      return;
-    }
-
-    setSelectedChapter(
-      selectedChapter + 1
-    );
-    setSelectedChoice(null);
-    setUserPrompt('');
-    scrollToTop();
-  };
-
-  const handleGenerateNextChapter = async (
-    choice?: string
-  ) => {
-    const selectedDecision =
-      choice?.trim() ||
-      selectedChoice?.trim() ||
-      userPrompt.trim();
-
-    if (
-      !selectedDecision ||
-      isGeneratingNext ||
-      story.currentChapter >=
-        story.totalChapters
-    ) {
-      return;
-    }
-
-    setIsGeneratingNext(true);
-
-    try {
-      const res = await fetch(
-        '/api/generate-story',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type':
-              'application/json',
-          },
-          body: JSON.stringify({
-            actionType:
-              'next_chapter',
-            storyId:
-              story.id,
-            storyTitle:
-              story.title,
-            genre:
-              story.genre,
-            tone:
-              story.tone,
-            previousChapters:
-              story.chapters,
-            userChoice:
-              selectedDecision,
-          }),
-        }
-      );
-
-      const data = await res.json();
-
-      if (
-        !res.ok ||
-        !data.success ||
-        !data.chapter
-      ) {
-        throw new Error(
-          data.error ||
-            'ไม่สามารถสร้างบทถัดไปได้'
-        );
-      }
-
-      const newChapter: Chapter & {
-        choices?: string[];
-      } = {
-        id:
-          data.chapter.id,
-        chapterNumber:
-          data.chapter.chapterNumber,
-        title:
-          data.chapter.title ||
-          `บทที่ ${data.chapter.chapterNumber}`,
-        content:
-          data.chapter.content || '',
-        choices:
-          Array.isArray(
-            data.chapter.choices
-          )
-            ? data.chapter.choices.slice(0, 3)
-            : [],
-        userPromptChoice:
-          selectedDecision,
-        createdAt:
-          data.chapter.createdAt,
-      };
-
-      const updatedStory: Story = {
-        ...story,
-        currentChapter:
-          newChapter.chapterNumber,
-        chapters: [
-          ...story.chapters,
-          newChapter,
-        ],
-        wordCount:
-          story.wordCount +
-          newChapter.content.length,
-      };
-
-      onUpdateStory(updatedStory);
-
-      setSelectedChapter(
-        newChapter.chapterNumber
-      );
-
+    useEffect(() => {
+      setSelectedChapter(story.currentChapter);
       setSelectedChoice(null);
       setUserPrompt('');
+    }, [story.currentChapter]);
 
+    const currentChapter =
+      story.chapters.find(
+        (chapter) =>
+          chapter.chapterNumber === selectedChapter
+      ) ||
+      story.chapters[story.chapters.length - 1];
+
+    const isLatestChapter =
+      selectedChapter === story.currentChapter;
+
+    const scrollToTop = () => {
       window.scrollTo({
         top: 0,
         behavior: 'smooth',
       });
-    } catch (err) {
-      console.error(
-        'generate next chapter error:',
-        err
+    };
+
+    const genreClassMap: Record<string, string> = {
+      แฟนตาซี: 'genre-fantasy',
+      โรแมนติก: 'genre-romance',
+      สืบสวนสอบสวน: 'genre-mystery',
+      สืบสวน: 'genre-mystery',
+      ไซไฟ: 'genre-sci-fi',
+      ประวัติศาสตร์: 'genre-history',
+      สยองขวัญ: 'genre-horror',
+      ดราม่า: 'genre-drama',
+      แอ็กชัน: 'genre-action',
+      แอคชัน: 'genre-action',
+      ผจญภัย: 'genre-adventure',
+    };
+
+    const genreClass =
+      genreClassMap[story.genre?.trim()] ||
+      'genre-default';
+
+    const progressPercent = useMemo(() => {
+      if (!story.totalChapters) {
+        return 0;
+      }
+
+      return Math.min(
+        100,
+        Math.round(
+          (story.currentChapter /
+            story.totalChapters) *
+          100
+        )
       );
+    }, [
+      story.currentChapter,
+      story.totalChapters,
+    ]);
 
-      alert(
-        err instanceof Error
-          ? err.message
-          : 'ไม่สามารถสร้างบทใหม่ได้'
+    const chapterChoices =
+      Array.isArray(
+        (
+          currentChapter as Chapter & {
+            choices?: string[];
+          }
+        ).choices
+      )
+        ? (
+          currentChapter as Chapter & {
+            choices?: string[];
+          }
+        ).choices?.slice(0, 3) || []
+        : [];
+
+    const storyParagraphs = useMemo(() => {
+      if (!currentChapter) {
+        return [];
+      }
+
+      return parseStoryContent(
+        currentChapter.content
       );
-    } finally {
-      setIsGeneratingNext(false);
-    }
-  };
+    }, [currentChapter]);
 
-  if (!currentChapter) {
-    return (
-      <div className="story-reader-page">
-        <header className="story-reader-topbar">
-          <div className="story-reader-topbar-inner">
-            <button
-              className="story-reader-back"
-              onClick={onBack}
-            >
-              ‹ กลับสู่หน้าหลัก
-            </button>
-          </div>
-        </header>
+    /* =========================================================
+       SORT CHARACTERS
+    ========================================================= */
 
-        <main className="story-reader-empty">
-          <div>
-            <div className="story-reader-empty-icon">
-              <Icon size={42}>
-                <path d="M5 4.5A2.5 2.5 0 0 1 7.5 2H19v17H7.5A2.5 2.5 0 0 0 5 21.5v-17Z" />
-                <path d="M5 6h11" />
-                <path d="M9 10h6" />
-                <path d="M9 13h6" />
-              </Icon>
-            </div>
+    const sortedSessionCharacters = useMemo(() => {
+      return sessionCharacters
+        .map((character, originalIndex) => ({
+          character,
+          originalIndex,
+        }))
+        .sort((a, b) => {
+          const getCharacterOrder = (
+            character: any,
+            originalIndex: number
+          ) => {
+            const role = String(
+              character?.role || ''
+            )
+              .trim()
+              .toLowerCase();
 
-            <h2>
-              ยังไม่มีเนื้อเรื่อง
-            </h2>
+            const name = String(
+              character?.name || ''
+            ).trim();
 
-            <p>
-              เรื่องราวกำลังจะเริ่มต้นขึ้น
-            </p>
-          </div>
-        </main>
-      </div>
-    );
-  }
+            if (
+              role === 'player' ||
+              role === 'ผู้เล่น' ||
+              role === 'protagonist' ||
+              name.toLowerCase() === 'player'
+            ) {
+              return 0;
+            }
 
-  return (
-    <div
-      className={`story-reader-page font-size-${fontSize}`}
-    >
-      {/* =====================================================
-          TOP BAR
-      ===================================================== */}
+            const supportingMatch =
+              name.match(/ตัวประกอบ\s*(\d+)/i);
 
-      <header className="story-reader-topbar">
-        <div className="story-reader-topbar-inner">
-          <button
-            className="story-reader-back"
-            onClick={onBack}
-          >
-            ‹ กลับสู่หน้าหลัก
-          </button>
+            if (supportingMatch) {
+              return Number(
+                supportingMatch[1]
+              );
+            }
 
-          <div className="story-reader-top-actions">
-            <button
-              onClick={
-                handleOpenBranchReader
+            const supportingEnglishMatch =
+              name.match(
+                /(?:supporting|side\s*character)\s*(\d+)/i
+              );
+
+            if (supportingEnglishMatch) {
+              return Number(
+                supportingEnglishMatch[1]
+              );
+            }
+
+            if (
+              role.includes('ตัวประกอบ') ||
+              role.includes('supporting')
+            ) {
+              const numberMatch =
+                name.match(/\d+/);
+
+              if (numberMatch) {
+                return Number(
+                  numberMatch[0]
+                );
               }
-              className="story-reader-branch-button"
-            >
-              <BranchIcon />
-              <span>
-                จัดการเส้นเรื่อง
-              </span>
-            </button>
+            }
 
-            <div className="story-reader-font-controls">
-              <button
-                onClick={() =>
-                  setFontSize('sm')
-                }
-                className={
-                  fontSize === 'sm'
-                    ? 'active'
-                    : ''
-                }
-                aria-label="ตัวอักษรเล็ก"
-              >
-                A-
-              </button>
+            return 1000 + originalIndex;
+          };
+
+          return (
+            getCharacterOrder(
+              a.character,
+              a.originalIndex
+            ) -
+            getCharacterOrder(
+              b.character,
+              b.originalIndex
+            )
+          );
+        })
+        .map((item) => item.character);
+    }, [sessionCharacters]);
+
+    const handleOpenBranchReader = () => {
+      router.push(
+        `/story/${story.id}/branches/${sessionId}`
+      );
+    };
+
+    const handlePreviousChapter = () => {
+      if (selectedChapter <= 1) {
+        return;
+      }
+
+      setSelectedChapter(
+        selectedChapter - 1
+      );
+
+      setSelectedChoice(null);
+      setUserPrompt('');
+      scrollToTop();
+    };
+
+    const handleNextChapter = () => {
+      if (
+        selectedChapter >=
+        story.currentChapter
+      ) {
+        return;
+      }
+
+      setSelectedChapter(
+        selectedChapter + 1
+      );
+
+      setSelectedChoice(null);
+      setUserPrompt('');
+      scrollToTop();
+    };
+
+    const handleGenerateNextChapter = async (
+      choice?: string
+    ) => {
+      const selectedDecision =
+        choice?.trim() ||
+        selectedChoice?.trim() ||
+        userPrompt.trim();
+
+      if (
+        !selectedDecision ||
+        isGeneratingNext ||
+        story.currentChapter >=
+        story.totalChapters
+      ) {
+        return;
+      }
+
+      setIsGeneratingNext(true);
+
+      try {
+        const res = await fetch(
+          '/api/generate-story',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type':
+                'application/json',
+            },
+            body: JSON.stringify({
+              actionType:
+                'next_chapter',
+              storyId:
+                story.id,
+              storyTitle:
+                story.title,
+              genre:
+                story.genre,
+              tone:
+                story.tone,
+              previousChapters:
+                story.chapters,
+              userChoice:
+                selectedDecision,
+            }),
+          }
+        );
+
+        const data = await res.json();
+
+        if (
+          !res.ok ||
+          !data.success ||
+          !data.chapter
+        ) {
+          throw new Error(
+            data.error ||
+            'ไม่สามารถสร้างบทถัดไปได้'
+          );
+        }
+
+        const newChapter: Chapter & {
+          choices?: string[];
+        } = {
+          id:
+            data.chapter.id,
+
+          chapterNumber:
+            data.chapter.chapterNumber,
+
+          title:
+            data.chapter.title ||
+            `บทที่ ${data.chapter.chapterNumber}`,
+
+          content:
+            data.chapter.content || '',
+
+          choices:
+            Array.isArray(
+              data.chapter.choices
+            )
+              ? data.chapter.choices.slice(
+                0,
+                3
+              )
+              : [],
+
+          userPromptChoice:
+            selectedDecision,
+
+          createdAt:
+            data.chapter.createdAt,
+        };
+
+        const updatedStory: Story = {
+          ...story,
+
+          currentChapter:
+            newChapter.chapterNumber,
+
+          chapters: [
+            ...story.chapters,
+            newChapter,
+          ],
+
+          wordCount:
+            story.wordCount +
+            newChapter.content.length,
+        };
+
+        onUpdateStory(updatedStory);
+
+        setSelectedChapter(
+          newChapter.chapterNumber
+        );
+
+        setSelectedChoice(null);
+        setUserPrompt('');
+
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        });
+      } catch (err) {
+        console.error(
+          'generate next chapter error:',
+          err
+        );
+
+        alert(
+          err instanceof Error
+            ? err.message
+            : 'ไม่สามารถสร้างบทใหม่ได้'
+        );
+      } finally {
+        setIsGeneratingNext(false);
+      }
+    };
+
+    /* =========================================================
+       EMPTY STATE
+    ========================================================= */
+
+    if (!currentChapter) {
+      return (
+        <div className="story-reader-page">
+          <main className="story-reader-empty">
+            <div className="story-reader-empty-card">
+              <div className="story-reader-empty-icon">
+                <Icon size={42}>
+                  <path d="M5 4.5A2.5 2.5 0 0 1 7.5 2H19v17H7.5A2.5 2.5 0 0 0 5 21.5v-17Z" />
+                  <path d="M5 6h11" />
+                  <path d="M9 10h6" />
+                  <path d="M9 13h6" />
+                </Icon>
+              </div>
+
+              <h2>
+                ยังไม่มีเนื้อเรื่อง
+              </h2>
+
+              <p>
+                เรื่องราวกำลังจะเริ่มต้นขึ้น
+              </p>
 
               <button
-                onClick={() =>
-                  setFontSize('md')
-                }
-                className={
-                  fontSize === 'md'
-                    ? 'active'
-                    : ''
-                }
-                aria-label="ตัวอักษรปกติ"
+                type="button"
+                className="story-reader-back"
+                onClick={onBack}
               >
-                A
-              </button>
-
-              <button
-                onClick={() =>
-                  setFontSize('lg')
-                }
-                className={
-                  fontSize === 'lg'
-                    ? 'active'
-                    : ''
-                }
-                aria-label="ตัวอักษรใหญ่"
-              >
-                A+
+                ‹ กลับสู่หน้าหลัก
               </button>
             </div>
-          </div>
+          </main>
         </div>
-      </header>
+      );
+    }
 
-      <main className="story-reader-layout">
-        {/* ===================================================
+    return (
+      <div
+        className={`story-reader-page font-size-${fontSize}`}
+      >
+        <main className="story-reader-layout">
+
+          {/* ===================================================
             MAIN STORY
         =================================================== */}
 
-        <section className="story-reader-main">
-          {/* Chapter Header */}
+          <section className="story-reader-main">
 
-          <div className="story-reader-chapter-header">
-            <div className="story-reader-chapter-top">
-              <div className="story-reader-chapter-count">
-                บทที่{' '}
-                {currentChapter.chapterNumber}
-                {' / '}
-                {story.totalChapters}
-              </div>
+            <article
+              className={`story-reader-article ${genreClass}`}
+              key={currentChapter.id}
+            >
 
-              <div className="story-reader-progress">
-                <div className="story-reader-progress-track">
-                  <div
-                    className="story-reader-progress-value"
-                    style={{
-                      width: `${progressPercent}%`,
-                    }}
-                  />
-                </div>
+              {/* =================================================
+                INNER TOPBAR
+            ================================================= */}
 
-                <span>
-                  {progressPercent}%
-                </span>
-              </div>
-            </div>
+              <div className="story-reader-inner-header">
 
-            <h1 className="story-reader-chapter-title">
-              {currentChapter.title}
-            </h1>
+                <button
+                  type="button"
+                  className="story-reader-back"
+                  onClick={onBack}
+                >
+                  ‹ กลับสู่หน้าหลัก
+                </button>
 
-            <div className="story-reader-chapter-divider" />
-          </div>
+                <div className="story-reader-top-actions">
 
-          {/* Story */}
-
-          <article
-            className={`story-reader-article ${genreClass}`}
-            key={currentChapter.id}
-          >
-            {/* User Decision */}
-
-            {currentChapter.userPromptChoice && (
-              <div className="story-reader-user-choice">
-                <span className="story-reader-user-choice-icon">
-                  <Icon size={20}>
-                    <path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z" />
-                  </Icon>
-                </span>
-
-                <div>
-                  <span className="story-reader-user-choice-label">
-                    การตัดสินใจของคุณ
-                  </span>
-
-                  <p>
-                    “
-                    {
-                      currentChapter.userPromptChoice
+                  <button
+                    type="button"
+                    onClick={
+                      handleOpenBranchReader
                     }
-                    ”
-                  </p>
-                </div>
-              </div>
-            )}
-
-            {/* Story Content */}
-
-            <div className="story-reader-text font-serif">
-              {storyParagraphs.map(
-                (
-                  paragraph,
-                  index
-                ) => (
-                  <div
-                    key={`${currentChapter.id}-${index}`}
-                    className={`story-reader-content-block story-reader-content-${paragraph.type}`}
+                    className="story-reader-branch-button"
                   >
-                    <div className="story-reader-content-body">
-                      <p>
-                        {paragraph.text}
-                      </p>
-                    </div>
-                  </div>
-                )
-              )}
-            </div>
-          </article>
+                    <BranchIcon />
 
-          {/* Chapter Navigation */}
+                    <span>
+                      จัดการเส้นเรื่อง
+                    </span>
+                  </button>
 
-          <div className="story-reader-navigation">
-            <button
-              className="story-reader-nav-button"
-              disabled={
-                selectedChapter <= 1
-              }
-              onClick={
-                handlePreviousChapter
-              }
-            >
-              ‹ บทก่อนหน้า
-            </button>
-
-            <span>
-              {selectedChapter}
-              {' / '}
-              {story.currentChapter}
-            </span>
-
-            <button
-              className="story-reader-nav-button"
-              disabled={
-                selectedChapter >=
-                story.currentChapter
-              }
-              onClick={
-                handleNextChapter
-              }
-            >
-              บทถัดไป ›
-            </button>
-          </div>
-
-          {/* Choices */}
-
-          {isLatestChapter && (
-            <section className="story-reader-choice-section">
-              <div className="story-reader-choice-heading">
-                <span className="story-reader-choice-icon">
-                  <ChoiceIcon />
-                </span>
-
-                <div>
-                  <h2>
-                    คุณจะทำอย่างไรต่อ?
-                  </h2>
-
-                  <p>
-                    เลือกแนวทางที่ต้องการ
-                    หรือพิมพ์การตัดสินใจของคุณเอง
-                  </p>
-                </div>
-              </div>
-
-              {story.currentChapter <
-              story.totalChapters ? (
-                <>
-                  {chapterChoices.length >
-                    0 && (
-                    <div className="story-reader-choice-list">
-                      {chapterChoices.map(
-                        (
-                          choice,
-                          index
-                        ) => {
-                          const isSelected =
-                            selectedChoice ===
-                            choice;
-
-                          return (
-                            <button
-                              key={`${choice}-${index}`}
-                              type="button"
-                              className={`story-reader-choice-button ${
-                                isSelected
-                                  ? 'selected'
-                                  : ''
-                              }`}
-                              onClick={() => {
-                                if (
-                                  isSelected
-                                ) {
-                                  setSelectedChoice(
-                                    null
-                                  );
-                                  return;
-                                }
-
-                                setSelectedChoice(
-                                  choice
-                                );
-                                setUserPrompt(
-                                  ''
-                                );
-                              }}
-                              disabled={
-                                isGeneratingNext
-                              }
-                            >
-                              <span className="story-reader-choice-number">
-                                {isSelected
-                                  ? '✓'
-                                  : index +
-                                    1}
-                              </span>
-
-                              <span className="story-reader-choice-text">
-                                {choice}
-                              </span>
-
-                              <span className="story-reader-choice-arrow">
-                                →
-                              </span>
-                            </button>
-                          );
-                        }
-                      )}
-                    </div>
-                  )}
-
-                  <div className="story-reader-choice-fallback">
-                    <input
-                      id="user-action"
-                      type="text"
-                      placeholder={
-                        selectedChoice
-                          ? 'เลือกตัวเลือกด้านบนแล้วกด "ดำเนินเรื่องต่อ"'
-                          : 'พิมพ์การตัดสินใจของคุณ...'
-                      }
-                      value={userPrompt}
-                      onChange={(e) => {
-                        setUserPrompt(
-                          e.target.value
-                        );
-
-                        if (
-                          e.target.value.trim()
-                        ) {
-                          setSelectedChoice(
-                            null
-                          );
-                        }
-                      }}
-                      onKeyDown={(e) => {
-                        if (
-                          e.key === 'Enter' &&
-                          !e.shiftKey &&
-                          !selectedChoice &&
-                          userPrompt.trim()
-                        ) {
-                          e.preventDefault();
-
-                          handleGenerateNextChapter();
-                        }
-                      }}
-                      disabled={
-                        !!selectedChoice ||
-                        isGeneratingNext
-                      }
-                    />
+                  <div className="story-reader-font-controls">
 
                     <button
                       type="button"
-                      className="story-reader-submit"
                       onClick={() =>
-                        handleGenerateNextChapter()
+                        setFontSize('sm')
                       }
-                      disabled={
-                        (!selectedChoice &&
-                          !userPrompt.trim()) ||
-                        isGeneratingNext
+                      className={
+                        fontSize === 'sm'
+                          ? 'active'
+                          : ''
                       }
+                      aria-label="ตัวอักษรเล็ก"
                     >
-                      {isGeneratingNext
-                        ? 'กำลังสร้าง...'
-                        : 'ดำเนินเรื่องต่อ →'}
+                      A-
                     </button>
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFontSize('md')
+                      }
+                      className={
+                        fontSize === 'md'
+                          ? 'active'
+                          : ''
+                      }
+                      aria-label="ตัวอักษรปกติ"
+                    >
+                      A
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setFontSize('lg')
+                      }
+                      className={
+                        fontSize === 'lg'
+                          ? 'active'
+                          : ''
+                      }
+                      aria-label="ตัวอักษรใหญ่"
+                    >
+                      A+
+                    </button>
+
                   </div>
-                </>
-              ) : (
-                <div className="story-reader-finished">
-                  เรื่องราวจบลงแล้ว
+                </div>
+              </div>
+
+              {/* =================================================
+                CHAPTER HEADER
+            ================================================= */}
+
+              <div className="story-reader-chapter-header">
+
+                <div className="story-reader-chapter-top">
+
+                  <div className="story-reader-chapter-count">
+                    บทที่{' '}
+                    {currentChapter.chapterNumber}
+                    {' / '}
+                    {story.totalChapters}
+                  </div>
+
+                  <div className="story-reader-progress">
+
+                    <div className="story-reader-progress-track">
+
+                      <div
+                        className="story-reader-progress-value"
+                        style={{
+                          width: `${progressPercent}%`,
+                        }}
+                      />
+
+                    </div>
+
+                    <span>
+                      {progressPercent}%
+                    </span>
+
+                  </div>
+                </div>
+
+                <h1 className="story-reader-chapter-title">
+                  {currentChapter.title}
+                </h1>
+
+                <div className="story-reader-chapter-divider" />
+              </div>
+
+              {/* =================================================
+                USER DECISION
+            ================================================= */}
+
+              {currentChapter.userPromptChoice && (
+                <div className="story-reader-user-choice">
+
+                  <span className="story-reader-user-choice-icon">
+
+                    <Icon size={20}>
+                      <path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z" />
+                    </Icon>
+
+                  </span>
+
+                  <div>
+
+                    <span className="story-reader-user-choice-label">
+                      การตัดสินใจของคุณ
+                    </span>
+
+                    <p>
+                      “
+                      {
+                        currentChapter.userPromptChoice
+                      }
+                      ”
+                    </p>
+
+                  </div>
                 </div>
               )}
-            </section>
-          )}
 
-          {/* Generating */}
+              {/* =================================================
+                STORY CONTENT
+            ================================================= */}
 
-          {isGeneratingNext && (
-            <div className="story-reader-generating">
-              <div className="story-reader-writing-icon">
-                <span />
-                <span />
-                <span />
-              </div>
+              <div className="story-reader-text font-serif">
 
-              <div>
-                <strong>
-                  กำลังเรียบเรียงเรื่องราวบทต่อไป
-                </strong>
-
-                <span>
-                  ตามการตัดสินใจของคุณ
-                </span>
-              </div>
-            </div>
-          )}
-        </section>
-
-        {/* ===================================================
-            SIDEBAR
-        =================================================== */}
-
-        <aside className="story-reader-sidebar">
-          {/* Story Info */}
-
-          <section className="story-sidebar-card story-sidebar-story">
-            <div className="story-sidebar-cover">
-              <img
-                src={
-                  story.coverUrl ||
-                  '/images/default-cover.png'
-                }
-                alt={story.title}
-              />
-            </div>
-
-            <div className="story-sidebar-story-info">
-              <h2>
-                {story.title}
-              </h2>
-
-              <div className="story-sidebar-tags">
-                <span>
-                  {story.genre}
-                </span>
-
-                <span>
-                  {story.tone}
-                </span>
-              </div>
-
-              <p>
-                {story.corePremise}
-              </p>
-
-              <div className="story-sidebar-author">
-                ผู้เขียน {story.author}
-              </div>
-            </div>
-          </section>
-
-          {/* Current Status */}
-
-          <section className="story-sidebar-card">
-            <div className="story-sidebar-section-title">
-              <span className="sidebar-section-icon">
-                <LocationIcon />
-              </span>
-
-              สถานะปัจจุบัน
-            </div>
-
-            <div className="story-sidebar-status-list">
-              {/* Location */}
-
-              <div className="story-sidebar-status-item">
-                <span className="status-icon">
-                  <LocationIcon />
-                </span>
-
-                <div>
-                  <small>
-                    สถานที่
-                  </small>
-
-                  <strong>
-                    {story.currentLocation ||
-                      'ไม่ระบุ'}
-                  </strong>
-                </div>
-              </div>
-
-              {/* Health */}
-
-              <div className="story-sidebar-status-item">
-                <span className="status-icon">
-                  <HealthIcon />
-                </span>
-
-                <div>
-                  <small>
-                    สภาพร่างกาย
-                  </small>
-
-                  <strong>
-                    {story.physicalCondition ||
-                      'ไม่ระบุ'}
-                  </strong>
-                </div>
-              </div>
-
-              {/* Inventory */}
-
-              <div className="story-sidebar-status-item">
-                <span className="status-icon">
-                  <InventoryIcon />
-                </span>
-
-                <div>
-                  <small>
-                    ของติดตัว
-                  </small>
-
-                  <strong>
-                    {story.currentInventory
-                      ?.length
-                      ? story.currentInventory.join(
-                          ', '
-                        )
-                      : 'ไม่มี'}
-                  </strong>
-                </div>
-              </div>
-
-              {/* Important Situation */}
-
-              <div className="story-sidebar-status-item">
-                <span className="status-icon">
-                  <WarningIcon />
-                </span>
-
-                <div>
-                  <small>
-                    สถานการณ์สำคัญ
-                  </small>
-
-                  <strong>
-                    {story.importantSituation ||
-                      'ไม่มี'}
-                  </strong>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Characters */}
-
-          <section className="story-sidebar-card">
-            <div className="story-sidebar-section-title">
-              <span className="sidebar-section-icon">
-                <CharactersIcon />
-              </span>
-
-              ตัวละคร
-            </div>
-
-            <div className="story-sidebar-characters">
-              {sortedSessionCharacters.length >
-              0 ? (
-                sortedSessionCharacters.map(
+                {storyParagraphs.map(
                   (
-                    character,
+                    paragraph,
                     index
                   ) => (
                     <div
-                      key={
-                        character.id ||
-                        `${character.name}-${index}`
-                      }
-                      className="story-sidebar-character"
+                      key={`${currentChapter.id}-${index}`}
+                      className={`story-reader-content-block story-reader-content-${paragraph.type}`}
                     >
-                      <div className="story-sidebar-character-avatar">
-                        {character.name
-                          ?.charAt(0)
-                          ?.toUpperCase() ||
-                          '?'}
+
+                      <div className="story-reader-content-body">
+
+                        <p>
+                          {paragraph.text}
+                        </p>
+
                       </div>
 
-                      <div>
-                        <strong>
-                          {character.name ||
-                            'ไม่ระบุชื่อ'}
-                        </strong>
-
-                        <small>
-                          {character.role ||
-                            character.personality ||
-                            'ตัวละคร'}
-                        </small>
-                      </div>
                     </div>
                   )
-                )
-              ) : (
-                <p className="story-sidebar-empty">
-                  ยังไม่มีข้อมูลตัวละคร
-                </p>
-              )}
-            </div>
-          </section>
+                )}
 
-          {/* Story Path */}
+              </div>
 
-          <section className="story-sidebar-card">
-            <div className="story-sidebar-section-title">
-              <span className="sidebar-section-icon">
-                <PathIcon />
-              </span>
+              {/* =================================================
+                CHAPTER NAVIGATION
+            ================================================= */}
 
-              เส้นทางเรื่อง
+              <div className="story-reader-navigation">
 
-              <small>
-                ({story.currentChapter} /{' '}
-                {story.totalChapters})
-              </small>
-            </div>
+                <button
+                  type="button"
+                  className="story-reader-nav-button"
+                  disabled={
+                    selectedChapter <= 1
+                  }
+                  onClick={
+                    handlePreviousChapter
+                  }
+                >
+                  ‹ บทก่อนหน้า
+                </button>
 
-            <div className="story-path">
-              {story.chapters.map(
-                (chapter) => {
-                  const isCurrent =
-                    chapter.chapterNumber ===
-                    story.currentChapter;
+                <span>
+                  {selectedChapter}
+                  {' / '}
+                  {story.currentChapter}
+                </span>
 
-                  const isCompleted =
-                    chapter.chapterNumber <
-                    story.currentChapter;
+                <button
+                  type="button"
+                  className="story-reader-nav-button"
+                  disabled={
+                    selectedChapter >=
+                    story.currentChapter
+                  }
+                  onClick={
+                    handleNextChapter
+                  }
+                >
+                  บทถัดไป ›
+                </button>
 
-                  return (
-                    <div
-                      key={chapter.id}
-                      className={`story-path-item ${
-                        isCurrent
-                          ? 'current'
-                          : ''
-                      } ${
-                        isCompleted
-                          ? 'completed'
-                          : ''
-                      }`}
-                    >
-                      <div className="story-path-number">
-                        {
-                          chapter.chapterNumber
-                        }
-                      </div>
+              </div>
 
-                      <div className="story-path-line" />
+              {/* =================================================
+                CHOICES
+            ================================================= */}
 
-                      <span>
-                        {isCurrent
-                          ? 'ปัจจุบัน'
-                          : isCompleted
-                            ? 'อ่านแล้ว'
-                            : 'ล็อก'}
-                      </span>
+              {isLatestChapter && (
+                <section className="story-reader-choice-section">
+
+                  <div className="story-reader-choice-heading">
+
+                    <span className="story-reader-choice-icon">
+                      <ChoiceIcon />
+                    </span>
+
+                    <div>
+
+                      <h2>
+                        คุณจะทำอย่างไรต่อ?
+                      </h2>
+
+                      <p>
+                        เลือกแนวทางที่ต้องการ
+                        หรือพิมพ์การตัดสินใจของคุณเอง
+                      </p>
+
                     </div>
-                  );
-                }
+                  </div>
+
+                  {story.currentChapter <
+                    story.totalChapters ? (
+                    <>
+                      {chapterChoices.length >
+                        0 && (
+                          <div className="story-reader-choice-list">
+
+                            {chapterChoices.map(
+                              (
+                                choice,
+                                index
+                              ) => {
+
+                                const isSelected =
+                                  selectedChoice ===
+                                  choice;
+
+                                return (
+                                  <button
+                                    key={`${choice}-${index}`}
+                                    type="button"
+                                    className={`story-reader-choice-button ${isSelected
+                                        ? 'selected'
+                                        : ''
+                                      }`}
+                                    onClick={() => {
+
+                                      if (
+                                        isSelected
+                                      ) {
+                                        setSelectedChoice(
+                                          null
+                                        );
+
+                                        return;
+                                      }
+
+                                      setSelectedChoice(
+                                        choice
+                                      );
+
+                                      setUserPrompt(
+                                        ''
+                                      );
+                                    }}
+                                    disabled={
+                                      isGeneratingNext
+                                    }
+                                  >
+
+                                    <span className="story-reader-choice-number">
+                                      {isSelected
+                                        ? '✓'
+                                        : index +
+                                        1}
+                                    </span>
+
+                                    <span className="story-reader-choice-text">
+                                      {choice}
+                                    </span>
+
+                                    <span className="story-reader-choice-arrow">
+                                      →
+                                    </span>
+
+                                  </button>
+                                );
+                              }
+                            )}
+
+                          </div>
+                        )}
+
+                      <div className="story-reader-choice-fallback">
+
+                        <input
+                          id="user-action"
+                          type="text"
+                          placeholder={
+                            selectedChoice
+                              ? 'เลือกตัวเลือกด้านบนแล้วกด "ดำเนินเรื่องต่อ"'
+                              : 'พิมพ์การตัดสินใจของคุณ...'
+                          }
+                          value={userPrompt}
+                          onChange={(e) => {
+
+                            setUserPrompt(
+                              e.target.value
+                            );
+
+                            if (
+                              e.target.value.trim()
+                            ) {
+                              setSelectedChoice(
+                                null
+                              );
+                            }
+                          }}
+                          onKeyDown={(e) => {
+
+                            if (
+                              e.key === 'Enter' &&
+                              !e.shiftKey &&
+                              !selectedChoice &&
+                              userPrompt.trim()
+                            ) {
+                              e.preventDefault();
+
+                              handleGenerateNextChapter();
+                            }
+
+                          }}
+                          disabled={
+                            !!selectedChoice ||
+                            isGeneratingNext
+                          }
+                        />
+
+                        <button
+                          type="button"
+                          className="story-reader-submit"
+                          onClick={() =>
+                            handleGenerateNextChapter()
+                          }
+                          disabled={
+                            (!selectedChoice &&
+                              !userPrompt.trim()) ||
+                            isGeneratingNext
+                          }
+                        >
+                          {isGeneratingNext
+                            ? 'กำลังสร้าง...'
+                            : 'ดำเนินเรื่องต่อ →'}
+                        </button>
+
+                      </div>
+                    </>
+                  ) : (
+                    <div className="story-reader-finished">
+                      เรื่องราวจบลงแล้ว
+                    </div>
+                  )}
+
+                </section>
               )}
-            </div>
+
+              {/* =================================================
+                GENERATING
+            ================================================= */}
+
+              {isGeneratingNext && (
+                <div className="story-reader-generating">
+
+                  <div className="story-reader-writing-icon">
+                    <span />
+                    <span />
+                    <span />
+                  </div>
+
+                  <div>
+
+                    <strong>
+                      กำลังเรียบเรียงเรื่องราวบทต่อไป
+                    </strong>
+
+                    <span>
+                      ตามการตัดสินใจของคุณ
+                    </span>
+
+                  </div>
+
+                </div>
+              )}
+
+            </article>
           </section>
-        </aside>
-      </main>
-    </div>
-  );
-};
+
+          {/* ===================================================
+            SIDEBAR
+        =================================================== */}
+
+          <aside className="story-reader-sidebar">
+
+            {/* Story Info */}
+
+            <section className="story-sidebar-card story-sidebar-story">
+
+              <div className="story-sidebar-cover">
+
+                <img
+                  src={
+                    story.coverUrl ||
+                    '/images/default-cover.png'
+                  }
+                  alt={story.title}
+                />
+
+              </div>
+
+              <div className="story-sidebar-story-info">
+
+                <h2>
+                  {story.title}
+                </h2>
+
+                <div className="story-sidebar-tags">
+
+                  <span>
+                    {story.genre}
+                  </span>
+
+                  <span>
+                    {story.tone}
+                  </span>
+
+                </div>
+
+                <p>
+                  {story.corePremise}
+                </p>
+
+                <div className="story-sidebar-author">
+                  ผู้เขียน {story.author}
+                </div>
+
+              </div>
+            </section>
+
+            {/* Current Status */}
+
+            <section className="story-sidebar-card">
+
+              <div className="story-sidebar-section-title">
+
+                <span className="sidebar-section-icon">
+                  <LocationIcon />
+                </span>
+
+                สถานะปัจจุบัน
+
+              </div>
+
+              <div className="story-sidebar-status-list">
+
+                <div className="story-sidebar-status-item">
+
+                  <span className="status-icon">
+                    <LocationIcon />
+                  </span>
+
+                  <div>
+
+                    <small>
+                      สถานที่
+                    </small>
+
+                    <strong>
+                      {story.currentLocation ||
+                        'ไม่ระบุ'}
+                    </strong>
+
+                  </div>
+                </div>
+
+                <div className="story-sidebar-status-item">
+
+                  <span className="status-icon">
+                    <HealthIcon />
+                  </span>
+
+                  <div>
+
+                    <small>
+                      สภาพร่างกาย
+                    </small>
+
+                    <strong>
+                      {story.physicalCondition ||
+                        'ไม่ระบุ'}
+                    </strong>
+
+                  </div>
+                </div>
+
+                <div className="story-sidebar-status-item">
+
+                  <span className="status-icon">
+                    <InventoryIcon />
+                  </span>
+
+                  <div>
+
+                    <small>
+                      ของติดตัว
+                    </small>
+
+                    <strong>
+                      {story.currentInventory
+                        ?.length
+                        ? story.currentInventory.join(
+                          ', '
+                        )
+                        : 'ไม่มี'}
+                    </strong>
+
+                  </div>
+                </div>
+
+                <div className="story-sidebar-status-item">
+
+                  <span className="status-icon">
+                    <WarningIcon />
+                  </span>
+
+                  <div>
+
+                    <small>
+                      สถานการณ์สำคัญ
+                    </small>
+
+                    <strong>
+                      {story.importantSituation ||
+                        'ไม่มี'}
+                    </strong>
+
+                  </div>
+                </div>
+
+              </div>
+            </section>
+
+            {/* Characters */}
+
+            <section className="story-sidebar-card">
+              <div className="story-sidebar-section-title">
+                <span className="sidebar-section-icon">
+                  <CharactersIcon />
+                </span>
+                ตัวละคร
+                <small>
+                  ({sortedSessionCharacters.length})
+                </small>
+              </div>
+
+              {sortedSessionCharacters.length > 0 ? (
+                <div className="story-sidebar-characters">
+                  {sortedSessionCharacters.map(
+                    (character, index) => (
+                      <div
+                        key={
+                          character.id ||
+                          `${character.name}-${index}`
+                        }
+                        className="story-sidebar-character"
+                      >
+                        <span className="story-sidebar-character-icon">
+                          <CharactersIcon />
+                        </span>
+
+                        <div className="story-sidebar-character-info">
+                          <strong>
+                            {character.name ||
+                              'ไม่ระบุชื่อ'}
+                          </strong>
+
+                          <small>
+                            {character.role === 'player'
+                              ? 'ผู้เล่น'
+                              : 'ตัวละคร'}
+
+                            {character.gender
+                              ? ` · ${character.gender}`
+                              : ''}
+                          </small>
+                        </div>
+                      </div>
+                    )
+                  )}
+                </div>
+              ) : (
+                <div className="story-sidebar-empty">
+                  ยังไม่มีข้อมูลตัวละคร
+                </div>
+              )}
+            </section>
+
+            {/* Story Path */}
+
+            <section className="story-sidebar-card">
+
+              <div className="story-sidebar-section-title">
+
+                <span className="sidebar-section-icon">
+                  <PathIcon />
+                </span>
+
+                เส้นทางเรื่อง
+
+                <small>
+                  ({story.currentChapter} /{' '}
+                  {story.totalChapters})
+                </small>
+
+              </div>
+
+              <div className="story-path">
+
+                {story.chapters.map(
+                  (chapter) => {
+
+                    const isCurrent =
+                      chapter.chapterNumber ===
+                      story.currentChapter;
+
+                    const isCompleted =
+                      chapter.chapterNumber <
+                      story.currentChapter;
+
+                    return (
+                      <div
+                        key={chapter.id}
+                        className={`story-path-item ${isCurrent
+                            ? 'current'
+                            : ''
+                          } ${isCompleted
+                            ? 'completed'
+                            : ''
+                          }`}
+                      >
+
+                        <div className="story-path-number">
+                          {
+                            chapter.chapterNumber
+                          }
+                        </div>
+
+                        <div className="story-path-line" />
+
+                        <span>
+                          {isCurrent
+                            ? 'ปัจจุบัน'
+                            : isCompleted
+                              ? 'อ่านแล้ว'
+                              : 'ล็อก'}
+                        </span>
+
+                      </div>
+                    );
+                  }
+                )}
+
+              </div>
+
+            </section>
+
+          </aside>
+        </main>
+      </div>
+    );
+  };
