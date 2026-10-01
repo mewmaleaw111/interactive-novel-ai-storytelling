@@ -434,7 +434,7 @@ export const ReaderView: React.FC<
 
   /* =========================================================
      SORT CHARACTERS
-     
+
      ลำดับ:
      1. Player
      2. ตัวประกอบ 1
@@ -481,7 +481,9 @@ export const ReaderView: React.FC<
           );
 
           if (supportingMatch) {
-            return Number(supportingMatch[1]);
+            return Number(
+              supportingMatch[1]
+            );
           }
 
           /*
@@ -703,22 +705,24 @@ export const ReaderView: React.FC<
     }
   };
 
+  /* =========================================================
+     EMPTY STATE
+  ========================================================= */
+
   if (!currentChapter) {
     return (
       <div className="story-reader-page">
-        <header className="story-reader-topbar">
-          <div className="story-reader-topbar-inner">
-            <button
-              className="story-reader-back"
-              onClick={onBack}
-            >
-              ‹ กลับสู่หน้าหลัก
-            </button>
-          </div>
-        </header>
-
         <main className="story-reader-empty">
-          <div>
+          <div className="story-reader-empty-card">
+            <div className="story-reader-empty-actions">
+              <button
+                className="story-reader-back"
+                onClick={onBack}
+              >
+                ‹ กลับสู่หน้าหลัก
+              </button>
+            </div>
+
             <div className="story-reader-empty-icon">
               <Icon size={42}>
                 <path d="M5 4.5A2.5 2.5 0 0 1 7.5 2H19v17H7.5A2.5 2.5 0 0 0 5 21.5v-17Z" />
@@ -745,126 +749,128 @@ export const ReaderView: React.FC<
     <div
       className={`story-reader-page font-size-${fontSize}`}
     >
-      {/* =====================================================
-          TOP BAR
-      ===================================================== */}
-
-      <header className="story-reader-topbar">
-        <div className="story-reader-topbar-inner">
-          <button
-            className="story-reader-back"
-            onClick={onBack}
-          >
-            ‹ กลับสู่หน้าหลัก
-          </button>
-
-          <div className="story-reader-top-actions">
-            <button
-              onClick={
-                handleOpenBranchReader
-              }
-              className="story-reader-branch-button"
-            >
-              <BranchIcon />
-              <span>
-                จัดการเส้นเรื่อง
-              </span>
-            </button>
-
-            <div className="story-reader-font-controls">
-              <button
-                onClick={() =>
-                  setFontSize('sm')
-                }
-                className={
-                  fontSize === 'sm'
-                    ? 'active'
-                    : ''
-                }
-                aria-label="ตัวอักษรเล็ก"
-              >
-                A-
-              </button>
-
-              <button
-                onClick={() =>
-                  setFontSize('md')
-                }
-                className={
-                  fontSize === 'md'
-                    ? 'active'
-                    : ''
-                }
-                aria-label="ตัวอักษรปกติ"
-              >
-                A
-              </button>
-
-              <button
-                onClick={() =>
-                  setFontSize('lg')
-                }
-                className={
-                  fontSize === 'lg'
-                    ? 'active'
-                    : ''
-                }
-                aria-label="ตัวอักษรใหญ่"
-              >
-                A+
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
       <main className="story-reader-layout">
         {/* ===================================================
             MAIN STORY
         =================================================== */}
 
         <section className="story-reader-main">
-          {/* Chapter Header */}
-
-          <div className="story-reader-chapter-header">
-            <div className="story-reader-chapter-top">
-              <div className="story-reader-chapter-count">
-                บทที่{' '}
-                {currentChapter.chapterNumber}
-                {' / '}
-                {story.totalChapters}
-              </div>
-
-              <div className="story-reader-progress">
-                <div className="story-reader-progress-track">
-                  <div
-                    className="story-reader-progress-value"
-                    style={{
-                      width: `${progressPercent}%`,
-                    }}
-                  />
-                </div>
-
-                <span>
-                  {progressPercent}%
-                </span>
-              </div>
-            </div>
-
-            <h1 className="story-reader-chapter-title">
-              {currentChapter.title}
-            </h1>
-
-            <div className="story-reader-chapter-divider" />
-          </div>
-
-          {/* Story */}
-
           <article
             className={`story-reader-article ${genreClass}`}
             key={currentChapter.id}
           >
-            {/* User Decision */}
+            {/* =================================================
+                READER HEADER
+                ย้ายจาก TOPBAR เข้ามาอยู่ในก้อนเนื้อเรื่อง
+            ================================================= */}
+
+            <div className="story-reader-inner-header">
+              <button
+                className="story-reader-back"
+                onClick={onBack}
+              >
+                ‹ กลับสู่หน้าหลัก
+              </button>
+
+              <div className="story-reader-top-actions">
+                <button
+                  onClick={
+                    handleOpenBranchReader
+                  }
+                  className="story-reader-branch-button"
+                >
+                  <BranchIcon />
+
+                  <span>
+                    จัดการเส้นเรื่อง
+                  </span>
+                </button>
+
+                <div className="story-reader-font-controls">
+                  <button
+                    onClick={() =>
+                      setFontSize('sm')
+                    }
+                    className={
+                      fontSize === 'sm'
+                        ? 'active'
+                        : ''
+                    }
+                    aria-label="ตัวอักษรเล็ก"
+                  >
+                    A-
+                  </button>
+
+                  <button
+                    onClick={() =>
+                      setFontSize('md')
+                    }
+                    className={
+                      fontSize === 'md'
+                        ? 'active'
+                        : ''
+                    }
+                    aria-label="ตัวอักษรปกติ"
+                  >
+                    A
+                  </button>
+
+                  <button
+                    onClick={() =>
+                      setFontSize('lg')
+                    }
+                    className={
+                      fontSize === 'lg'
+                        ? 'active'
+                        : ''
+                    }
+                    aria-label="ตัวอักษรใหญ่"
+                  >
+                    A+
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* =================================================
+                CHAPTER HEADER
+            ================================================= */}
+
+            <div className="story-reader-chapter-header">
+              <div className="story-reader-chapter-top">
+                <div className="story-reader-chapter-count">
+                  บทที่{' '}
+                  {currentChapter.chapterNumber}
+                  {' / '}
+                  {story.totalChapters}
+                </div>
+
+                <div className="story-reader-progress">
+                  <div className="story-reader-progress-track">
+                    <div
+                      className="story-reader-progress-value"
+                      style={{
+                        width: `${progressPercent}%`,
+                      }}
+                    />
+                  </div>
+
+                  <span>
+                    {progressPercent}%
+                  </span>
+                </div>
+              </div>
+
+              <h1 className="story-reader-chapter-title">
+                {currentChapter.title}
+              </h1>
+
+              <div className="story-reader-chapter-divider" />
+            </div>
+
+            {/* =================================================
+                USER DECISION
+            ================================================= */}
 
             {currentChapter.userPromptChoice && (
               <div className="story-reader-user-choice">
@@ -890,7 +896,9 @@ export const ReaderView: React.FC<
               </div>
             )}
 
-            {/* Story Content */}
+            {/* =================================================
+                STORY CONTENT
+            ================================================= */}
 
             <div className="story-reader-text font-serif">
               {storyParagraphs.map(
@@ -911,218 +919,225 @@ export const ReaderView: React.FC<
                 )
               )}
             </div>
-          </article>
 
-          {/* Chapter Navigation */}
+            {/* =================================================
+                CHAPTER NAVIGATION
+            ================================================= */}
 
-          <div className="story-reader-navigation">
-            <button
-              className="story-reader-nav-button"
-              disabled={
-                selectedChapter <= 1
-              }
-              onClick={
-                handlePreviousChapter
-              }
-            >
-              ‹ บทก่อนหน้า
-            </button>
+            <div className="story-reader-navigation">
+              <button
+                className="story-reader-nav-button"
+                disabled={
+                  selectedChapter <= 1
+                }
+                onClick={
+                  handlePreviousChapter
+                }
+              >
+                ‹ บทก่อนหน้า
+              </button>
 
-            <span>
-              {selectedChapter}
-              {' / '}
-              {story.currentChapter}
-            </span>
+              <span>
+                {selectedChapter}
+                {' / '}
+                {story.currentChapter}
+              </span>
 
-            <button
-              className="story-reader-nav-button"
-              disabled={
-                selectedChapter >=
-                story.currentChapter
-              }
-              onClick={
-                handleNextChapter
-              }
-            >
-              บทถัดไป ›
-            </button>
-          </div>
+              <button
+                className="story-reader-nav-button"
+                disabled={
+                  selectedChapter >=
+                  story.currentChapter
+                }
+                onClick={
+                  handleNextChapter
+                }
+              >
+                บทถัดไป ›
+              </button>
+            </div>
 
-          {/* Choices */}
+            {/* =================================================
+                CHOICES
+            ================================================= */}
 
-          {isLatestChapter && (
-            <section className="story-reader-choice-section">
-              <div className="story-reader-choice-heading">
-                <span className="story-reader-choice-icon">
-                  <ChoiceIcon />
-                </span>
+            {isLatestChapter && (
+              <section className="story-reader-choice-section">
+                <div className="story-reader-choice-heading">
+                  <span className="story-reader-choice-icon">
+                    <ChoiceIcon />
+                  </span>
+
+                  <div>
+                    <h2>
+                      คุณจะทำอย่างไรต่อ?
+                    </h2>
+
+                    <p>
+                      เลือกแนวทางที่ต้องการ
+                      หรือพิมพ์การตัดสินใจของคุณเอง
+                    </p>
+                  </div>
+                </div>
+
+                {story.currentChapter <
+                story.totalChapters ? (
+                  <>
+                    {chapterChoices.length >
+                      0 && (
+                      <div className="story-reader-choice-list">
+                        {chapterChoices.map(
+                          (
+                            choice,
+                            index
+                          ) => {
+                            const isSelected =
+                              selectedChoice ===
+                              choice;
+
+                            return (
+                              <button
+                                key={`${choice}-${index}`}
+                                type="button"
+                                className={`story-reader-choice-button ${
+                                  isSelected
+                                    ? 'selected'
+                                    : ''
+                                }`}
+                                onClick={() => {
+                                  if (
+                                    isSelected
+                                  ) {
+                                    setSelectedChoice(
+                                      null
+                                    );
+                                    return;
+                                  }
+
+                                  setSelectedChoice(
+                                    choice
+                                  );
+
+                                  setUserPrompt(
+                                    ''
+                                  );
+                                }}
+                                disabled={
+                                  isGeneratingNext
+                                }
+                              >
+                                <span className="story-reader-choice-number">
+                                  {isSelected
+                                    ? '✓'
+                                    : index +
+                                      1}
+                                </span>
+
+                                <span className="story-reader-choice-text">
+                                  {choice}
+                                </span>
+
+                                <span className="story-reader-choice-arrow">
+                                  →
+                                </span>
+                              </button>
+                            );
+                          }
+                        )}
+                      </div>
+                    )}
+
+                    <div className="story-reader-choice-fallback">
+                      <input
+                        id="user-action"
+                        type="text"
+                        placeholder={
+                          selectedChoice
+                            ? 'เลือกตัวเลือกด้านบนแล้วกด "ดำเนินเรื่องต่อ"'
+                            : 'พิมพ์การตัดสินใจของคุณ...'
+                        }
+                        value={userPrompt}
+                        onChange={(e) => {
+                          setUserPrompt(
+                            e.target.value
+                          );
+
+                          if (
+                            e.target.value.trim()
+                          ) {
+                            setSelectedChoice(
+                              null
+                            );
+                          }
+                        }}
+                        onKeyDown={(e) => {
+                          if (
+                            e.key === 'Enter' &&
+                            !e.shiftKey &&
+                            !selectedChoice &&
+                            userPrompt.trim()
+                          ) {
+                            e.preventDefault();
+
+                            handleGenerateNextChapter();
+                          }
+                        }}
+                        disabled={
+                          !!selectedChoice ||
+                          isGeneratingNext
+                        }
+                      />
+
+                      <button
+                        type="button"
+                        className="story-reader-submit"
+                        onClick={() =>
+                          handleGenerateNextChapter()
+                        }
+                        disabled={
+                          (!selectedChoice &&
+                            !userPrompt.trim()) ||
+                          isGeneratingNext
+                        }
+                      >
+                        {isGeneratingNext
+                          ? 'กำลังสร้าง...'
+                          : 'ดำเนินเรื่องต่อ →'}
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  <div className="story-reader-finished">
+                    เรื่องราวจบลงแล้ว
+                  </div>
+                )}
+              </section>
+            )}
+
+            {/* =================================================
+                GENERATING
+            ================================================= */}
+
+            {isGeneratingNext && (
+              <div className="story-reader-generating">
+                <div className="story-reader-writing-icon">
+                  <span />
+                  <span />
+                  <span />
+                </div>
 
                 <div>
-                  <h2>
-                    คุณจะทำอย่างไรต่อ?
-                  </h2>
+                  <strong>
+                    กำลังเรียบเรียงเรื่องราวบทต่อไป
+                  </strong>
 
-                  <p>
-                    เลือกแนวทางที่ต้องการ
-                    หรือพิมพ์การตัดสินใจของคุณเอง
-                  </p>
+                  <span>
+                    ตามการตัดสินใจของคุณ
+                  </span>
                 </div>
               </div>
-
-              {story.currentChapter <
-              story.totalChapters ? (
-                <>
-                  {chapterChoices.length >
-                    0 && (
-                    <div className="story-reader-choice-list">
-                      {chapterChoices.map(
-                        (
-                          choice,
-                          index
-                        ) => {
-                          const isSelected =
-                            selectedChoice ===
-                            choice;
-
-                          return (
-                            <button
-                              key={`${choice}-${index}`}
-                              type="button"
-                              className={`story-reader-choice-button ${
-                                isSelected
-                                  ? 'selected'
-                                  : ''
-                              }`}
-                              onClick={() => {
-                                if (
-                                  isSelected
-                                ) {
-                                  setSelectedChoice(
-                                    null
-                                  );
-                                  return;
-                                }
-
-                                setSelectedChoice(
-                                  choice
-                                );
-                                setUserPrompt(
-                                  ''
-                                );
-                              }}
-                              disabled={
-                                isGeneratingNext
-                              }
-                            >
-                              <span className="story-reader-choice-number">
-                                {isSelected
-                                  ? '✓'
-                                  : index +
-                                    1}
-                              </span>
-
-                              <span className="story-reader-choice-text">
-                                {choice}
-                              </span>
-
-                              <span className="story-reader-choice-arrow">
-                                →
-                              </span>
-                            </button>
-                          );
-                        }
-                      )}
-                    </div>
-                  )}
-
-                  <div className="story-reader-choice-fallback">
-                    <input
-                      id="user-action"
-                      type="text"
-                      placeholder={
-                        selectedChoice
-                          ? 'เลือกตัวเลือกด้านบนแล้วกด "ดำเนินเรื่องต่อ"'
-                          : 'พิมพ์การตัดสินใจของคุณ...'
-                      }
-                      value={userPrompt}
-                      onChange={(e) => {
-                        setUserPrompt(
-                          e.target.value
-                        );
-
-                        if (
-                          e.target.value.trim()
-                        ) {
-                          setSelectedChoice(
-                            null
-                          );
-                        }
-                      }}
-                      onKeyDown={(e) => {
-                        if (
-                          e.key === 'Enter' &&
-                          !e.shiftKey &&
-                          !selectedChoice &&
-                          userPrompt.trim()
-                        ) {
-                          e.preventDefault();
-
-                          handleGenerateNextChapter();
-                        }
-                      }}
-                      disabled={
-                        !!selectedChoice ||
-                        isGeneratingNext
-                      }
-                    />
-
-                    <button
-                      type="button"
-                      className="story-reader-submit"
-                      onClick={() =>
-                        handleGenerateNextChapter()
-                      }
-                      disabled={
-                        (!selectedChoice &&
-                          !userPrompt.trim()) ||
-                        isGeneratingNext
-                      }
-                    >
-                      {isGeneratingNext
-                        ? 'กำลังสร้าง...'
-                        : 'ดำเนินเรื่องต่อ →'}
-                    </button>
-                  </div>
-                </>
-              ) : (
-                <div className="story-reader-finished">
-                  เรื่องราวจบลงแล้ว
-                </div>
-              )}
-            </section>
-          )}
-
-          {/* Generating */}
-
-          {isGeneratingNext && (
-            <div className="story-reader-generating">
-              <div className="story-reader-writing-icon">
-                <span />
-                <span />
-                <span />
-              </div>
-
-              <div>
-                <strong>
-                  กำลังเรียบเรียงเรื่องราวบทต่อไป
-                </strong>
-
-                <span>
-                  ตามการตัดสินใจของคุณ
-                </span>
-              </div>
-            </div>
-          )}
+            )}
+          </article>
         </section>
 
         {/* ===================================================

@@ -398,12 +398,17 @@
 
 .story-reader-article {
     position: relative;
-    min-width: 0;
-    overflow: visible;
-    border: none;
-    border-radius: 0;
-    background: transparent;
-    box-shadow: none;
+    overflow: hidden;
+
+    border: 1px solid rgba(126, 78, 53, 0.16);
+    border-radius: 16px;
+
+    background-color: rgba(250, 245, 237, 0.92);
+
+    box-shadow:
+        0 16px 42px rgba(76, 48, 36, 0.075),
+        0 2px 8px rgba(76, 48, 36, 0.035);
+
     isolation: isolate;
 }
 
@@ -539,39 +544,62 @@
     align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    margin: 1.45rem 0 1.65rem;
-    padding: 0.42rem 0;
+
+    margin: 0;
+    padding: 1rem 1.75rem 1.15rem;
+
     border-top: 1px solid rgba(126, 78, 53, 0.10);
-    border-bottom: 1px solid rgba(126, 78, 53, 0.10);
+
     background: transparent;
+
+    box-sizing: border-box;
 }
 
 .story-reader-navigation>span {
     flex-shrink: 0;
+
     color: var(--reader-text-muted);
     font-size: 0.67rem;
     font-weight: 600;
 }
 
 .story-reader-nav-button {
-    border: none;
-    background: transparent;
+    border: 1px solid rgba(126, 78, 53, 0.15);
+    border-radius: 9px;
+
+    background: rgba(255, 255, 255, 0.72);
     color: var(--reader-accent);
+
     font-family: inherit;
     font-size: 0.73rem;
     font-weight: 600;
+
     cursor: pointer;
-    padding: 0.45rem 0.55rem;
+    padding: 0.48rem 0.8rem;
+
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
 }
 
 .story-reader-nav-button:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: rgba(126, 78, 53, 0.25);
     color: var(--reader-accent-dark);
+    box-shadow: 0 3px 10px rgba(76, 48, 36, 0.07);
+    transform: translateY(-1px);
 }
 
 .story-reader-nav-button:disabled {
+    background: rgba(255, 255, 255, 0.35);
+    border-color: rgba(126, 78, 53, 0.08);
     color: var(--reader-text-muted);
-    opacity: 0.4;
+    opacity: 0.45;
     cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
 }
 
 /* =========================================================
@@ -2318,5 +2346,705 @@
     .reader-loading-choice-input,
     .reader-loading-choice-submit {
         animation: none;
+    }
+}
+
+/* =========================================================
+   FINAL READER OVERRIDES
+   Updated reader structure:
+   - No separate topbar
+   - Controls live inside the story reader card
+   - Desktop genre backgrounds only
+   - No mobile genre background images
+========================================================= */
+
+/* ---------------------------------------------------------
+   Remove the old page-level genre wash.
+   The actual genre image now belongs to the reader card.
+--------------------------------------------------------- */
+
+.story-reader-page::before {
+    content: none;
+    display: none;
+}
+
+/* ---------------------------------------------------------
+   Reader card
+--------------------------------------------------------- */
+
+.story-reader-article {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(126, 78, 53, 0.16);
+    border-radius: 16px;
+    background-color: rgba(250, 245, 237, 0.92);
+    box-shadow:
+        0 16px 42px rgba(76, 48, 36, 0.075),
+        0 2px 8px rgba(76, 48, 36, 0.035);
+    isolation: isolate;
+}
+
+/* ---------------------------------------------------------
+   Desktop genre backgrounds
+   Images are intentionally applied to the whole reader card.
+--------------------------------------------------------- */
+
+@media (min-width: 921px) {
+
+    .story-reader-article.genre-fantasy {
+        background-image:
+            linear-gradient(180deg,
+                rgba(250, 245, 237, 0.78),
+                rgba(250, 245, 237, 0.88)),
+            url('/images/genres/fantasy-desktop.jpg');
+    }
+
+    .story-reader-article.genre-romance {
+        background-image:
+            linear-gradient(180deg,
+                rgba(250, 245, 237, 0.78),
+                rgba(250, 245, 237, 0.88)),
+            url('/images/genres/romance-desktop.jpg');
+    }
+
+    .story-reader-article.genre-mystery {
+        background-image:
+            linear-gradient(180deg,
+                rgba(250, 245, 237, 0.80),
+                rgba(250, 245, 237, 0.90)),
+            url('/images/genres/mystery-desktop.jpg');
+    }
+
+    .story-reader-article.genre-sci-fi {
+        background-image:
+            linear-gradient(180deg,
+                rgba(250, 245, 237, 0.80),
+                rgba(250, 245, 237, 0.90)),
+            url('/images/genres/sci-fi-desktop.jpg');
+    }
+
+    .story-reader-article.genre-history {
+        background-image:
+            linear-gradient(180deg,
+                rgba(250, 245, 237, 0.78),
+                rgba(250, 245, 237, 0.89)),
+            url('/images/genres/history-desktop.jpg');
+    }
+
+    .story-reader-article.genre-horror {
+        background-image:
+            linear-gradient(180deg,
+                rgba(250, 245, 237, 0.80),
+                rgba(250, 245, 237, 0.91)),
+            url('/images/genres/horror-desktop.jpg');
+    }
+
+    .story-reader-article.genre-drama {
+        background-image:
+            linear-gradient(180deg,
+                rgba(250, 245, 237, 0.79),
+                rgba(250, 245, 237, 0.89)),
+            url('/images/genres/drama-desktop.jpg');
+    }
+
+    .story-reader-article.genre-action {
+        background-image:
+            linear-gradient(180deg,
+                rgba(250, 245, 237, 0.79),
+                rgba(250, 245, 237, 0.89)),
+            url('/images/genres/action-desktop.jpg');
+    }
+
+    .story-reader-article.genre-adventure {
+        background-image:
+            linear-gradient(180deg,
+                rgba(250, 245, 237, 0.78),
+                rgba(250, 245, 237, 0.88)),
+            url('/images/genres/adventure-desktop.jpg');
+    }
+
+    .story-reader-article.genre-fantasy,
+    .story-reader-article.genre-romance,
+    .story-reader-article.genre-mystery,
+    .story-reader-article.genre-sci-fi,
+    .story-reader-article.genre-history,
+    .story-reader-article.genre-horror,
+    .story-reader-article.genre-drama,
+    .story-reader-article.genre-action,
+    .story-reader-article.genre-adventure {
+        background-size: cover;
+        background-position: center top;
+        background-repeat: no-repeat;
+        background-attachment: local;
+    }
+}
+
+/* ---------------------------------------------------------
+   Reader header inside the same story card
+--------------------------------------------------------- */
+
+.story-reader-inner-header {
+    position: relative;
+    z-index: 5;
+
+    min-height: 64px;
+    padding: 0.72rem 1.15rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
+    border-bottom: 1px solid rgba(126, 78, 53, 0.12);
+    background: rgba(250, 245, 237, 0.72);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-sizing: border-box;
+}
+
+.story-reader-inner-header .story-reader-back {
+    flex-shrink: 0;
+}
+
+.story-reader-inner-header .story-reader-top-actions {
+    flex-shrink: 0;
+}
+
+/* Make the rest of the reader feel like one continuous block. */
+
+.story-reader-article>.story-reader-chapter-header {
+    position: relative;
+    z-index: 2;
+    margin: 0;
+    padding: 1.05rem 1.25rem 0.15rem;
+    background: rgba(250, 245, 237, 0.42);
+}
+
+.story-reader-article>.story-reader-user-choice,
+.story-reader-article>.story-reader-text,
+.story-reader-article>.story-reader-navigation,
+.story-reader-article>.story-reader-choice-section,
+.story-reader-article>.story-reader-generating {
+    position: relative;
+    z-index: 2;
+}
+
+.story-reader-article>.story-reader-text {
+    padding-top: 0.55rem;
+}
+
+.story-reader-article>.story-reader-navigation {
+    margin-left: 1.25rem;
+    margin-right: 1.25rem;
+}
+
+.story-reader-article>.story-reader-choice-section {
+    margin-left: 1.25rem;
+    margin-right: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+.story-reader-article>.story-reader-generating {
+    margin-left: 1.25rem;
+    margin-right: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+/* ---------------------------------------------------------
+   Empty state — same visual language, no topbar
+--------------------------------------------------------- */
+
+.story-reader-empty-card {
+    width: min(620px, calc(100% - 32px));
+    padding: 1rem 1.25rem 2rem;
+    border: 1px solid rgba(126, 78, 53, 0.14);
+    border-radius: 16px;
+    background: rgba(250, 245, 237, 0.88);
+    box-shadow: 0 16px 42px rgba(76, 48, 36, 0.07);
+    box-sizing: border-box;
+}
+
+.story-reader-empty-actions {
+    display: flex;
+    align-items: center;
+    min-height: 42px;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid rgba(126, 78, 53, 0.10);
+}
+
+/* ---------------------------------------------------------
+   Remove old topbar presentation.
+   The class is intentionally retained only for compatibility
+   with any other page that may still use it.
+--------------------------------------------------------- */
+
+.story-reader-topbar {
+    position: static;
+    width: auto;
+    min-height: 0;
+    border: 0;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: none;
+}
+
+.story-reader-topbar-inner {
+    width: auto;
+    min-height: 0;
+}
+
+/* ---------------------------------------------------------
+   Mobile:
+   absolutely NO genre background image.
+--------------------------------------------------------- */
+
+@media (max-width: 920px) {
+
+    .story-reader-article.genre-fantasy,
+    .story-reader-article.genre-romance,
+    .story-reader-article.genre-mystery,
+    .story-reader-article.genre-sci-fi,
+    .story-reader-article.genre-history,
+    .story-reader-article.genre-horror,
+    .story-reader-article.genre-drama,
+    .story-reader-article.genre-action,
+    .story-reader-article.genre-adventure {
+        background-image: none;
+        background-color: rgba(250, 245, 237, 0.96);
+    }
+
+    .story-reader-inner-header {
+        min-height: 58px;
+        padding: 0.62rem 0.75rem;
+        gap: 0.6rem;
+    }
+
+    .story-reader-inner-header .story-reader-top-actions {
+        gap: 0.28rem;
+    }
+
+    .story-reader-article>.story-reader-chapter-header {
+        padding: 0.95rem 0.85rem 0.1rem;
+    }
+
+    .story-reader-article>.story-reader-navigation {
+        margin-left: 0.75rem;
+        margin-right: 0.75rem;
+    }
+
+    .story-reader-article>.story-reader-choice-section {
+        margin-left: 0.75rem;
+        margin-right: 0.75rem;
+        margin-bottom: 0.85rem;
+    }
+
+    .story-reader-article>.story-reader-generating {
+        margin-left: 0.75rem;
+        margin-right: 0.75rem;
+        margin-bottom: 0.85rem;
+    }
+}
+
+@media (max-width: 760px) {
+
+    .story-reader-inner-header {
+        align-items: center;
+    }
+
+    .story-reader-inner-header .story-reader-back {
+        font-size: 0.68rem;
+    }
+
+    .story-reader-inner-header .story-reader-branch-button {
+        min-height: 1.85rem;
+        height: auto;
+        padding: 0.45rem 0.62rem;
+        font-size: 0.61rem;
+    }
+
+    .story-reader-inner-header .story-reader-font-controls {
+        padding: 2px;
+    }
+
+    .story-reader-inner-header .story-reader-font-controls button {
+        min-width: 1.55rem;
+        height: 1.48rem;
+        font-size: 0.58rem;
+    }
+
+    .story-reader-empty-card {
+        width: calc(100% - 20px);
+    }
+}
+
+@media (max-width: 420px) {
+
+    .story-reader-inner-header {
+        padding-left: 0.55rem;
+        padding-right: 0.55rem;
+    }
+
+    .story-reader-inner-header .story-reader-back {
+        max-width: 112px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .story-reader-inner-header .story-reader-branch-button {
+        max-width: 88px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+/* =========================================================
+   FINAL DESKTOP GENRE BACKGROUND
+   Genre artwork belongs to the whole page, OUTSIDE the reader
+   and sidebar. The reader/sidebar are translucent surfaces over it.
+   Desktop only. No genre background images on mobile.
+========================================================= */
+
+@media (min-width: 921px) {
+
+    .story-reader-page {
+        position: relative;
+        isolation: isolate;
+        min-height: 100vh;
+        overflow-x: clip;
+        background: #eee4d7;
+    }
+
+    /* The artwork is a fixed page-level layer. */
+    .story-reader-page::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        display: block;
+        pointer-events: none;
+        background-position: center center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-color: #eee4d7;
+        opacity: 0.90;
+        filter: saturate(0.88);
+        mask-image: none;
+        -webkit-mask-image: none;
+    }
+
+    /* Gentle page-wide fade over the artwork. */
+    .story-reader-page::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        display: block;
+        pointer-events: none;
+        background:
+            linear-gradient(90deg,
+                rgba(238, 228, 215, 0.20) 0%,
+                rgba(238, 228, 215, 0.04) 24%,
+                rgba(238, 228, 215, 0.06) 52%,
+                rgba(238, 228, 215, 0.04) 78%,
+                rgba(238, 228, 215, 0.24) 100%),
+            linear-gradient(180deg,
+                rgba(238, 228, 215, 0.12) 0%,
+                rgba(238, 228, 215, 0.00) 20%,
+                rgba(238, 228, 215, 0.00) 78%,
+                rgba(238, 228, 215, 0.16) 100%);
+    }
+
+    .story-reader-page:has(.genre-fantasy)::before {
+        background-image: url('/images/genres/fantasy-desktop.png');
+    }
+
+    .story-reader-page:has(.genre-romance)::before {
+        background-image: url('/images/genres/romance-desktop.png');
+    }
+
+    .story-reader-page:has(.genre-mystery)::before {
+        background-image: url('/images/genres/mystery-desktop.png');
+    }
+
+    .story-reader-page:has(.genre-sci-fi)::before {
+        background-image: url('/images/genres/sci-fi-desktop.png');
+    }
+
+    .story-reader-page:has(.genre-history)::before {
+        background-image: url('/images/genres/history-desktop.png');
+    }
+
+    .story-reader-page:has(.genre-horror)::before {
+        background-image: url('/images/genres/horror-desktop.png');
+    }
+
+    .story-reader-page:has(.genre-drama)::before {
+        background-image: url('/images/genres/drama-desktop.png');
+    }
+
+    .story-reader-page:has(.genre-action)::before {
+        background-image: url('/images/genres/action-desktop.png');
+    }
+
+    .story-reader-page:has(.genre-adventure)::before {
+        background-image: url('/images/genres/adventure-desktop.png');
+    }
+
+    /* Keep every actual UI layer above the artwork. */
+    .story-reader-page>* {
+        position: relative;
+        z-index: 1;
+    }
+
+    .story-reader-layout,
+    .story-reader-empty {
+        position: relative;
+        z-index: 1;
+    }
+
+    /* The article is a translucent reading surface. */
+    .story-reader-article,
+    .story-reader-article.genre-fantasy,
+    .story-reader-article.genre-romance,
+    .story-reader-article.genre-mystery,
+    .story-reader-article.genre-sci-fi,
+    .story-reader-article.genre-history,
+    .story-reader-article.genre-horror,
+    .story-reader-article.genre-drama,
+    .story-reader-article.genre-action,
+    .story-reader-article.genre-adventure {
+        background-image: none;
+        background-color: rgba(250, 245, 237, 0.84);
+        border: 1px solid rgba(126, 78, 53, 0.14);
+        border-radius: 16px;
+        box-shadow:
+            0 18px 50px rgba(55, 39, 28, 0.10),
+            0 2px 10px rgba(55, 39, 28, 0.045);
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
+    }
+
+    .story-reader-article>.story-reader-chapter-header {
+        background: rgba(250, 245, 237, 0.46);
+    }
+
+    /* Sidebar cards also behave like translucent paper/glass. */
+    .story-sidebar-card {
+        background: rgba(249, 242, 232, 0.78);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+}
+
+/* =========================================================
+   Mobile: absolutely no genre background images.
+========================================================= */
+
+@media (max-width: 920px) {
+
+    .story-reader-page::before,
+    .story-reader-page::after {
+        content: none;
+        display: none;
+    }
+
+    .story-reader-page {
+        background:
+            radial-gradient(circle at 52% 18%,
+                rgba(255, 251, 245, 0.96) 0%,
+                rgba(245, 236, 225, 0.94) 38%,
+                rgba(231, 218, 203, 0.96) 100%);
+    }
+
+    .story-reader-article,
+    .story-reader-article.genre-fantasy,
+    .story-reader-article.genre-romance,
+    .story-reader-article.genre-mystery,
+    .story-reader-article.genre-sci-fi,
+    .story-reader-article.genre-history,
+    .story-reader-article.genre-horror,
+    .story-reader-article.genre-drama,
+    .story-reader-article.genre-action,
+    .story-reader-article.genre-adventure {
+        background-image: none;
+        background-color: rgba(250, 245, 237, 0.96);
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+    }
+}
+
+/* =========================================================
+   FINAL 4-LAYER READER COMPOSITION
+   Layer 1: full-viewport genre artwork
+   Layer 2: atmospheric fade
+   Layer 3: translucent reader/sidebar surfaces
+   Layer 4: actual UI/content
+   Desktop only for genre artwork.
+========================================================= */
+
+@media (min-width: 921px) {
+    .story-reader-page {
+        position: relative;
+        isolation: isolate;
+        min-height: 100vh;
+        min-height: 100dvh;
+        overflow-x: clip;
+        background: #eee4d7;
+    }
+
+    /* Layer 1 — full-screen genre artwork */
+    .story-reader-page::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
+        height: 100dvh;
+        z-index: -2;
+        display: block;
+        pointer-events: none;
+        background-color: #eee4d7;
+        background-position: center center;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        opacity: 1;
+        filter: saturate(0.92);
+        transform: translateZ(0);
+    }
+
+    .story-reader-page:has(.genre-fantasy)::before {
+        background-image: url('/images/genres/fantasy-desktop.png');
+    }
+
+    .story-reader-page:has(.genre-romance)::before {
+        background-image: url('/images/genres/romance-desktop.png');
+    }
+
+    .story-reader-page:has(.genre-mystery)::before {
+        background-image: url('/images/genres/mystery-desktop.png');
+    }
+
+    .story-reader-page:has(.genre-sci-fi)::before {
+        background-image: url('/images/genres/sci-fi-desktop.png');
+    }
+
+    .story-reader-page:has(.genre-history)::before {
+        background-image: url('/images/genres/history-desktop.png');
+    }
+
+    .story-reader-page:has(.genre-horror)::before {
+        background-image: url('/images/genres/horror-desktop.png');
+    }
+
+    .story-reader-page:has(.genre-drama)::before {
+        background-image: url('/images/genres/drama-desktop.png');
+    }
+
+    .story-reader-page:has(.genre-action)::before {
+        background-image: url('/images/genres/action-desktop.png');
+    }
+
+    .story-reader-page:has(.genre-adventure)::before {
+        background-image: url('/images/genres/adventure-desktop.png');
+    }
+
+    /* Layer 2 — atmospheric fade, strongest around the reading area. */
+    .story-reader-page::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
+        height: 100dvh;
+        z-index: -1;
+        display: block;
+        pointer-events: none;
+        background:
+            radial-gradient(ellipse 62% 92% at 52% 50%,
+                rgba(250, 245, 237, 0.24) 0%,
+                rgba(250, 245, 237, 0.12) 48%,
+                rgba(250, 245, 237, 0.02) 76%,
+                rgba(250, 245, 237, 0.00) 100%),
+            linear-gradient(90deg,
+                rgba(250, 245, 237, 0.04) 0%,
+                rgba(250, 245, 237, 0.00) 18%,
+                rgba(250, 245, 237, 0.00) 82%,
+                rgba(250, 245, 237, 0.05) 100%);
+    }
+
+    /* Layer 4 — page UI stays above the artwork and atmosphere. */
+    .story-reader-page>*,
+    .story-reader-layout,
+    .story-reader-empty {
+        position: relative;
+        z-index: 0;
+    }
+
+    /* Layer 3 — reader surface. No genre image belongs here. */
+    .story-reader-article,
+    .story-reader-article.genre-fantasy,
+    .story-reader-article.genre-romance,
+    .story-reader-article.genre-mystery,
+    .story-reader-article.genre-sci-fi,
+    .story-reader-article.genre-history,
+    .story-reader-article.genre-horror,
+    .story-reader-article.genre-drama,
+    .story-reader-article.genre-action,
+    .story-reader-article.genre-adventure {
+        background-image: none !important;
+        background-color: rgba(250, 245, 237, 0.76) !important;
+        border: 1px solid rgba(126, 78, 53, 0.14);
+        border-radius: 16px;
+        box-shadow:
+            0 18px 50px rgba(55, 39, 28, 0.10),
+            0 2px 10px rgba(55, 39, 28, 0.045);
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+        isolation: isolate;
+    }
+
+    .story-reader-article>.story-reader-chapter-header {
+        background: rgba(250, 245, 237, 0.52);
+    }
+
+    .story-reader-inner-header {
+        background: rgba(250, 245, 237, 0.56);
+    }
+
+    /* Sidebar surface remains a little more opaque for small text blocks. */
+    .story-sidebar-card {
+        background: rgba(249, 242, 232, 0.82);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+    }
+}
+
+/* Mobile: no genre artwork and no desktop atmosphere layer. */
+@media (max-width: 920px) {
+
+    .story-reader-page::before,
+    .story-reader-page::after {
+        content: none !important;
+        display: none !important;
+    }
+
+    .story-reader-article,
+    .story-reader-article.genre-fantasy,
+    .story-reader-article.genre-romance,
+    .story-reader-article.genre-mystery,
+    .story-reader-article.genre-sci-fi,
+    .story-reader-article.genre-history,
+    .story-reader-article.genre-horror,
+    .story-reader-article.genre-drama,
+    .story-reader-article.genre-action,
+    .story-reader-article.genre-adventure {
+        background-image: none !important;
+        background-color: rgba(250, 245, 237, 0.96) !important;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
     }
 }

@@ -5,11 +5,13 @@ import React, {
   useMemo,
   useState,
 } from 'react';
+
 import {
   useParams,
   useRouter,
   useSearchParams,
 } from 'next/navigation';
+
 import '@/styles/reader.css';
 import '@/styles/story-reader.css';
 
@@ -171,6 +173,7 @@ const parseStoryContent = (
     .map((rawText): StoryParagraph => {
       const text = rawText.trim();
 
+      /* [dialogue] */
       if (/^\[dialogue\]\s*/i.test(text)) {
         return {
           type: 'dialogue',
@@ -180,6 +183,7 @@ const parseStoryContent = (
         };
       }
 
+      /* [thought] */
       if (/^\[thought\]\s*/i.test(text)) {
         return {
           type: 'thought',
@@ -189,6 +193,7 @@ const parseStoryContent = (
         };
       }
 
+      /* [action] */
       if (/^\[action\]\s*/i.test(text)) {
         return {
           type: 'action',
@@ -198,6 +203,7 @@ const parseStoryContent = (
         };
       }
 
+      /* [important] */
       if (/^\[important\]\s*/i.test(text)) {
         return {
           type: 'important',
@@ -207,7 +213,7 @@ const parseStoryContent = (
         };
       }
 
-      // รองรับ marker ภาษาไทยจาก content เก่า
+      /* รองรับ marker ภาษาไทยจาก content เก่า */
       if (/^เหตุการณ์สำคัญ\s*[:：]\s*/i.test(text)) {
         return {
           type: 'important',
@@ -244,7 +250,7 @@ const parseStoryContent = (
         };
       }
 
-      // รองรับความคิดแบบ *ข้อความ*
+      /* รองรับความคิดแบบ *ข้อความ* */
       if (
         text.startsWith('*') &&
         text.endsWith('*') &&
@@ -256,7 +262,7 @@ const parseStoryContent = (
         };
       }
 
-      // รองรับความคิดแบบ (ข้อความ)
+      /* รองรับความคิดแบบ (ข้อความ) */
       if (
         text.startsWith('(') &&
         text.endsWith(')') &&
@@ -268,7 +274,7 @@ const parseStoryContent = (
         };
       }
 
-      // รองรับบทพูดที่ไม่มี marker
+      /* รองรับบทพูดที่ไม่มี marker */
       const isDialogue =
         /^["“「『].*["”」』]$/.test(text);
 
@@ -279,7 +285,7 @@ const parseStoryContent = (
         };
       }
 
-      // ปกติ = narration
+      /* ปกติ = narration */
       return {
         type: 'narration',
         text,
@@ -304,42 +310,22 @@ export default function BranchReaderPage() {
      STATE
   ========================================================= */
 
-  const [storyTitle, setStoryTitle] =
-    useState('');
-
-  const [totalChapters, setTotalChapters] =
-    useState(0);
-
-  const [genre, setGenre] =
-    useState('');
-
-  const [tone, setTone] =
-    useState('');
-
-  const [synopsis, setSynopsis] =
-    useState('');
-
-  const [creatorName, setCreatorName] =
-    useState('');
-
+  const [storyTitle, setStoryTitle] = useState('');
+  const [totalChapters, setTotalChapters] = useState(0);
+  const [genre, setGenre] = useState('');
+  const [tone, setTone] = useState('');
+  const [synopsis, setSynopsis] = useState('');
+  const [creatorName, setCreatorName] = useState('');
   const [coverImageUrl, setCoverImageUrl] =
     useState<string | null>(null);
 
-  const [playerName, setPlayerName] =
-    useState('');
-
-  const [isPublic, setIsPublic] =
-    useState(false);
-
-  const [isOwner, setIsOwner] =
-    useState(false);
-
+  const [playerName, setPlayerName] = useState('');
+  const [isPublic, setIsPublic] = useState(false);
+  const [isOwner, setIsOwner] = useState(false);
   const [updatingVisibility, setUpdatingVisibility] =
     useState(false);
 
-  const [chapters, setChapters] =
-    useState<Chapter[]>([]);
-
+  const [chapters, setChapters] = useState<Chapter[]>([]);
   const [characters, setCharacters] =
     useState<Character[]>([]);
 
@@ -357,11 +343,8 @@ export default function BranchReaderPage() {
   const [selectedChapter, setSelectedChapter] =
     useState(1);
 
-  const [loading, setLoading] =
-    useState(true);
-
-  const [error, setError] =
-    useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   /* =========================================================
      BACK
@@ -369,7 +352,8 @@ export default function BranchReaderPage() {
 
   const handleBack = () => {
     router.push(
-      `/story/${storyId}/branches${from ? `?from=${from}` : ''
+      `/story/${storyId}/branches${
+        from ? `?from=${from}` : ''
       }`
     );
   };
@@ -396,8 +380,7 @@ export default function BranchReaderPage() {
         {
           method: 'PATCH',
           headers: {
-            'Content-Type':
-              'application/json',
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({
             is_public: nextValue,
@@ -405,8 +388,7 @@ export default function BranchReaderPage() {
         }
       );
 
-      const data =
-        await response.json();
+      const data = await response.json();
 
       if (
         !response.ok ||
@@ -414,7 +396,7 @@ export default function BranchReaderPage() {
       ) {
         throw new Error(
           data.error ||
-          'ไม่สามารถเปลี่ยนสถานะเส้นเรื่องได้'
+            'ไม่สามารถเปลี่ยนสถานะเส้นเรื่องได้'
         );
       }
 
@@ -465,7 +447,7 @@ export default function BranchReaderPage() {
         ) {
           throw new Error(
             data.error ||
-            'ไม่สามารถโหลดเส้นเรื่องได้'
+              'ไม่สามารถโหลดเส้นเรื่องได้'
           );
         }
 
@@ -492,7 +474,7 @@ export default function BranchReaderPage() {
 
         setCreatorName(
           data.story?.creatorName ??
-          'ไม่ระบุชื่อ'
+            'ไม่ระบุชื่อ'
         );
 
         setCoverImageUrl(
@@ -502,7 +484,7 @@ export default function BranchReaderPage() {
         /* Branch */
         setPlayerName(
           data.branch?.userName ??
-          'ผู้เล่น'
+            'ผู้เล่น'
         );
 
         setIsPublic(
@@ -587,7 +569,7 @@ export default function BranchReaderPage() {
       Math.round(
         (selectedChapter /
           totalChapters) *
-        100
+          100
       )
     );
   }, [
@@ -632,8 +614,21 @@ export default function BranchReaderPage() {
 
   const genreClass =
     genreClassMap[
-    genre.trim()
+      genre.trim()
     ] || 'genre-default';
+
+  /*
+   * ใส่ genre class ไว้ที่ root ด้วย
+   * เพื่อให้ background ของ genre
+   * ครอบคลุมทั้ง viewport ของ Branch Reader
+   */
+
+  const pageClassName = [
+    'story-reader-page',
+    'branches-reader-page',
+    genreClass,
+    `font-size-${fontSize}`,
+  ].join(' ');
 
   /* =========================================================
      SCROLL
@@ -689,13 +684,15 @@ export default function BranchReaderPage() {
     return (
       <button
         type="button"
-        className={`visibility-toggle ${isPublic
-          ? 'is-public'
-          : 'is-private'
-          } ${updatingVisibility
+        className={`visibility-toggle ${
+          isPublic
+            ? 'is-public'
+            : 'is-private'
+        } ${
+          updatingVisibility
             ? 'is-updating'
             : ''
-          }`}
+        }`}
         onClick={
           handleToggleVisibility
         }
@@ -724,84 +721,170 @@ export default function BranchReaderPage() {
   };
 
   /* =========================================================
+     FONT CONTROLS
+  ========================================================= */
+
+  const FontControls = () => (
+    <div className="story-reader-font-controls">
+      <button
+        type="button"
+        onClick={() =>
+          setFontSize('sm')
+        }
+        className={
+          fontSize === 'sm'
+            ? 'active'
+            : ''
+        }
+        aria-label="ตัวอักษรเล็ก"
+      >
+        A-
+      </button>
+
+      <button
+        type="button"
+        onClick={() =>
+          setFontSize('md')
+        }
+        className={
+          fontSize === 'md'
+            ? 'active'
+            : ''
+        }
+        aria-label="ตัวอักษรปกติ"
+      >
+        A
+      </button>
+
+      <button
+        type="button"
+        onClick={() =>
+          setFontSize('lg')
+        }
+        className={
+          fontSize === 'lg'
+            ? 'active'
+            : ''
+        }
+        aria-label="ตัวอักษรใหญ่"
+      >
+        A+
+      </button>
+    </div>
+  );
+
+  /* =========================================================
+     READER INNER HEADER
+  ========================================================= */
+
+  const ReaderInnerHeader = () => (
+    <div className="story-reader-inner-header">
+      <button
+        className="story-reader-back"
+        onClick={handleBack}
+        type="button"
+      >
+        ‹ กลับสู่เส้นเรื่อง
+      </button>
+
+      <div className="story-reader-top-actions">
+        <VisibilityButton />
+        <FontControls />
+      </div>
+    </div>
+  );
+
+  /* =========================================================
+     CHAPTER NAVIGATION UI
+  ========================================================= */
+
+  const ChapterNavigation = () => (
+    <div className="story-reader-navigation">
+      <button
+        type="button"
+        className="story-reader-nav-button"
+        disabled={
+          selectedChapter <= 1
+        }
+        onClick={
+          handlePreviousChapter
+        }
+      >
+        ‹ บทก่อนหน้า
+      </button>
+
+      <span>
+        {selectedChapter}
+        {' / '}
+        {chapters.length}
+      </span>
+
+      <button
+        type="button"
+        className="story-reader-nav-button"
+        disabled={
+          selectedChapter >=
+          chapters.length
+        }
+        onClick={
+          handleNextChapter
+        }
+      >
+        บทถัดไป ›
+      </button>
+    </div>
+  );
+
+  /* =========================================================
      LOADING
   ========================================================= */
 
   if (loading) {
     return (
-      <div className="story-reader-page branches-reader-page">
-        <header className="story-reader-topbar">
-          <div className="story-reader-topbar-inner">
-            <div className="reader-loading-back" />
-
-            <div className="story-reader-top-actions">
-              <div className="reader-loading-visibility" />
-
-              <div className="story-reader-font-controls reader-loading-font">
-                <span />
-                <span />
-                <span />
-              </div>
-            </div>
-          </div>
-        </header>
-
+      <div className={pageClassName}>
         <main className="story-reader-layout">
           <section className="story-reader-main">
-            {/* Chapter header */}
-            <div className="story-reader-chapter-header">
-              <div className="story-reader-chapter-top">
-                <div className="reader-loading-chapter-number" />
+            <article className="story-reader-article">
+              <ReaderInnerHeader />
 
-                <div className="story-reader-progress">
-                  <div className="story-reader-progress-track">
-                    <div className="reader-loading-progress" />
+              <div className="story-reader-chapter-header">
+                <div className="story-reader-chapter-top">
+                  <div className="reader-loading-chapter-number" />
+
+                  <div className="story-reader-progress">
+                    <div className="story-reader-progress-track">
+                      <div className="reader-loading-progress" />
+                    </div>
+
+                    <span className="reader-loading-progress-text" />
                   </div>
-
-                  <span className="reader-loading-progress-text" />
                 </div>
+
+                <div className="reader-loading-chapter-title" />
+
+                <div className="story-reader-chapter-divider" />
               </div>
 
-              <div className="reader-loading-chapter-title" />
-
-              <div className="story-reader-chapter-divider" />
-            </div>
-
-            {/* Story content */}
-            <article className="story-reader-article">
               <div className="story-reader-text font-serif">
                 <div className="reader-loading-story">
-                  <span />
-                  <span />
-                  <span />
-                  <span />
-                  <span />
-                  <span />
-
-                  <span />
-                  <span />
-                  <span />
-                  <span />
-                  <span />
-                  <span />
-
-                  <span />
-                  <span />
-                  <span />
-                  <span />
+                  {Array.from(
+                    { length: 15 },
+                    (_, index) => (
+                      <span key={index} />
+                    )
+                  )}
                 </div>
               </div>
-            </article>
 
-            {/* Navigation */}
-            <div className="story-reader-navigation">
-              <div className="reader-loading-nav-button" />
-              <div className="reader-loading-nav-counter" />
-              <div className="reader-loading-nav-button" />
-            </div>
+              {/* Navigation อยู่ใน article เดียวกัน */}
+              <div className="story-reader-navigation">
+                <div className="reader-loading-nav-button" />
+                <div className="reader-loading-nav-counter" />
+                <div className="reader-loading-nav-button" />
+              </div>
+            </article>
           </section>
 
-          {/* Sidebar */}
           <aside className="story-reader-sidebar">
             {/* Story info */}
             <section className="story-sidebar-card story-sidebar-story">
@@ -830,87 +913,66 @@ export default function BranchReaderPage() {
             <section className="story-sidebar-card">
               <div className="reader-loading-section-title" />
 
-              <div className="reader-loading-status-item">
-                <span />
-                <div>
-                  <small />
-                  <strong />
-                </div>
-              </div>
+              {Array.from(
+                { length: 3 },
+                (_, index) => (
+                  <div
+                    className="reader-loading-status-item"
+                    key={index}
+                  >
+                    <span />
 
-              <div className="reader-loading-status-item">
-                <span />
-                <div>
-                  <small />
-                  <strong />
-                </div>
-              </div>
-
-              <div className="reader-loading-status-item">
-                <span />
-                <div>
-                  <small />
-                  <strong />
-                </div>
-              </div>
+                    <div>
+                      <small />
+                      <strong />
+                    </div>
+                  </div>
+                )
+              )}
             </section>
 
             {/* Current status */}
             <section className="story-sidebar-card">
               <div className="reader-loading-section-title" />
 
-              <div className="reader-loading-status-item">
-                <span />
-                <div>
-                  <small />
-                  <strong />
-                </div>
-              </div>
+              {Array.from(
+                { length: 3 },
+                (_, index) => (
+                  <div
+                    className="reader-loading-status-item"
+                    key={index}
+                  >
+                    <span />
 
-              <div className="reader-loading-status-item">
-                <span />
-                <div>
-                  <small />
-                  <strong />
-                </div>
-              </div>
-
-              <div className="reader-loading-status-item">
-                <span />
-                <div>
-                  <small />
-                  <strong />
-                </div>
-              </div>
+                    <div>
+                      <small />
+                      <strong />
+                    </div>
+                  </div>
+                )
+              )}
             </section>
 
             {/* Characters */}
             <section className="story-sidebar-card">
               <div className="reader-loading-section-title" />
 
-              <div className="reader-loading-character">
-                <span />
-                <div>
-                  <strong />
-                  <small />
-                </div>
-              </div>
+              {Array.from(
+                { length: 3 },
+                (_, index) => (
+                  <div
+                    className="reader-loading-character"
+                    key={index}
+                  >
+                    <span />
 
-              <div className="reader-loading-character">
-                <span />
-                <div>
-                  <strong />
-                  <small />
-                </div>
-              </div>
-
-              <div className="reader-loading-character">
-                <span />
-                <div>
-                  <strong />
-                  <small />
-                </div>
-              </div>
+                    <div>
+                      <strong />
+                      <small />
+                    </div>
+                  </div>
+                )
+              )}
             </section>
 
             {/* Story path */}
@@ -918,11 +980,12 @@ export default function BranchReaderPage() {
               <div className="reader-loading-section-title" />
 
               <div className="reader-loading-path">
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
+                {Array.from(
+                  { length: 5 },
+                  (_, index) => (
+                    <span key={index} />
+                  )
+                )}
               </div>
             </section>
           </aside>
@@ -937,93 +1000,42 @@ export default function BranchReaderPage() {
 
   if (error) {
     return (
-      <div className="story-reader-page branches-reader-page">
-        <header className="story-reader-topbar">
-          <div className="story-reader-topbar-inner">
-            <button
-              className="story-reader-back"
-              onClick={handleBack}
-            >
-              ‹ กลับสู่เส้นเรื่อง
-            </button>
+      <div className={pageClassName}>
+        <main className="story-reader-layout">
+          <section className="story-reader-main">
+            <article className="story-reader-article">
+              <ReaderInnerHeader />
 
-            <div className="story-reader-top-actions">
-              <VisibilityButton />
+              <div className="story-reader-empty">
+                <div>
+                  <div className="story-reader-empty-icon">
+                    <Icon size={42}>
+                      <path d="M5 4.5A2.5 2.5 0 0 1 7.5 2H19v17H7.5A2.5 2.5 0 0 0 5 21.5v-17Z" />
+                      <path d="M5 6h11" />
+                      <path d="M9 10h6" />
+                      <path d="M9 13h6" />
+                    </Icon>
+                  </div>
 
-              <div className="story-reader-font-controls">
-                <button
-                  type="button"
-                  onClick={() =>
-                    setFontSize('sm')
-                  }
-                  className={
-                    fontSize === 'sm'
-                      ? 'active'
-                      : ''
-                  }
-                >
-                  A-
-                </button>
+                  <h2>
+                    ไม่สามารถโหลดเส้นเรื่องได้
+                  </h2>
 
-                <button
-                  type="button"
-                  onClick={() =>
-                    setFontSize('md')
-                  }
-                  className={
-                    fontSize === 'md'
-                      ? 'active'
-                      : ''
-                  }
-                >
-                  A
-                </button>
+                  <p>{error}</p>
 
-                <button
-                  type="button"
-                  onClick={() =>
-                    setFontSize('lg')
-                  }
-                  className={
-                    fontSize === 'lg'
-                      ? 'active'
-                      : ''
-                  }
-                >
-                  A+
-                </button>
+                  <button
+                    type="button"
+                    className="story-reader-submit"
+                    onClick={() =>
+                      window.location.reload()
+                    }
+                  >
+                    ลองอีกครั้ง
+                  </button>
+                </div>
               </div>
-            </div>
-          </div>
-        </header>
-
-        <main className="story-reader-empty">
-          <div>
-            <div className="story-reader-empty-icon">
-              <Icon size={42}>
-                <path d="M5 4.5A2.5 2.5 0 0 1 7.5 2H19v17H7.5A2.5 2.5 0 0 0 5 21.5v-17Z" />
-                <path d="M5 6h11" />
-                <path d="M9 10h6" />
-                <path d="M9 13h6" />
-              </Icon>
-            </div>
-
-            <h2>
-              ไม่สามารถโหลดเส้นเรื่องได้
-            </h2>
-
-            <p>{error}</p>
-
-            <button
-              type="button"
-              className="story-reader-submit"
-              onClick={() =>
-                window.location.reload()
-              }
-            >
-              ลองอีกครั้ง
-            </button>
-          </div>
+            </article>
+          </section>
         </main>
       </div>
     );
@@ -1035,83 +1047,28 @@ export default function BranchReaderPage() {
 
   if (!currentChapter) {
     return (
-      <div className="story-reader-page branches-reader-page">
-        <header className="story-reader-topbar">
-          <div className="story-reader-topbar-inner">
-            <button
-              className="story-reader-back"
-              onClick={handleBack}
-            >
-              ‹ กลับสู่เส้นเรื่อง
-            </button>
-
-            <div className="story-reader-top-actions">
-              <VisibilityButton />
-
-              <div className="story-reader-font-controls">
-                <button
-                  type="button"
-                  onClick={() =>
-                    setFontSize('sm')
-                  }
-                  className={
-                    fontSize === 'sm'
-                      ? 'active'
-                      : ''
-                  }
-                >
-                  A-
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    setFontSize('md')
-                  }
-                  className={
-                    fontSize === 'md'
-                      ? 'active'
-                      : ''
-                  }
-                >
-                  A
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    setFontSize('lg')
-                  }
-                  className={
-                    fontSize === 'lg'
-                      ? 'active'
-                      : ''
-                  }
-                >
-                  A+
-                </button>
-              </div>
-            </div>
-          </div>
-        </header>
-
+      <div className={pageClassName}>
         <main className="story-reader-layout">
           <section className="story-reader-main">
-            <div className="story-reader-chapter-header">
-              <div className="story-reader-chapter-top">
-                <div className="story-reader-chapter-count">
-                  เส้นเรื่อง
+            <article
+              className={`story-reader-article ${genreClass}`}
+            >
+              <ReaderInnerHeader />
+
+              <div className="story-reader-chapter-header">
+                <div className="story-reader-chapter-top">
+                  <div className="story-reader-chapter-count">
+                    เส้นเรื่อง
+                  </div>
                 </div>
+
+                <h1 className="story-reader-chapter-title">
+                  {storyTitle}
+                </h1>
+
+                <div className="story-reader-chapter-divider" />
               </div>
 
-              <h1 className="story-reader-chapter-title">
-                {storyTitle}
-              </h1>
-
-              <div className="story-reader-chapter-divider" />
-            </div>
-
-            <article className="story-reader-article">
               <div className="story-reader-empty">
                 <div>
                   <div className="story-reader-empty-icon">
@@ -1136,6 +1093,7 @@ export default function BranchReaderPage() {
           </section>
 
           <aside className="story-reader-sidebar">
+            {/* Story info */}
             <section className="story-sidebar-card story-sidebar-story">
               {coverImageUrl && (
                 <div className="story-sidebar-cover">
@@ -1171,6 +1129,7 @@ export default function BranchReaderPage() {
               </div>
             </section>
 
+            {/* Branch info */}
             <section className="story-sidebar-card">
               <div className="story-sidebar-section-title">
                 <span className="sidebar-section-icon">
@@ -1214,6 +1173,7 @@ export default function BranchReaderPage() {
               </div>
             </section>
 
+            {/* Current status */}
             <section className="story-sidebar-card">
               <div className="story-sidebar-section-title">
                 <span className="sidebar-section-icon">
@@ -1230,7 +1190,10 @@ export default function BranchReaderPage() {
                     </span>
 
                     <div>
-                      <small>สถานที่</small>
+                      <small>
+                        สถานที่
+                      </small>
+
                       <strong>
                         {currentStatus.location}
                       </strong>
@@ -1249,9 +1212,14 @@ export default function BranchReaderPage() {
                     </span>
 
                     <div>
-                      <small>สภาพร่างกาย</small>
+                      <small>
+                        สภาพร่างกาย
+                      </small>
+
                       <strong>
-                        {currentStatus.physicalCondition}
+                        {
+                          currentStatus.physicalCondition
+                        }
                       </strong>
                     </div>
                   </div>
@@ -1264,9 +1232,14 @@ export default function BranchReaderPage() {
                     </span>
 
                     <div>
-                      <small>สถานการณ์สำคัญ</small>
+                      <small>
+                        สถานการณ์สำคัญ
+                      </small>
+
                       <strong>
-                        {currentStatus.importantSituation}
+                        {
+                          currentStatus.importantSituation
+                        }
                       </strong>
                     </div>
                   </div>
@@ -1289,11 +1262,16 @@ export default function BranchReaderPage() {
                     </span>
 
                     <div>
-                      <small>สิ่งของ</small>
+                      <small>
+                        สิ่งของ
+                      </small>
 
                       <div className="story-sidebar-inventory-list">
                         {currentStatus.inventory.map(
-                          (item, index) => (
+                          (
+                            item,
+                            index
+                          ) => (
                             <span
                               key={`${item}-${index}`}
                               className="story-sidebar-inventory-item"
@@ -1318,12 +1296,15 @@ export default function BranchReaderPage() {
                 )}
             </section>
 
+            {/* Characters */}
             <section className="story-sidebar-card">
               <div className="story-sidebar-section-title">
                 <span className="sidebar-section-icon">
                   <CharactersIcon />
                 </span>
+
                 ตัวละคร
+
                 <small>
                   ({characters.length})
                 </small>
@@ -1348,9 +1329,10 @@ export default function BranchReaderPage() {
 
                           <small>
                             {character.role ===
-                              'player'
+                            'player'
                               ? 'ผู้เล่น'
                               : 'ตัวละคร'}
+
                             {character.gender
                               ? ` · ${character.gender}`
                               : ''}
@@ -1377,124 +1359,63 @@ export default function BranchReaderPage() {
   ========================================================= */
 
   return (
-    <div
-      className={`story-reader-page branches-reader-page font-size-${fontSize}`}
-    >
-      {/* =====================================================
-          TOP BAR
-      ===================================================== */}
-
-      <header className="story-reader-topbar">
-        <div className="story-reader-topbar-inner">
-          <button
-            className="story-reader-back"
-            onClick={handleBack}
-          >
-            ‹ กลับสู่เส้นเรื่อง
-          </button>
-
-          <div className="story-reader-top-actions">
-            <VisibilityButton />
-
-            <div className="story-reader-font-controls">
-              <button
-                type="button"
-                onClick={() =>
-                  setFontSize('sm')
-                }
-                className={
-                  fontSize === 'sm'
-                    ? 'active'
-                    : ''
-                }
-                aria-label="ตัวอักษรเล็ก"
-              >
-                A-
-              </button>
-
-              <button
-                type="button"
-                onClick={() =>
-                  setFontSize('md')
-                }
-                className={
-                  fontSize === 'md'
-                    ? 'active'
-                    : ''
-                }
-                aria-label="ตัวอักษรปกติ"
-              >
-                A
-              </button>
-
-              <button
-                type="button"
-                onClick={() =>
-                  setFontSize('lg')
-                }
-                className={
-                  fontSize === 'lg'
-                    ? 'active'
-                    : ''
-                }
-                aria-label="ตัวอักษรใหญ่"
-              >
-                A+
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* =====================================================
-          READER LAYOUT
-      ===================================================== */}
-
+    <div className={pageClassName}>
       <main className="story-reader-layout">
         {/* ===================================================
             MAIN STORY
         =================================================== */}
 
         <section className="story-reader-main">
-          {/* Chapter Header */}
-          <div className="story-reader-chapter-header">
-            <div className="story-reader-chapter-top">
-              <div className="story-reader-chapter-count">
-                บทที่{' '}
-                {currentChapter.chapterNumber}
-                {' / '}
-                {totalChapters}
-              </div>
-
-              <div className="story-reader-progress">
-                <div className="story-reader-progress-track">
-                  <div
-                    className="story-reader-progress-value"
-                    style={{
-                      width: `${progressPercent}%`,
-                    }}
-                  />
-                </div>
-
-                <span>
-                  {progressPercent}%
-                </span>
-              </div>
-            </div>
-
-            <h1 className="story-reader-chapter-title">
-              {currentChapter.title}
-            </h1>
-
-            <div className="story-reader-chapter-divider" />
-          </div>
-
-          {/* Story */}
           <article
             className={`story-reader-article ${genreClass}`}
             key={currentChapter.id}
           >
-            {/* User Decision */}
+            {/* =================================================
+                TOP CONTROLS
+            ================================================= */}
+
+            <ReaderInnerHeader />
+
+            {/* =================================================
+                CHAPTER HEADER
+            ================================================= */}
+
+            <div className="story-reader-chapter-header">
+              <div className="story-reader-chapter-top">
+                <div className="story-reader-chapter-count">
+                  บทที่{' '}
+                  {currentChapter.chapterNumber}
+                  {' / '}
+                  {totalChapters}
+                </div>
+
+                <div className="story-reader-progress">
+                  <div className="story-reader-progress-track">
+                    <div
+                      className="story-reader-progress-value"
+                      style={{
+                        width: `${progressPercent}%`,
+                      }}
+                    />
+                  </div>
+
+                  <span>
+                    {progressPercent}%
+                  </span>
+                </div>
+              </div>
+
+              <h1 className="story-reader-chapter-title">
+                {currentChapter.title}
+              </h1>
+
+              <div className="story-reader-chapter-divider" />
+            </div>
+
+            {/* =================================================
+                USER DECISION
+            ================================================= */}
+
             {currentChapter.userPromptChoice && (
               <div className="story-reader-user-choice">
                 <span className="story-reader-user-choice-icon">
@@ -1519,7 +1440,10 @@ export default function BranchReaderPage() {
               </div>
             )}
 
-            {/* Story Content */}
+            {/* =================================================
+                STORY CONTENT
+            ================================================= */}
+
             <div className="story-reader-text font-serif">
               {storyParagraphs.map(
                 (
@@ -1539,41 +1463,17 @@ export default function BranchReaderPage() {
                 )
               )}
             </div>
+
+            {/* =================================================
+                CHAPTER NAVIGATION
+
+                สำคัญ:
+                Navigation อยู่ "ข้างใน article"
+                เพื่อให้เป็นก้อนเดียวกับเนื้อหา
+            ================================================= */}
+
+            <ChapterNavigation />
           </article>
-
-          {/* Chapter Navigation */}
-          <div className="story-reader-navigation">
-            <button
-              className="story-reader-nav-button"
-              disabled={
-                selectedChapter <= 1
-              }
-              onClick={
-                handlePreviousChapter
-              }
-            >
-              ‹ บทก่อนหน้า
-            </button>
-
-            <span>
-              {selectedChapter}
-              {' / '}
-              {chapters.length}
-            </span>
-
-            <button
-              className="story-reader-nav-button"
-              disabled={
-                selectedChapter >=
-                chapters.length
-              }
-              onClick={
-                handleNextChapter
-              }
-            >
-              บทถัดไป ›
-            </button>
-          </div>
         </section>
 
         {/* ===================================================
@@ -1845,7 +1745,7 @@ export default function BranchReaderPage() {
 
                         <small>
                           {character.role ===
-                            'player'
+                          'player'
                             ? 'ผู้เล่น'
                             : 'ตัวละคร'}
 
@@ -1895,17 +1795,20 @@ export default function BranchReaderPage() {
                     <button
                       type="button"
                       key={chapter.id}
-                      className={`story-path-item ${isCurrent
-                        ? 'current'
-                        : ''
-                        } ${isCompleted
+                      className={`story-path-item ${
+                        isCurrent
+                          ? 'current'
+                          : ''
+                      } ${
+                        isCompleted
                           ? 'completed'
                           : ''
-                        }`}
+                      }`}
                       onClick={() => {
                         setSelectedChapter(
                           chapter.chapterNumber
                         );
+
                         scrollToTop();
                       }}
                     >
