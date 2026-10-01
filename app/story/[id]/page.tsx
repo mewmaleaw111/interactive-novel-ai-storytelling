@@ -35,162 +35,163 @@ import {
 function StoryDetailLoading() {
   return (
     <div className="story-reader-page">
-      {/* =====================================================
-          TOP BAR
-      ===================================================== */}
-      <header className="story-reader-topbar">
-        <div className="story-reader-topbar-inner">
-
-          <div className="reader-loading-back" />
-
-          <div className="story-reader-top-actions">
-
-            <div className="reader-loading-branch" />
-
-            <div className="story-reader-font-controls reader-loading-font">
-              <span />
-              <span />
-              <span />
-            </div>
-
-          </div>
-        </div>
-      </header>
-
-      {/* =====================================================
-          MAIN READER LAYOUT
-      ===================================================== */}
       <main className="story-reader-layout">
 
-        {/* ===================================================
-            MAIN READING COLUMN
-        =================================================== */}
+        {/* =====================================================
+            MAIN READER
+        ===================================================== */}
         <section className="story-reader-main">
 
-          {/* =================================================
-              CHAPTER HEADER
-          ================================================= */}
-          <div className="story-reader-chapter-header">
+          <article className="story-reader-article">
 
-            <div className="story-reader-chapter-top">
+            {/* =================================================
+                SAME HEADER POSITION AS ReaderView
+            ================================================= */}
+            <div className="story-reader-inner-header">
 
-              <div className="reader-loading-chapter-number" />
+              <div className="reader-loading-back" />
 
-              <div className="story-reader-progress">
+              <div className="story-reader-top-actions">
 
-                <div className="story-reader-progress-track">
-                  <div className="reader-loading-progress" />
+                <div className="reader-loading-branch" />
+
+                <div className="story-reader-font-controls reader-loading-font">
+                  <span />
+                  <span />
+                  <span />
                 </div>
-
-                <span className="reader-loading-progress-text" />
 
               </div>
             </div>
 
-            <div className="reader-loading-chapter-title" />
+            {/* =================================================
+                CHAPTER HEADER
+            ================================================= */}
+            <div className="story-reader-chapter-header">
 
-            <div className="story-reader-chapter-divider" />
+              <div className="story-reader-chapter-top">
 
-          </div>
+                <div className="reader-loading-chapter-number" />
 
-          {/* =================================================
-              ARTICLE
-          ================================================= */}
-          <article className="story-reader-article">
+                <div className="story-reader-progress">
 
+                  <div className="story-reader-progress-track">
+                    <div className="reader-loading-progress" />
+                  </div>
+
+                  <span className="reader-loading-progress-text" />
+
+                </div>
+
+              </div>
+
+              <div className="reader-loading-chapter-title" />
+
+              <div className="story-reader-chapter-divider" />
+
+            </div>
+
+            {/* =================================================
+                STORY CONTENT
+            ================================================= */}
             <div className="story-reader-text font-serif">
 
               <div className="reader-loading-story">
+
                 <span />
                 <span />
                 <span />
                 <span />
+
+                <span />
+                <span />
+                <span />
+
                 <span />
                 <span />
                 <span />
                 <span />
+
                 <span />
                 <span />
                 <span />
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
+
               </div>
 
             </div>
+
+            {/* =================================================
+                CHAPTER NAVIGATION
+            ================================================= */}
+            <div className="story-reader-navigation">
+
+              <div className="reader-loading-nav-button" />
+
+              <div className="reader-loading-nav-counter" />
+
+              <div className="reader-loading-nav-button" />
+
+            </div>
+
+            {/* =================================================
+                CHOICE SECTION
+            ================================================= */}
+            <section className="story-reader-choice-section">
+
+              <div className="story-reader-choice-heading">
+
+                <div className="reader-loading-choice-icon" />
+
+                <div className="reader-loading-choice-heading">
+
+                  <div className="reader-loading-choice-title" />
+
+                  <div className="reader-loading-choice-subtitle" />
+
+                </div>
+
+              </div>
+
+              <div className="story-reader-choice-list">
+
+                <div className="reader-loading-choice-button">
+                  <span className="reader-loading-choice-number" />
+                  <span className="reader-loading-choice-text" />
+                </div>
+
+                <div className="reader-loading-choice-button">
+                  <span className="reader-loading-choice-number" />
+                  <span className="reader-loading-choice-text" />
+                </div>
+
+                <div className="reader-loading-choice-button">
+                  <span className="reader-loading-choice-number" />
+                  <span className="reader-loading-choice-text" />
+                </div>
+
+              </div>
+
+              <div className="reader-loading-choice-fallback">
+
+                <div className="reader-loading-choice-input" />
+
+                <div className="reader-loading-choice-submit" />
+
+              </div>
+
+            </section>
 
           </article>
 
-          {/* =================================================
-              CHAPTER NAVIGATION
-          ================================================= */}
-          <div className="story-reader-navigation">
-
-            <div className="reader-loading-nav-button" />
-
-            <div className="reader-loading-nav-counter" />
-
-            <div className="reader-loading-nav-button" />
-
-          </div>
-
-          {/* =================================================
-              CHOICE SECTION
-              Keep the same space as latest chapter reader
-          ================================================= */}
-          <section className="story-reader-choice-section">
-
-            <div className="story-reader-choice-heading">
-
-              <div className="reader-loading-choice-icon" />
-
-              <div className="reader-loading-choice-heading">
-                <div className="reader-loading-choice-title" />
-                <div className="reader-loading-choice-subtitle" />
-              </div>
-
-            </div>
-
-            <div className="story-reader-choice-list">
-
-              <div className="reader-loading-choice-button">
-                <span className="reader-loading-choice-number" />
-                <span className="reader-loading-choice-text" />
-              </div>
-
-              <div className="reader-loading-choice-button">
-                <span className="reader-loading-choice-number" />
-                <span className="reader-loading-choice-text" />
-              </div>
-
-              <div className="reader-loading-choice-button">
-                <span className="reader-loading-choice-number" />
-                <span className="reader-loading-choice-text" />
-              </div>
-
-            </div>
-
-            <div className="reader-loading-choice-fallback">
-
-              <div className="reader-loading-choice-input" />
-
-              <div className="reader-loading-choice-submit" />
-
-            </div>
-
-          </section>
-
         </section>
 
-        {/* ===================================================
-            RIGHT SIDEBAR
-        =================================================== */}
+        {/* =====================================================
+            SAME SIDEBAR POSITION AS ReaderView
+        ===================================================== */}
         <aside className="story-reader-sidebar">
 
           {/* =================================================
-              STORY INFORMATION
+              STORY INFO
           ================================================= */}
           <section className="story-sidebar-card story-sidebar-story">
 
@@ -237,57 +238,23 @@ function StoryDetailLoading() {
 
             <div className="story-sidebar-status-list">
 
-              <div className="story-sidebar-status-item reader-loading-status-item">
+              {Array.from({ length: 4 }).map(
+                (_, index) => (
+                  <div
+                    key={index}
+                    className="story-sidebar-status-item reader-loading-status-item"
+                  >
+                    <span className="status-icon">
+                      <span className="reader-loading-status-icon" />
+                    </span>
 
-                <span className="status-icon">
-                  <span className="reader-loading-status-icon" />
-                </span>
-
-                <div>
-                  <small />
-                  <strong />
-                </div>
-
-              </div>
-
-              <div className="story-sidebar-status-item reader-loading-status-item">
-
-                <span className="status-icon">
-                  <span className="reader-loading-status-icon" />
-                </span>
-
-                <div>
-                  <small />
-                  <strong />
-                </div>
-
-              </div>
-
-              <div className="story-sidebar-status-item reader-loading-status-item">
-
-                <span className="status-icon">
-                  <span className="reader-loading-status-icon" />
-                </span>
-
-                <div>
-                  <small />
-                  <strong />
-                </div>
-
-              </div>
-
-              <div className="story-sidebar-status-item reader-loading-status-item">
-
-                <span className="status-icon">
-                  <span className="reader-loading-status-icon" />
-                </span>
-
-                <div>
-                  <small />
-                  <strong />
-                </div>
-
-              </div>
+                    <div>
+                      <small />
+                      <strong />
+                    </div>
+                  </div>
+                )
+              )}
 
             </div>
 
@@ -310,41 +277,19 @@ function StoryDetailLoading() {
 
             <div className="story-sidebar-characters">
 
-              <div className="story-sidebar-character reader-loading-character">
-
-                <div>
-                  <strong />
-                  <small />
-                </div>
-
-              </div>
-
-              <div className="story-sidebar-character reader-loading-character">
-
-                <div>
-                  <strong />
-                  <small />
-                </div>
-
-              </div>
-
-              <div className="story-sidebar-character reader-loading-character">
-
-                <div>
-                  <strong />
-                  <small />
-                </div>
-
-              </div>
-
-              <div className="story-sidebar-character reader-loading-character">
-
-                <div>
-                  <strong />
-                  <small />
-                </div>
-
-              </div>
+              {Array.from({ length: 4 }).map(
+                (_, index) => (
+                  <div
+                    key={index}
+                    className="story-sidebar-character reader-loading-character"
+                  >
+                    <div>
+                      <strong />
+                      <small />
+                    </div>
+                  </div>
+                )
+              )}
 
             </div>
 
@@ -368,11 +313,13 @@ function StoryDetailLoading() {
             <div className="story-path">
 
               <div className="reader-loading-path">
+
                 <span />
                 <span />
                 <span />
                 <span />
                 <span />
+
               </div>
 
             </div>

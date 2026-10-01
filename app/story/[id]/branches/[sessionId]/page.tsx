@@ -173,47 +173,42 @@ const parseStoryContent = (
     .map((rawText): StoryParagraph => {
       const text = rawText.trim();
 
-      /* [dialogue] */
-      if (/^\[dialogue\]\s*/i.test(text)) {
+      if (/^\*\*\[\*\*dialogue\*\*\]\*\*\s\*/i.test(text)) {
         return {
           type: 'dialogue',
           text: text
-            .replace(/^\[dialogue\]\s*/i, '')
+            .replace(/^\*\*\[\*\*dialogue\*\*\]\*\*\s\*/i, '')
             .trim(),
         };
       }
 
-      /* [thought] */
-      if (/^\[thought\]\s*/i.test(text)) {
+      if (/^\*\*\[\*\*thought\*\*\]\*\*\s\*/i.test(text)) {
         return {
           type: 'thought',
           text: text
-            .replace(/^\[thought\]\s*/i, '')
+            .replace(/^\*\*\[\*\*thought\*\*\]\*\*\s\*/i, '')
             .trim(),
         };
       }
 
-      /* [action] */
-      if (/^\[action\]\s*/i.test(text)) {
+      if (/^\*\*\[\*\*action\*\*\]\*\*\s\*/i.test(text)) {
         return {
           type: 'action',
           text: text
-            .replace(/^\[action\]\s*/i, '')
+            .replace(/^\*\*\[\*\*action\*\*\]\*\*\s\*/i, '')
             .trim(),
         };
       }
 
-      /* [important] */
-      if (/^\[important\]\s*/i.test(text)) {
+      if (/^\*\*\[\*\*important\*\*\]\*\*\s\*/i.test(text)) {
         return {
           type: 'important',
           text: text
-            .replace(/^\[important\]\s*/i, '')
+            .replace(/^\*\*\[\*\*important\*\*\]\*\*\s\*/i, '')
             .trim(),
         };
       }
 
-      /* รองรับ marker ภาษาไทยจาก content เก่า */
       if (/^เหตุการณ์สำคัญ\s*[:：]\s*/i.test(text)) {
         return {
           type: 'important',
@@ -250,7 +245,6 @@ const parseStoryContent = (
         };
       }
 
-      /* รองรับความคิดแบบ *ข้อความ* */
       if (
         text.startsWith('*') &&
         text.endsWith('*') &&
@@ -262,7 +256,6 @@ const parseStoryContent = (
         };
       }
 
-      /* รองรับความคิดแบบ (ข้อความ) */
       if (
         text.startsWith('(') &&
         text.endsWith(')') &&
@@ -274,7 +267,6 @@ const parseStoryContent = (
         };
       }
 
-      /* รองรับบทพูดที่ไม่มี marker */
       const isDialogue =
         /^["“「『].*["”」』]$/.test(text);
 
@@ -285,7 +277,6 @@ const parseStoryContent = (
         };
       }
 
-      /* ปกติ = narration */
       return {
         type: 'narration',
         text,
@@ -325,8 +316,11 @@ export default function BranchReaderPage() {
   const [updatingVisibility, setUpdatingVisibility] =
     useState(false);
 
-  const [chapters, setChapters] = useState<Chapter[]>([]);
-  const [characters, setCharacters] = useState<Character[]>([]);
+  const [chapters, setChapters] =
+    useState<Chapter[]>([]);
+
+  const [characters, setCharacters] =
+    useState<Character[]>([]);
 
   const [currentStatus, setCurrentStatus] =
     useState<CurrentStatus>({
@@ -442,6 +436,7 @@ export default function BranchReaderPage() {
         }
 
         /* Story */
+
         setStoryTitle(
           data.story?.title ?? ''
         );
@@ -467,11 +462,20 @@ export default function BranchReaderPage() {
             'ไม่ระบุชื่อ'
         );
 
+        /*
+         * โหลด URL ปกนิยาย
+         *
+         * API ส่ง coverImageUrl มาแล้ว
+         * เราเก็บไว้ใน state เพื่อใช้ทั้ง
+         * main sidebar และ empty state
+         */
+
         setCoverImageUrl(
           data.story?.coverImageUrl ?? null
         );
 
         /* Branch */
+
         setPlayerName(
           data.branch?.userName ??
             'ผู้เล่น'
@@ -486,6 +490,7 @@ export default function BranchReaderPage() {
         );
 
         /* Current Status */
+
         setCurrentStatus(
           data.currentStatus ?? {
             location: '',
@@ -496,11 +501,13 @@ export default function BranchReaderPage() {
         );
 
         /* Characters */
+
         setCharacters(
           data.characters ?? []
         );
 
         /* Chapters */
+
         const loadedChapters =
           data.chapters ?? [];
 
@@ -699,7 +706,6 @@ export default function BranchReaderPage() {
 
   /* =========================================================
      READER CONTROLS
-     ใช้ร่วมกันเพื่อให้ทุกสถานะจัดวางเหมือนกัน
   ========================================================= */
 
   const ReaderControls = () => (
@@ -774,9 +780,7 @@ export default function BranchReaderPage() {
       <div className="story-reader-page branches-reader-page">
         <main className="story-reader-layout">
           <section className="story-reader-main">
-
             <article className="story-reader-article">
-
               <div className="story-reader-inner-header">
                 <div className="reader-loading-back" />
 
@@ -791,7 +795,6 @@ export default function BranchReaderPage() {
                 </div>
               </div>
 
-              {/* Chapter header */}
               <div className="story-reader-chapter-header">
                 <div className="story-reader-chapter-top">
                   <div className="reader-loading-chapter-number" />
@@ -810,7 +813,17 @@ export default function BranchReaderPage() {
                 <div className="story-reader-chapter-divider" />
               </div>
 
-              {/* Story content */}
+              <div className="story-reader-user-choice reader-loading-user-choice">
+                <span className="story-reader-user-choice-icon">
+                  <span className="reader-loading-user-choice-icon" />
+                </span>
+
+                <div>
+                  <span className="reader-loading-user-choice-label" />
+                  <div className="reader-loading-user-choice-text" />
+                </div>
+              </div>
+
               <div className="story-reader-text font-serif">
                 <div className="reader-loading-story">
                   <span />
@@ -832,7 +845,6 @@ export default function BranchReaderPage() {
               </div>
             </article>
 
-            {/* Navigation */}
             <div className="story-reader-navigation">
               <div className="reader-loading-nav-button" />
               <div className="reader-loading-nav-counter" />
@@ -840,12 +852,11 @@ export default function BranchReaderPage() {
             </div>
           </section>
 
-          {/* Sidebar */}
           <aside className="story-reader-sidebar">
-
-            {/* Story info */}
             <section className="story-sidebar-card story-sidebar-story">
-              <div className="reader-loading-cover" />
+              <div className="story-sidebar-cover">
+                <div className="reader-loading-cover" />
+              </div>
 
               <div className="story-sidebar-story-info">
                 <div className="reader-loading-story-title" />
@@ -866,112 +877,107 @@ export default function BranchReaderPage() {
               </div>
             </section>
 
-            {/* Branch info */}
             <section className="story-sidebar-card">
-              <div className="reader-loading-section-title" />
+              <div className="story-sidebar-section-title">
+                <span className="sidebar-section-icon">
+                  <span className="reader-loading-section-icon" />
+                </span>
 
-              <div className="reader-loading-status-item">
-                <span />
-
-                <div>
-                  <small />
-                  <strong />
-                </div>
+                <span className="reader-loading-section-title" />
               </div>
 
-              <div className="reader-loading-status-item">
-                <span />
+              <div className="story-sidebar-status-list">
+                {[1, 2, 3].map((item) => (
+                  <div
+                    key={item}
+                    className="story-sidebar-status-item reader-loading-status-item"
+                  >
+                    <span className="status-icon">
+                      <span className="reader-loading-status-icon" />
+                    </span>
 
-                <div>
-                  <small />
-                  <strong />
-                </div>
-              </div>
-
-              <div className="reader-loading-status-item">
-                <span />
-
-                <div>
-                  <small />
-                  <strong />
-                </div>
+                    <div>
+                      <small />
+                      <strong />
+                    </div>
+                  </div>
+                ))}
               </div>
             </section>
 
-            {/* Current status */}
             <section className="story-sidebar-card">
-              <div className="reader-loading-section-title" />
+              <div className="story-sidebar-section-title">
+                <span className="sidebar-section-icon">
+                  <span className="reader-loading-section-icon" />
+                </span>
 
-              <div className="reader-loading-status-item">
-                <span />
-
-                <div>
-                  <small />
-                  <strong />
-                </div>
+                <span className="reader-loading-section-title" />
               </div>
 
-              <div className="reader-loading-status-item">
-                <span />
+              <div className="story-sidebar-status-list">
+                {[1, 2, 3].map((item) => (
+                  <div
+                    key={item}
+                    className="story-sidebar-status-item reader-loading-status-item"
+                  >
+                    <span className="status-icon">
+                      <span className="reader-loading-status-icon" />
+                    </span>
 
-                <div>
-                  <small />
-                  <strong />
-                </div>
-              </div>
-
-              <div className="reader-loading-status-item">
-                <span />
-
-                <div>
-                  <small />
-                  <strong />
-                </div>
+                    <div>
+                      <small />
+                      <strong />
+                    </div>
+                  </div>
+                ))}
               </div>
             </section>
 
-            {/* Characters */}
             <section className="story-sidebar-card">
-              <div className="reader-loading-section-title" />
+              <div className="story-sidebar-section-title">
+                <span className="sidebar-section-icon">
+                  <span className="reader-loading-section-icon" />
+                </span>
 
-              <div className="reader-loading-character">
-                <span />
-
-                <div>
-                  <strong />
-                  <small />
-                </div>
+                <span className="reader-loading-section-title" />
               </div>
 
-              <div className="reader-loading-character">
-                <span />
+              <div className="story-sidebar-characters">
+                {[1, 2, 3].map((item) => (
+                  <div
+                    key={item}
+                    className="story-sidebar-character reader-loading-character"
+                  >
+                    <span className="story-sidebar-character-icon">
+                      <span className="reader-loading-character-icon" />
+                    </span>
 
-                <div>
-                  <strong />
-                  <small />
-                </div>
-              </div>
-
-              <div className="reader-loading-character">
-                <span />
-
-                <div>
-                  <strong />
-                  <small />
-                </div>
+                    <div className="story-sidebar-character-info">
+                      <strong />
+                      <small />
+                    </div>
+                  </div>
+                ))}
               </div>
             </section>
 
-            {/* Story path */}
             <section className="story-sidebar-card">
-              <div className="reader-loading-section-title" />
+              <div className="story-sidebar-section-title">
+                <span className="sidebar-section-icon">
+                  <span className="reader-loading-section-icon" />
+                </span>
 
-              <div className="reader-loading-path">
-                <span />
-                <span />
-                <span />
-                <span />
-                <span />
+                <span className="reader-loading-section-title" />
+              </div>
+
+              <div className="story-path">
+                <div className="reader-loading-path">
+                  <span />
+                  <span />
+                  <span />
+                  <span />
+                  <span />
+                </div>
               </div>
             </section>
           </aside>
@@ -989,9 +995,7 @@ export default function BranchReaderPage() {
       <div className="story-reader-page branches-reader-page">
         <main className="story-reader-layout">
           <section className="story-reader-main">
-
             <article className="story-reader-article">
-
               <ReaderControls />
 
               <div className="story-reader-empty">
@@ -1022,7 +1026,6 @@ export default function BranchReaderPage() {
                   </button>
                 </div>
               </div>
-
             </article>
           </section>
         </main>
@@ -1040,11 +1043,8 @@ export default function BranchReaderPage() {
         className={`story-reader-page branches-reader-page font-size-${fontSize}`}
       >
         <main className="story-reader-layout">
-
           <section className="story-reader-main">
-
             <article className="story-reader-article">
-
               <ReaderControls />
 
               <div className="story-reader-chapter-header">
@@ -1081,21 +1081,20 @@ export default function BranchReaderPage() {
                   </p>
                 </div>
               </div>
-
             </article>
           </section>
 
           <aside className="story-reader-sidebar">
-
             <section className="story-sidebar-card story-sidebar-story">
-              {coverImageUrl && (
-                <div className="story-sidebar-cover">
-                  <img
-                    src={coverImageUrl}
-                    alt={`ปก ${storyTitle}`}
-                  />
-                </div>
-              )}
+              <div className="story-sidebar-cover">
+                <img
+                  src={
+                    coverImageUrl ||
+                    '/images/default-cover.png'
+                  }
+                  alt={storyTitle}
+                />
+              </div>
 
               <div className="story-sidebar-story-info">
                 <h2>
@@ -1127,11 +1126,11 @@ export default function BranchReaderPage() {
                 <span className="sidebar-section-icon">
                   <BranchIcon />
                 </span>
+
                 เส้นเรื่อง
               </div>
 
               <div className="story-sidebar-status-list">
-
                 <div className="story-sidebar-status-item">
                   <span className="status-icon">
                     <CharactersIcon />
@@ -1163,21 +1162,19 @@ export default function BranchReaderPage() {
                     </strong>
                   </div>
                 </div>
-
               </div>
             </section>
 
             <section className="story-sidebar-card">
-
               <div className="story-sidebar-section-title">
                 <span className="sidebar-section-icon">
                   <LocationIcon />
                 </span>
+
                 สถานะปัจจุบัน
               </div>
 
               <div className="story-sidebar-status-list">
-
                 {currentStatus.location && (
                   <div className="story-sidebar-status-item">
                     <span className="status-icon">
@@ -1259,7 +1256,10 @@ export default function BranchReaderPage() {
 
                       <div className="story-sidebar-inventory-list">
                         {currentStatus.inventory.map(
-                          (item, index) => (
+                          (
+                            item,
+                            index
+                          ) => (
                             <span
                               key={`${item}-${index}`}
                               className="story-sidebar-inventory-item"
@@ -1272,7 +1272,6 @@ export default function BranchReaderPage() {
                     </div>
                   </div>
                 )}
-
               </div>
 
               {!currentStatus.location &&
@@ -1283,11 +1282,9 @@ export default function BranchReaderPage() {
                     ยังไม่มีข้อมูลสถานะ
                   </div>
                 )}
-
             </section>
 
             <section className="story-sidebar-card">
-
               <div className="story-sidebar-section-title">
                 <span className="sidebar-section-icon">
                   <CharactersIcon />
@@ -1302,7 +1299,6 @@ export default function BranchReaderPage() {
 
               {characters.length > 0 ? (
                 <div className="story-sidebar-characters">
-
                   {characters.map(
                     (character) => (
                       <div
@@ -1332,16 +1328,13 @@ export default function BranchReaderPage() {
                       </div>
                     )
                   )}
-
                 </div>
               ) : (
                 <div className="story-sidebar-empty">
                   ยังไม่มีข้อมูลตัวละคร
                 </div>
               )}
-
             </section>
-
           </aside>
         </main>
       </div>
@@ -1356,34 +1349,16 @@ export default function BranchReaderPage() {
     <div
       className={`story-reader-page branches-reader-page font-size-${fontSize}`}
     >
-
       <main className="story-reader-layout">
-
-        {/* ===================================================
-            MAIN STORY
-        =================================================== */}
-
         <section className="story-reader-main">
-
           <article
             className={`story-reader-article ${genreClass}`}
             key={currentChapter.id}
           >
-
-            {/* =================================================
-                READER CONTROLS
-            ================================================= */}
-
             <ReaderControls />
 
-            {/* =================================================
-                CHAPTER HEADER
-            ================================================= */}
-
             <div className="story-reader-chapter-header">
-
               <div className="story-reader-chapter-top">
-
                 <div className="story-reader-chapter-count">
                   บทที่{' '}
                   {currentChapter.chapterNumber}
@@ -1392,7 +1367,6 @@ export default function BranchReaderPage() {
                 </div>
 
                 <div className="story-reader-progress">
-
                   <div className="story-reader-progress-track">
                     <div
                       className="story-reader-progress-value"
@@ -1405,9 +1379,7 @@ export default function BranchReaderPage() {
                   <span>
                     {progressPercent}%
                   </span>
-
                 </div>
-
               </div>
 
               <h1 className="story-reader-chapter-title">
@@ -1417,13 +1389,8 @@ export default function BranchReaderPage() {
               <div className="story-reader-chapter-divider" />
             </div>
 
-            {/* =================================================
-                USER DECISION
-            ================================================= */}
-
             {currentChapter.userPromptChoice && (
               <div className="story-reader-user-choice">
-
                 <span className="story-reader-user-choice-icon">
                   <Icon size={20}>
                     <path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3Z" />
@@ -1436,21 +1403,13 @@ export default function BranchReaderPage() {
                   </span>
 
                   <p>
-                    “
-                    {currentChapter.userPromptChoice}
-                    ”
+                    “{currentChapter.userPromptChoice}”
                   </p>
                 </div>
-
               </div>
             )}
 
-            {/* =================================================
-                STORY CONTENT
-            ================================================= */}
-
             <div className="story-reader-text font-serif">
-
               {storyParagraphs.map(
                 (
                   paragraph,
@@ -1468,17 +1427,10 @@ export default function BranchReaderPage() {
                   </div>
                 )
               )}
-
             </div>
-
           </article>
 
-          {/* =================================================
-              CHAPTER NAVIGATION
-          ================================================= */}
-
           <div className="story-reader-navigation">
-
             <button
               className="story-reader-nav-button"
               disabled={
@@ -1509,9 +1461,7 @@ export default function BranchReaderPage() {
             >
               บทถัดไป ›
             </button>
-
           </div>
-
         </section>
 
         {/* ===================================================
@@ -1521,25 +1471,24 @@ export default function BranchReaderPage() {
         <aside className="story-reader-sidebar">
 
           {/* Story Info */}
-          <section className="story-sidebar-card story-sidebar-story">
 
-            {coverImageUrl && (
-              <div className="story-sidebar-cover">
-                <img
-                  src={coverImageUrl}
-                  alt={`ปก ${storyTitle}`}
-                />
-              </div>
-            )}
+          <section className="story-sidebar-card story-sidebar-story">
+            <div className="story-sidebar-cover">
+              <img
+                src={
+                  coverImageUrl ||
+                  '/images/default-cover.png'
+                }
+                alt={storyTitle}
+              />
+            </div>
 
             <div className="story-sidebar-story-info">
-
               <h2>
                 {storyTitle}
               </h2>
 
               <div className="story-sidebar-tags">
-
                 {genre && (
                   <span>{genre}</span>
                 )}
@@ -1547,7 +1496,6 @@ export default function BranchReaderPage() {
                 {tone && (
                   <span>{tone}</span>
                 )}
-
               </div>
 
               {synopsis && (
@@ -1559,29 +1507,25 @@ export default function BranchReaderPage() {
               <div className="story-sidebar-author">
                 ผู้เขียน {creatorName}
               </div>
-
             </div>
-
           </section>
 
           {/* Branch Info */}
+
           <section className="story-sidebar-card">
-
             <div className="story-sidebar-section-title">
-
               <span className="sidebar-section-icon">
                 <BranchIcon />
               </span>
 
               ข้อมูลเส้นเรื่อง
-
             </div>
 
             <div className="story-sidebar-status-list">
 
               {/* Player */}
-              <div className="story-sidebar-status-item">
 
+              <div className="story-sidebar-status-item">
                 <span className="status-icon">
                   <CharactersIcon />
                 </span>
@@ -1595,12 +1539,11 @@ export default function BranchReaderPage() {
                     {playerName}
                   </strong>
                 </div>
-
               </div>
 
               {/* Current Chapter */}
-              <div className="story-sidebar-status-item">
 
+              <div className="story-sidebar-status-item">
                 <span className="status-icon">
                   <PathIcon />
                 </span>
@@ -1612,17 +1555,14 @@ export default function BranchReaderPage() {
 
                   <strong>
                     บทที่{' '}
-                    {
-                      currentChapter.chapterNumber
-                    }
+                    {currentChapter.chapterNumber}
                   </strong>
                 </div>
-
               </div>
 
               {/* Visibility */}
-              <div className="story-sidebar-status-item">
 
+              <div className="story-sidebar-status-item">
                 <span className="status-icon">
                   <LocationIcon />
                 </span>
@@ -1638,31 +1578,24 @@ export default function BranchReaderPage() {
                       : 'Private'}
                   </strong>
                 </div>
-
               </div>
-
             </div>
-
           </section>
 
           {/* Current Status */}
+
           <section className="story-sidebar-card">
-
             <div className="story-sidebar-section-title">
-
               <span className="sidebar-section-icon">
                 <LocationIcon />
               </span>
 
               สถานะปัจจุบัน
-
             </div>
 
             <div className="story-sidebar-status-list">
-
               {currentStatus.location && (
                 <div className="story-sidebar-status-item">
-
                   <span className="status-icon">
                     <LocationIcon />
                   </span>
@@ -1676,13 +1609,11 @@ export default function BranchReaderPage() {
                       {currentStatus.location}
                     </strong>
                   </div>
-
                 </div>
               )}
 
               {currentStatus.physicalCondition && (
                 <div className="story-sidebar-status-item">
-
                   <span className="status-icon">
                     <Icon>
                       <path d="M12 3v18" />
@@ -1702,13 +1633,11 @@ export default function BranchReaderPage() {
                       }
                     </strong>
                   </div>
-
                 </div>
               )}
 
               {currentStatus.importantSituation && (
                 <div className="story-sidebar-status-item">
-
                   <span className="status-icon">
                     <ChoiceIcon />
                   </span>
@@ -1724,13 +1653,11 @@ export default function BranchReaderPage() {
                       }
                     </strong>
                   </div>
-
                 </div>
               )}
 
               {currentStatus.inventory.length > 0 && (
                 <div className="story-sidebar-status-item">
-
                   <span className="status-icon">
                     <Icon>
                       <rect
@@ -1751,7 +1678,6 @@ export default function BranchReaderPage() {
                     </small>
 
                     <div className="story-sidebar-inventory-list">
-
                       {currentStatus.inventory.map(
                         (
                           item,
@@ -1765,13 +1691,10 @@ export default function BranchReaderPage() {
                           </span>
                         )
                       )}
-
                     </div>
                   </div>
-
                 </div>
               )}
-
             </div>
 
             {!currentStatus.location &&
@@ -1782,14 +1705,12 @@ export default function BranchReaderPage() {
                   ยังไม่มีข้อมูลสถานะ
                 </div>
               )}
-
           </section>
 
           {/* Characters */}
+
           <section className="story-sidebar-card">
-
             <div className="story-sidebar-section-title">
-
               <span className="sidebar-section-icon">
                 <CharactersIcon />
               </span>
@@ -1799,25 +1720,21 @@ export default function BranchReaderPage() {
               <small>
                 ({characters.length})
               </small>
-
             </div>
 
             {characters.length > 0 ? (
               <div className="story-sidebar-characters">
-
                 {characters.map(
                   (character) => (
                     <div
                       key={character.id}
                       className="story-sidebar-character"
                     >
-
                       <span className="story-sidebar-character-icon">
                         <CharactersIcon />
                       </span>
 
                       <div className="story-sidebar-character-info">
-
                         <strong>
                           {character.name}
                         </strong>
@@ -1832,27 +1749,22 @@ export default function BranchReaderPage() {
                             ? ` · ${character.gender}`
                             : ''}
                         </small>
-
                       </div>
-
                     </div>
                   )
                 )}
-
               </div>
             ) : (
               <div className="story-sidebar-empty">
                 ยังไม่มีข้อมูลตัวละคร
               </div>
             )}
-
           </section>
 
           {/* Story Path */}
+
           <section className="story-sidebar-card">
-
             <div className="story-sidebar-section-title">
-
               <span className="sidebar-section-icon">
                 <PathIcon />
               </span>
@@ -1863,11 +1775,9 @@ export default function BranchReaderPage() {
                 ({selectedChapter} /{' '}
                 {totalChapters})
               </small>
-
             </div>
 
             <div className="story-path">
-
               {chapters.map(
                 (chapter) => {
                   const isCurrent =
@@ -1899,7 +1809,6 @@ export default function BranchReaderPage() {
                         scrollToTop();
                       }}
                     >
-
                       <div className="story-path-number">
                         {
                           chapter.chapterNumber
@@ -1915,16 +1824,12 @@ export default function BranchReaderPage() {
                             ? 'อ่านแล้ว'
                             : 'อ่านได้'}
                       </span>
-
                     </button>
                   );
                 }
               )}
-
             </div>
-
           </section>
-
         </aside>
       </main>
     </div>
