@@ -214,6 +214,7 @@ export default function FavoritesPage() {
               totalChapters:
                 story.total_chapters || 0,
               currentChapter,
+              completedChapters: currentChapter,
               wordCount,
               isFavorite: true,
               isTrending: false,
