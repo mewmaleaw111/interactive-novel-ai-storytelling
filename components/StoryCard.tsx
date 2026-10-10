@@ -384,7 +384,7 @@ export const StoryCard: React.FC<StoryCardProps> = ({
         >
 
           <span>
-            ดูเส้นเรื่อง
+            ดูรายละเอียด
           </span>
 
           <span className="view-branches-arrow">

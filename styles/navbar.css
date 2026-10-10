@@ -130,18 +130,10 @@
 ========================================================= */
 
 .navbar-links {
-  position: absolute;
-
-  left: 50%;
-
-  transform: translateX(-50%);
-
   display: flex;
   align-items: center;
-
   gap: 0.35rem;
-
-  margin-left: 0;
+  margin-left: auto;
 }
 
 .nav-link {
@@ -271,10 +263,9 @@
 .navbar-actions {
   display: flex;
   align-items: center;
-
   gap: 0.55rem;
-
   flex-shrink: 0;
+  margin-left: 0.5rem;
 }
 
 
@@ -997,4 +988,30 @@
     transition: none;
   }
 
+}
+
+.guide-nav-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0.55rem 0.8rem;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  font-family: var(--font-global);
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.guide-nav-link:hover {
+  color: var(--accent-color);
+  background: rgba(112, 63, 45, 0.055);
 }

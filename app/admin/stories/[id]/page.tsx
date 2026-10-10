@@ -715,7 +715,7 @@ export default async function AdminStoryDetailPage({
                               href={`/admin/stories/${story.id}/sessions/${session.id}`}
                               className="admin-session-view-button"
                             >
-                              ดูเส้นเรื่อง
+                              ดูรายละเอียด
                               <span aria-hidden="true">
                                 →
                               </span>

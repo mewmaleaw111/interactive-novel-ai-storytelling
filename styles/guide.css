@@ -1,0 +1,283 @@
+.guide-page {
+  min-height: 100vh;
+  background: #f8f3ea;
+  color: #3f3029;
+  display: flex;
+}
+
+.guide-sidebar {
+  width: 250px;
+  min-width: 250px;
+  height: calc(100vh - 80px);
+  position: sticky;
+  top: 80px;
+  padding: 32px 20px;
+  background: #eee5d8;
+  border-right: 1px solid #d8c9b7;
+}
+
+.guide-sidebar-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 21px;
+  font-weight: 700;
+  color: #5b3d32;
+  margin-bottom: 24px;
+}
+
+.guide-navigation {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.guide-nav-item {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: #6f5a50;
+  text-align: left;
+  padding: 11px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.guide-nav-item:hover {
+  transform: translateX(3px);
+  background: #e3d5c5;
+  color: #4d342b;
+}
+
+.guide-nav-item.active {
+  background: #d8c4b1;
+  color: #4a3028;
+  font-weight: 700;
+  position: relative;
+}
+
+.guide-nav-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  background: #a45d48;
+  border-radius: 3px;
+}
+
+.guide-content {
+  width: 100%;
+  max-width: 1050px;
+  margin: 0 auto;
+  padding: 70px 70px 100px;
+}
+
+.guide-header {
+  max-width: 800px;
+  margin-bottom: 80px;
+}
+
+.guide-eyebrow {
+  display: inline-block;
+  margin-bottom: 14px;
+  color: #a45d48;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.guide-header h1 {
+  margin: 0 0 20px;
+  color: #4a3028;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(36px, 5vw, 58px);
+  line-height: 1.1;
+}
+
+.guide-header p {
+  max-width: 700px;
+  margin: 0;
+  color: #79665d;
+  font-size: 17px;
+  line-height: 1.8;
+}
+
+.guide-section {
+  scroll-margin-top: 110px;
+  padding: 55px 0 80px;
+  border-top: 1px solid #dfd2c3;
+}
+
+.guide-section:first-of-type {
+  border-top: none;
+}
+
+.guide-section-number {
+  display: inline-block;
+  margin-bottom: 10px;
+  color: #a45d48;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.guide-section h2 {
+  margin: 0 0 12px;
+  color: #4a3028;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 34px;
+}
+
+.guide-section>p {
+  max-width: 720px;
+  margin: 0 0 28px;
+  color: #766158;
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.guide-image-placeholder {
+  width: 100%;
+  min-height: 430px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e8ddd0;
+  border: 1px solid #d5c5b3;
+  border-radius: 14px;
+  color: #9a877b;
+  font-size: 15px;
+  overflow: hidden;
+}
+
+.guide-caption {
+  margin-top: 12px;
+  color: #8a756b;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.guide-faq {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.guide-faq-item {
+  padding: 22px 24px;
+  background: #f2eadf;
+  border: 1px solid #dccdbd;
+  border-radius: 12px;
+}
+
+.guide-faq-item h3 {
+  margin: 0 0 8px;
+  color: #563a31;
+  font-size: 16px;
+}
+
+.guide-faq-item p {
+  margin: 0;
+  color: #79665d;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+@media (max-width: 900px) {
+  .guide-sidebar {
+    width: 210px;
+    min-width: 210px;
+  }
+
+  .guide-content {
+    padding: 55px 35px 80px;
+  }
+}
+
+@media (max-width: 700px) {
+  .guide-page {
+    display: block;
+  }
+
+  .guide-sidebar {
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    position: relative;
+    top: 0;
+    padding: 20px;
+    border-right: none;
+    border-bottom: 1px solid #d8c9b7;
+  }
+
+  .guide-navigation {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .guide-content {
+    padding: 45px 20px 70px;
+  }
+
+  .guide-header {
+    margin-bottom: 50px;
+  }
+
+  .guide-header h1 {
+    font-size: 38px;
+  }
+
+  .guide-section {
+    padding: 45px 0 60px;
+  }
+
+  .guide-section h2 {
+    font-size: 29px;
+  }
+
+  .guide-figure {
+    margin: 32px 0 0;
+    width: 100%;
+  }
+
+  .guide-screenshot {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid #d5c5b3;
+    border-radius: 14px;
+    background: #eee5d8;
+    box-shadow: 0 12px 30px rgba(74, 48, 40, 0.08);
+  }
+
+  .guide-caption {
+    margin: 12px 4px 0;
+    color: #8a756b;
+    font-size: 13px;
+    line-height: 1.7;
+    text-align: center;
+  }
+
+  .guide-step {
+    margin-top: 50px;
+  }
+
+  .guide-step h3 {
+    margin: 0 0 10px;
+    color: #563a31;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 22px;
+  }
+
+  .guide-step>p {
+    margin: 0 0 22px;
+    color: #79665d;
+    font-size: 15px;
+    line-height: 1.8;
+  }
+}

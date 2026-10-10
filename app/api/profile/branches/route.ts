@@ -112,6 +112,40 @@ export async function GET() {
       );
     }
 
+
+    const {
+      data: chapters,
+      error: chaptersError,
+    } =
+      await supabaseAdmin
+        .from('chapters')
+        .select(
+          `
+      story_id,
+      chapter_number,
+      content
+      `
+        )
+        .in(
+          'story_id',
+          storyIds
+        );
+
+    if (chaptersError) {
+      console.error(
+        'Error loading branch chapters:',
+        chaptersError
+      );
+
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            'Failed to load branch chapters',
+        },
+        { status: 500 }
+      );
+    }
     // ==================================================
     // 3. โหลด Username จาก Profile
     // ==================================================
@@ -141,6 +175,28 @@ export async function GET() {
     // ==================================================
     // 4. รวมข้อมูล
     // ==================================================
+    const completedChapterMap =
+      new Map<string, number>();
+
+    for (const chapter of chapters ?? []) {
+      const content =
+        chapter.content?.trim() ?? '';
+
+      if (!content) {
+        continue;
+      }
+
+      const current =
+        completedChapterMap.get(
+          chapter.story_id
+        ) ?? 0;
+
+      completedChapterMap.set(
+        chapter.story_id,
+        current + 1
+      );
+    }
+
 
     const storyMap = new Map(
       (stories ?? []).map(
@@ -180,10 +236,15 @@ export async function GET() {
             story.tone ?? '',
 
           totalChapters:
-            story.total_chapters ?? 1,
+            story.total_chapters ?? 0,
 
           currentChapter:
             session.current_chapter ?? 1,
+
+          completedChapters:
+            completedChapterMap.get(
+              story.id
+            ) ?? 0,
 
           status:
             session.status,

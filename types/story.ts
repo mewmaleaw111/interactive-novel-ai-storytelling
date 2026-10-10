@@ -203,6 +203,8 @@ export interface Story {
 
   currentChapter: number;
 
+  completedChapters: number;
+
   wordCount: number;
 
   /* -------------------------------------------------------

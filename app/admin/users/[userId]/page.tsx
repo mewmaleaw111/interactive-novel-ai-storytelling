@@ -594,7 +594,7 @@ export default function AdminUserDetailPage() {
                       href={`/admin/stories/${session.storyId}/sessions/${session.id}`}
                       className="admin-view-button"
                     >
-                      ดูเส้นเรื่อง
+                      ดูรายละเอียด
                       <span aria-hidden="true">
                         →
                       </span>

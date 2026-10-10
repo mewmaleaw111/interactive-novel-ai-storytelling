@@ -1361,3 +1361,18 @@
 
   transform: translateY(-1px);
 }
+
+.story-create-input-helper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+  font-size: 13px;
+  color: #9a8f87;
+}
+
+.story-create-input-helper span:last-child {
+  flex-shrink: 0;
+  white-space: nowrap;
+}

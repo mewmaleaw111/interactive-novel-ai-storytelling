@@ -7,12 +7,12 @@ import {
 } from 'react';
 
 import {
-  useClerk,
   useSession,
   useUser,
 } from '@clerk/nextjs';
 
 import { useRouter } from 'next/navigation';
+import LoginRequiredModal from '@/components/LoginRequiredModal';
 
 import { DiscoverView } from '@/components/DiscoverView';
 import { createSupabaseClient } from '@/lib/supabaseClient';
@@ -34,8 +34,6 @@ export default function DiscoverPage() {
     isSignedIn,
   } = useUser();
 
-  const { openSignIn } = useClerk();
-
   const supabase = useMemo(
     () =>
       createSupabaseClient(
@@ -51,6 +49,9 @@ export default function DiscoverPage() {
 
   const [isLoading, setIsLoading] =
     useState(true);
+
+  const [showLoginModal, setShowLoginModal] =
+    useState(false);
 
   useEffect(() => {
     if (!isLoaded) {
@@ -135,10 +136,10 @@ export default function DiscoverPage() {
                   story.created_at
                 ).getTime() <
                 7 *
-                  24 *
-                  60 *
-                  60 *
-                  1000;
+                24 *
+                60 *
+                60 *
+                1000;
 
               return {
                 id:
@@ -236,25 +237,18 @@ export default function DiscoverPage() {
   const handleSelectStory = (
     id: string
   ) => {
-    /*
-     * ยังไม่ได้ Login
-     * เปิด Login Modal แต่ไม่เปลี่ยนหน้า
-     */
     if (!isSignedIn) {
-      openSignIn();
+      setShowLoginModal(true);
       return;
     }
 
-    /*
-     * Login แล้ว
-     * เข้าอ่านนิยายได้ตามปกติ
-     */
     router.push(
       `/story/${id}?from=discover`
     );
   };
 
-  return (
+return (
+  <>
     <DiscoverView
       stories={stories}
       isLoading={isLoading}
@@ -262,5 +256,13 @@ export default function DiscoverPage() {
         handleSelectStory
       }
     />
-  );
+
+    <LoginRequiredModal
+      isOpen={showLoginModal}
+      onClose={() =>
+        setShowLoginModal(false)
+      }
+    />
+  </>
+);
 }

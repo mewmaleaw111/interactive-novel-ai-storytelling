@@ -3602,3 +3602,43 @@
   }
 
 }
+
+
+/* จัดปุ่มให้อยู่กึ่งกลางแนวตั้งด้านขวาของการ์ด */
+.my-story-item {
+  position: relative;
+}
+
+.my-story-action {
+  position: absolute;
+  top: 50%;
+  right: 24px;
+  transform: translateY(-50%);
+  align-self: auto;
+  margin: 0;
+  z-index: 2;
+}
+
+.story-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ป้องกันปุ่มชนขอบบนและล่างบนหน้าจอเล็ก */
+@media (max-width: 1099px) {
+  .my-story-action {
+    position: static;
+    transform: none;
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .story-card-actions {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    justify-content: stretch;
+  }
+}

@@ -14,6 +14,7 @@ import {
 
 import '@/styles/reader.css';
 import '@/styles/story-reader.css';
+import { calculateStoryProgress } from '@/lib/storyProgress';
 
 /* =========================================================
    TYPES
@@ -557,22 +558,11 @@ export default function BranchReaderPage() {
   ========================================================= */
 
   const progressPercent = useMemo(() => {
-    if (!totalChapters) {
-      return 0;
-    }
-
-    return Math.min(
-      100,
-      Math.round(
-        (selectedChapter /
-          totalChapters) *
-          100
-      )
-    );
-  }, [
-    selectedChapter,
+  return calculateStoryProgress({
+    completedChapters: selectedChapter,
     totalChapters,
-  ]);
+  });
+}, [selectedChapter, totalChapters]);
 
   /* =========================================================
      PARAGRAPHS

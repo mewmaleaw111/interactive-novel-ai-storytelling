@@ -3,6 +3,9 @@
 import { useUser } from '@clerk/nextjs';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import {
+  calculateStoryProgress,
+} from '@/lib/storyProgress';
 
 import '@/styles/profile-branches.css';
 
@@ -20,6 +23,7 @@ interface Branch {
 
     totalChapters: number;
     currentChapter: number;
+    completedChapters: number;
 
     status: string;
 
@@ -231,16 +235,12 @@ export default function ProfileBranchesPage() {
 
                             {branches.map((branch) => {
                                 const progress =
-                                    Math.min(
-                                        (
-                                            branch.currentChapter /
-                                            Math.max(
-                                                branch.totalChapters,
-                                                1
-                                            )
-                                        ) * 100,
-                                        100
-                                    );
+  calculateStoryProgress({
+    completedChapters:
+      branch.completedChapters,
+    totalChapters:
+      branch.totalChapters,
+  });
 
                                 return (
                                     <article
@@ -360,7 +360,7 @@ export default function ProfileBranchesPage() {
                                                     เล่นต่อ
                                                 </button>
 
-                                                {/* ดูเส้นเรื่อง */}
+                                                {/* ดูรายละเอียด */}
                                                 <button
                                                     type="button"
                                                     className="profile-branch-view"
@@ -370,7 +370,7 @@ export default function ProfileBranchesPage() {
                                                         )
                                                     }
                                                 >
-                                                    ดูเส้นเรื่อง
+                                                    ดูรายละเอียด
                                                 </button>
 
                                             </div>

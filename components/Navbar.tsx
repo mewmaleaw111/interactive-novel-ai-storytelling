@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import LoginRequiredModal from '@/components/LoginRequiredModal';
 import {
   SignInButton,
   SignUpButton,
@@ -31,7 +32,16 @@ export const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] =
     useState(false);
 
+  const [showLoginRequired, setShowLoginRequired] =
+    useState(false);
+
   const handleCreateStory = () => {
+    if (!isSignedIn) {
+      setShowLoginRequired(true);
+      setIsMobileMenuOpen(false);
+      return;
+    }
+
     sessionStorage.removeItem(
       'GonnaTales_create_story_draft'
     );
@@ -202,6 +212,12 @@ export const Navbar: React.FC = () => {
             <span>เรื่องใหม่</span>
           </button>
 
+          <Link
+            href="/guide"
+            className="guide-nav-link"
+          >
+            คู่มือการใช้งาน
+          </Link>
 
           {/* ========================================
               AUTHENTICATION
@@ -474,6 +490,13 @@ export const Navbar: React.FC = () => {
         )}
 
       </div>
+
+      <LoginRequiredModal
+        isOpen={showLoginRequired}
+        onClose={() =>
+          setShowLoginRequired(false)
+        }
+      />
 
     </header>
   );

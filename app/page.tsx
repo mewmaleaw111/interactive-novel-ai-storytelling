@@ -12,6 +12,9 @@ import {
   useUser,
 } from '@clerk/nextjs';
 
+import WelcomeGuideModal from '../components/WelcomeGuideModal';
+import LoginRequiredModal from '../components/LoginRequiredModal';
+
 import { useRouter } from 'next/navigation';
 
 import '@/styles/story-login.css';
@@ -28,17 +31,13 @@ import type {
 import { LibraryView } from '@/components/LibraryView';
 
 export default function HomePage() {
-  const { user, isLoaded } =
-    useUser();
+  const { user, isLoaded } = useUser();
 
-  const { session } =
-    useSession();
+  const { session } = useSession();
 
-  const { openSignIn } =
-    useClerk();
+  const { openSignIn } = useClerk();
 
-  const router =
-    useRouter();
+  const router = useRouter();
 
   const supabase = useMemo(
     () =>
@@ -56,19 +55,96 @@ export default function HomePage() {
   const [isLoading, setIsLoading] =
     useState(true);
 
-  /*
-   * ========================================
-   * Load Stories
-   * ========================================
-   */
+  const [showWelcomeGuide, setShowWelcomeGuide] =
+    useState(false);
+
+  const [showLoginRequired, setShowLoginRequired] =
+    useState(false);
 
   useEffect(() => {
     if (!isLoaded) return;
 
-    /*
-     * ถ้า Login แล้ว แต่ Session
-     * ยังไม่พร้อม ให้รอก่อน
-     */
+    if (!user) {
+      setShowWelcomeGuide(false);
+      return;
+    }
+
+    if (!session) {
+      return;
+    }
+
+    const checkGuideStatus = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('has_seen_guide')
+          .eq('user_id', user.id)
+          .maybeSingle();
+
+        if (error) {
+          console.error(
+            'Check Guide Status Error:',
+            error
+          );
+          return;
+        }
+
+        if (!data) {
+          return;
+        }
+
+        setShowWelcomeGuide(
+          data.has_seen_guide === false
+        );
+      } catch (error) {
+        console.error(
+          'Guide Status Error:',
+          error
+        );
+      }
+    };
+
+    checkGuideStatus();
+  }, [
+    user,
+    isLoaded,
+    session,
+    supabase,
+  ]);
+
+  const handleWelcomeGuideClose =
+    async () => {
+      setShowWelcomeGuide(false);
+
+      if (!user) {
+        return;
+      }
+
+      try {
+        const { error } = await supabase
+          .from('profiles')
+          .update({
+            has_seen_guide: true,
+          })
+          .eq('user_id', user.id);
+
+        if (error) {
+          console.error(
+            'Update Guide Status Error:',
+            error
+          );
+        }
+      } catch (error) {
+        console.error(
+          'Guide Status Error:',
+          error
+        );
+      }
+    };
+
+  useEffect(() => {
+    if (!isLoaded) return;
+
     if (user && !session) {
       return;
     }
@@ -78,17 +154,6 @@ export default function HomePage() {
         setIsLoading(true);
 
         try {
-          /*
-           * ========================================
-           * 1. โหลดนิยายผ่าน Public Stories API
-           *
-           * API จะกรองให้แล้ว:
-           * - is_published = true
-           * - is_banned = false
-           * - เจ้าของนิยายต้องไม่ถูกแบน
-           * ========================================
-           */
-
           const storyResponse =
             await fetch(
               '/api/stories/public',
@@ -116,11 +181,6 @@ export default function HomePage() {
           const allStoryData =
             storyResult.stories ?? [];
 
-          /*
-           * Home:
-           * - Login → แสดงสูงสุด 100 เรื่อง
-           * - Guest → แสดงสูงสุด 8 เรื่อง
-           */
           const storyData =
             allStoryData.slice(
               0,
@@ -134,12 +194,6 @@ export default function HomePage() {
             return;
           }
 
-          /*
-           * ========================================
-           * 2. เตรียม Story IDs
-           * ========================================
-           */
-
           const storyIds =
             storyData.map(
               (story: {
@@ -147,12 +201,6 @@ export default function HomePage() {
               }) =>
                 story.id
             );
-
-          /*
-           * ========================================
-           * 3. โหลด Chapters
-           * ========================================
-           */
 
           const {
             data: chapterData,
@@ -185,12 +233,6 @@ export default function HomePage() {
           const chapters =
             chapterData || [];
 
-          /*
-           * ========================================
-           * 4. ค่าเริ่มต้น
-           * ========================================
-           */
-
           let sessions: {
             story_id: string;
             current_chapter: number;
@@ -205,19 +247,7 @@ export default function HomePage() {
             string
           > = {};
 
-          /*
-           * ========================================
-           * 5. โหลดข้อมูลของ User
-           * ========================================
-           */
-
           if (user) {
-            /*
-             * ------------------------------
-             * Game Sessions
-             * ------------------------------
-             */
-
             const {
               data: sessionData,
               error: sessionError,
@@ -243,12 +273,6 @@ export default function HomePage() {
 
             sessions =
               sessionData || [];
-
-            /*
-             * ------------------------------
-             * Favorites
-             * ------------------------------
-             */
 
             try {
               const favoriteResponse =
@@ -277,12 +301,6 @@ export default function HomePage() {
                 error
               );
             }
-
-            /*
-             * ------------------------------
-             * Creators
-             * ------------------------------
-             */
 
             try {
               const creatorResponse =
@@ -313,19 +331,9 @@ export default function HomePage() {
             }
           }
 
-          /*
-           * ========================================
-           * 6. Map Supabase → Story
-           * ========================================
-           */
-
           const mappedStories: Story[] =
             storyData.map(
               (story: any) => {
-                /*
-                 * Chapters ของเรื่องนี้
-                 */
-
                 const storyChapters: Chapter[] =
                   chapters
                     .filter(
@@ -354,10 +362,6 @@ export default function HomePage() {
                       })
                     );
 
-                /*
-                 * Session ของ User
-                 */
-
                 const userSession =
                   user
                     ? sessions.find(
@@ -367,17 +371,9 @@ export default function HomePage() {
                     )
                     : undefined;
 
-                /*
-                 * Progress
-                 */
-
                 const currentChapter =
                   userSession?.current_chapter ||
                   0;
-
-                /*
-                 * จำนวนตัวอักษร
-                 */
 
                 const wordCount =
                   storyChapters.reduce(
@@ -390,10 +386,6 @@ export default function HomePage() {
                         .length,
                     0
                   );
-
-                /*
-                 * นิยายใหม่ภายใน 7 วัน
-                 */
 
                 const isFresh =
                   Date.now() -
@@ -506,12 +498,6 @@ export default function HomePage() {
     supabase,
   ]);
 
-  /*
-   * ========================================
-   * Favorite
-   * ========================================
-   */
-
   const handleFavoriteChange = (
     storyId: string,
     isFavorite: boolean
@@ -531,24 +517,11 @@ export default function HomePage() {
     );
   };
 
-  /*
-   * ========================================
-   * Select Story
-   *
-   * Guest → Clerk Sign In
-   * Login → Story
-   * ========================================
-   */
-
   const handleSelectStory = (
     storyId: string
   ) => {
     if (!user) {
-      openSignIn({
-        fallbackRedirectUrl:
-          `/story/${storyId}`,
-      });
-
+      setShowLoginRequired(true);
       return;
     }
 
@@ -557,20 +530,10 @@ export default function HomePage() {
     );
   };
 
-  /*
-   * ========================================
-   * Create Story
-   * ========================================
-   */
-
   const handleCreateStory =
     () => {
       if (!user) {
-        openSignIn({
-          fallbackRedirectUrl:
-            '/story/create',
-        });
-
+        setShowLoginRequired(true);
         return;
       }
 
@@ -583,42 +546,45 @@ export default function HomePage() {
       );
     };
 
-  /*
-   * ========================================
-   * Render
-   * ========================================
-   */
-
   return (
-    <LibraryView
-      stories={stories}
+    <>
+      <LibraryView
+        stories={stories}
+        isLoading={
+          !isLoaded ||
+          isLoading
+        }
+        isGuest={!user}
+        onSelectStory={
+          handleSelectStory
+        }
+        onOpenCreateModal={
+          handleCreateStory
+        }
+        onGoToDiscover={() => {
+          router.push(
+            '/discover'
+          );
+        }}
+        onFavoriteChange={
+          handleFavoriteChange
+        }
+      />
 
-      isLoading={
-        !isLoaded ||
-        isLoading
-      }
-
-      isGuest={
-        !user
-      }
-
-      onSelectStory={
-        handleSelectStory
-      }
-
-      onOpenCreateModal={
-        handleCreateStory
-      }
-
-      onGoToDiscover={() => {
-        router.push(
-          '/discover'
-        );
-      }}
-
-      onFavoriteChange={
-        handleFavoriteChange
-      }
-    />
+      <WelcomeGuideModal
+        isOpen={
+          showWelcomeGuide
+        }
+        onClose={
+          handleWelcomeGuideClose
+        }
+      />
+      <LoginRequiredModal
+        isOpen={showLoginRequired}
+        onClose={() =>
+          setShowLoginRequired(false)
+        }
+      />
+    </>
   );
 }

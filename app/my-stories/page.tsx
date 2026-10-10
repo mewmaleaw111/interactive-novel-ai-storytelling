@@ -18,6 +18,7 @@ import { MyStoriesView } from '@/components/MyStoriesView';
 import MyStoriesSkeleton from '@/components/MyStoriesSkeleton';
 import { EditStoryModal } from '@/components/EditStoryModal';
 import { DeleteStoryModal } from '@/components/DeleteStoryModal';
+import LoginRequiredModal from '@/components/LoginRequiredModal';
 
 import type {
   Story,
@@ -66,6 +67,9 @@ export default function MyStoriesPage() {
     useState<Story | null>(null);
 
   const [isDeleting, setIsDeleting] =
+    useState(false);
+
+  const [showLoginRequired, setShowLoginRequired] =
     useState(false);
 
   // ==========================================
@@ -129,6 +133,34 @@ export default function MyStoriesPage() {
           storyData.map(
             (story) => story.id
           );
+
+
+        const {
+          data: sessionData,
+          error: sessionError,
+        } = await supabase
+          .from('game_sessions')
+          .select('id, story_id, current_chapter, updated_at')
+          .eq('user_id', user.id)
+          .in('story_id', storyIds)
+          .order('updated_at', { ascending: false });
+
+        if (sessionError) {
+          console.error('My Stories Session Error:', sessionError);
+          setStories([]);
+          return;
+        }
+
+        const sessionProgressMap = new Map<string, number>();
+
+        for (const sessionItem of sessionData ?? []) {
+          if (!sessionProgressMap.has(sessionItem.story_id)) {
+            sessionProgressMap.set(
+              sessionItem.story_id,
+              Math.max(0, Number(sessionItem.current_chapter) || 0)
+            );
+          }
+        }
 
         // ==========================================
         // LOAD CHAPTERS
@@ -195,11 +227,37 @@ export default function MyStoriesPage() {
             // ==========================================
             // CURRENT CHAPTER
             // ==========================================
+
+            // ==========================================
+            // CHAPTER PROGRESS
+            // ==========================================
+
+            // นับเฉพาะ chapter ที่มีเนื้อหาจริง
+            const completedChapters =
+              storyChapters.filter(
+                (chapter) =>
+                  typeof chapter.content === 'string' &&
+                  chapter.content.trim().length > 0
+              ).length;
+
+            // chapter ล่าสุดที่มีเนื้อหาจริง
+            const completedChapterNumbers =
+              storyChapters
+                .filter(
+                  (chapter) =>
+                    typeof chapter.content === 'string' &&
+                    chapter.content.trim().length > 0
+                )
+                .map(
+                  (chapter) =>
+                    chapter.chapterNumber
+                );
+
             const currentChapter =
-              storyChapters.length > 0
-                ? storyChapters[
-                    storyChapters.length - 1
-                  ].chapterNumber
+              completedChapterNumbers.length > 0
+                ? Math.max(
+                  ...completedChapterNumbers
+                )
                 : 0;
 
             // ==========================================
@@ -258,7 +316,11 @@ export default function MyStoriesPage() {
               totalChapters:
                 story.total_chapters || 0,
 
-              currentChapter,
+              currentChapter:
+                sessionProgressMap.get(story.id) ?? 0,
+
+              completedChapters:
+                sessionProgressMap.get(story.id) ?? 0,
 
               wordCount,
 
@@ -285,14 +347,14 @@ export default function MyStoriesPage() {
 
               isFresh:
                 Date.now() -
-                  new Date(
-                    story.created_at
-                  ).getTime() <
+                new Date(
+                  story.created_at
+                ).getTime() <
                 7 *
-                  24 *
-                  60 *
-                  60 *
-                  1000,
+                24 *
+                60 *
+                60 *
+                1000,
 
               isTrending: false,
             };
@@ -321,10 +383,23 @@ export default function MyStoriesPage() {
     supabase,
   ]);
 
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    if (!user) {
+      setShowLoginRequired(true);
+    }
+  }, [isLoaded, user]);
+
   // ==========================================
   // CREATE NEW STORY
   // ==========================================
   const handleCreateStory = () => {
+    if (!user) {
+      setShowLoginRequired(true);
+      return;
+    }
+
     sessionStorage.removeItem(
       'GonnaTales_create_story_draft'
     );
@@ -354,25 +429,25 @@ export default function MyStoriesPage() {
         prevStories.map(
           (story) =>
             story.id ===
-            updatedStory.id
+              updatedStory.id
               ? {
-                  ...story,
+                ...story,
 
-                  title:
-                    updatedStory.title,
+                title:
+                  updatedStory.title,
 
-                  corePremise:
-                    updatedStory.corePremise,
+                corePremise:
+                  updatedStory.corePremise,
 
-                  genre:
-                    updatedStory.genre,
+                genre:
+                  updatedStory.genre,
 
-                  tone:
-                    updatedStory.tone,
+                tone:
+                  updatedStory.tone,
 
-                  coverUrl:
-                    updatedStory.coverUrl,
-                }
+                coverUrl:
+                  updatedStory.coverUrl,
+              }
               : story
         )
     );
@@ -430,7 +505,7 @@ export default function MyStoriesPage() {
         ) {
           throw new Error(
             data.error ||
-              'ไม่สามารถเปลี่ยนสถานะนิยายได้'
+            'ไม่สามารถเปลี่ยนสถานะนิยายได้'
           );
         }
 
@@ -443,10 +518,10 @@ export default function MyStoriesPage() {
               (item) =>
                 item.id === story.id
                   ? {
-                      ...item,
-                      isPublished:
-                        data.isPublished,
-                    }
+                    ...item,
+                    isPublished:
+                      data.isPublished,
+                  }
                   : item
             )
         );
@@ -513,7 +588,7 @@ export default function MyStoriesPage() {
         ) {
           throw new Error(
             data.error ||
-              'ไม่สามารถลบนิยายได้'
+            'ไม่สามารถลบนิยายได้'
           );
         }
 
@@ -570,11 +645,16 @@ export default function MyStoriesPage() {
       <MyStoriesView
         myStories={stories}
 
-        onSelectStory={(id) =>
+        onSelectStory={(id) => {
+          if (!user) {
+            setShowLoginRequired(true);
+            return;
+          }
+
           router.push(
             `/story/${id}`
-          )
-        }
+          );
+        }}
 
         onCreateStory={
           handleCreateStory
@@ -638,11 +718,10 @@ export default function MyStoriesPage() {
           >
             {/* ICON */}
             <div
-              className={`publish-modal-icon ${
-                publishTarget.isPublished
-                  ? 'is-unpublish'
-                  : 'is-publish'
-              }`}
+              className={`publish-modal-icon ${publishTarget.isPublished
+                ? 'is-unpublish'
+                : 'is-publish'
+                }`}
             >
               {publishTarget.isPublished ? (
                 <svg
@@ -676,7 +755,6 @@ export default function MyStoriesPage() {
               )}
             </div>
 
-            {/* CONTENT */}
             <div className="publish-modal-content">
               <h2>
                 {publishTarget.isPublished
@@ -695,7 +773,6 @@ export default function MyStoriesPage() {
               </p>
             </div>
 
-            {/* ACTIONS */}
             <div className="publish-modal-actions">
               <button
                 type="button"
@@ -709,11 +786,10 @@ export default function MyStoriesPage() {
 
               <button
                 type="button"
-                className={`publish-modal-confirm ${
-                  publishTarget.isPublished
-                    ? 'confirm-unpublish'
-                    : 'confirm-publish'
-                }`}
+                className={`publish-modal-confirm ${publishTarget.isPublished
+                  ? 'confirm-unpublish'
+                  : 'confirm-publish'
+                  }`}
                 onClick={
                   handleConfirmPublish
                 }
@@ -726,6 +802,14 @@ export default function MyStoriesPage() {
           </div>
         </div>
       )}
+
+      <LoginRequiredModal
+        isOpen={showLoginRequired}
+        onClose={() =>
+          setShowLoginRequired(false)
+        }
+      />
     </>
   );
 }
+

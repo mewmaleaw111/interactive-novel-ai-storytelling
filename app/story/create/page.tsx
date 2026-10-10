@@ -28,6 +28,18 @@ const DRAFT_KEY =
 const CREATE_KEY =
   'GonnaTales_create_story';
 
+const MAX_LENGTHS = {
+  title: 100,
+  corePremise: 2000,
+  protagonist: 100,
+  protagonistPersonality: 1000,
+  protagonistItems: 500,
+  supportingCharacterName: 100,
+  supportingCharacterPersonality: 1000,
+  supportingCharacterItems: 500,
+  worldSetting: 2000,
+};
+
 const genres: Genre[] = [
   'แฟนตาซี',
   'โรแมนติก',
@@ -757,8 +769,8 @@ export default function CreateStoryPage() {
               <div
                 key={item}
                 className={`story-create-progress-item ${step >= item
-                    ? 'active'
-                    : ''
+                  ? 'active'
+                  : ''
                   }`}
               >
 
@@ -825,6 +837,7 @@ export default function CreateStoryPage() {
 
                   <input
                     type="text"
+                    maxLength={MAX_LENGTHS.title}
                     value={
                       formData.title
                     }
@@ -836,6 +849,16 @@ export default function CreateStoryPage() {
                     }
                     placeholder="เช่น คืนที่ดวงจันทร์หายไป"
                   />
+
+                  <div className="story-create-input-helper">
+                    <span>
+                      ชื่อเรื่องจะแสดงให้ผู้เล่นคนอื่นเห็น
+                    </span>
+
+                    <span>
+                      {formData.title.length}/{MAX_LENGTHS.title}
+                    </span>
+                  </div>
 
                 </div>
 
@@ -849,6 +872,7 @@ export default function CreateStoryPage() {
                   </label>
 
                   <textarea
+                    maxLength={MAX_LENGTHS.corePremise}
                     value={
                       formData.corePremise
                     }
@@ -861,6 +885,16 @@ export default function CreateStoryPage() {
                     placeholder="เล่าไอเดียหลักของเรื่องที่คุณอยากให้เกิดขึ้น..."
                     rows={6}
                   />
+
+                  <div className="story-create-input-helper">
+                    <span>
+                      อธิบายแนวคิดหลักของเรื่อง ตัวละคร หรือเหตุการณ์ที่ต้องการ
+                    </span>
+
+                    <span>
+                      {formData.corePremise.length}/{MAX_LENGTHS.corePremise}
+                    </span>
+                  </div>
 
                 </div>
 
@@ -956,6 +990,7 @@ export default function CreateStoryPage() {
 
                   <input
                     type="text"
+                    maxLength={MAX_LENGTHS.protagonist}
                     value={
                       formData.protagonist
                     }
@@ -967,6 +1002,16 @@ export default function CreateStoryPage() {
                     }
                     placeholder="เช่น อาร์เธอร์ เพนเดิลตัน"
                   />
+
+                  <div className="story-create-input-helper">
+                    <span>
+                      ชื่อตัวละครหลักที่จะปรากฏในเรื่อง
+                    </span>
+
+                    <span>
+                      {formData.protagonist.length}/{MAX_LENGTHS.protagonist}
+                    </span>
+                  </div>
 
                 </div>
 
@@ -1023,6 +1068,7 @@ export default function CreateStoryPage() {
                   </p>
 
                   <textarea
+                    maxLength={MAX_LENGTHS.protagonistPersonality}
                     value={
                       formData.protagonistPersonality
                     }
@@ -1035,6 +1081,16 @@ export default function CreateStoryPage() {
                     placeholder="เช่น สุขุม รอบคอบ ไม่ไว้ใจคนง่าย สามารถใช้เวทมนตร์ไฟได้..."
                     rows={5}
                   />
+
+                  <div className="story-create-input-helper">
+                    <span>
+                      ระบุนิสัย ความสามารถ หรือรายละเอียดสำคัญของตัวละคร
+                    </span>
+
+                    <span>
+                      {formData.protagonistPersonality.length}/{MAX_LENGTHS.protagonistPersonality}
+                    </span>
+                  </div>
 
                 </div>
 
@@ -1052,6 +1108,7 @@ export default function CreateStoryPage() {
                   </p>
 
                   <textarea
+                    maxLength={MAX_LENGTHS.protagonistItems}
                     value={
                       formData.protagonistItems
                     }
@@ -1064,6 +1121,16 @@ export default function CreateStoryPage() {
                     placeholder="เช่น ดาบเก่า 1 เล่ม, หนังสือเวทมนตร์, เหรียญของแม่..."
                     rows={4}
                   />
+
+                  <div className="story-create-input-helper">
+                    <span>
+                      ระบุสิ่งของสำคัญที่ตัวละครพกติดตัว
+                    </span>
+
+                    <span>
+                      {formData.protagonistItems.length}/{MAX_LENGTHS.protagonistItems}
+                    </span>
+                  </div>
 
                 </div>
 
@@ -1294,6 +1361,7 @@ export default function CreateStoryPage() {
                   </label>
 
                   <textarea
+                    maxLength={MAX_LENGTHS.worldSetting}
                     value={
                       formData.worldSetting
                     }
@@ -1306,6 +1374,16 @@ export default function CreateStoryPage() {
                     placeholder="เช่น เมืองเล็ก ๆ ที่ซ่อนอยู่ท่ามกลางป่า ผู้คนในเมืองใช้เวทมนตร์เป็นเรื่องปกติ..."
                     rows={5}
                   />
+
+                  <div className="story-create-input-helper">
+                    <span>
+                      กำหนดสถานที่ ยุคสมัย หรือสภาพแวดล้อมของเรื่อง
+                    </span>
+
+                    <span>
+                      {formData.worldSetting.length}/{MAX_LENGTHS.worldSetting}
+                    </span>
+                  </div>
 
                 </div>
 

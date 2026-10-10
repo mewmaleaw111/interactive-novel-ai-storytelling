@@ -70,8 +70,8 @@ export default function ProfilePage() {
   const saveDisplayName = async () => {
     const name = editName.trim();
 
-    if (name.length < 2 || name.length > 50) {
-      setMessage('นามสมมุติต้องมีความยาว 2-50 ตัวอักษร');
+    if (name.length < 2 || name.length > 20) {
+      setMessage('นามสมมุติต้องมีความยาว 2-20 ตัวอักษร');
       return;
     }
 
@@ -220,7 +220,7 @@ export default function ProfilePage() {
                       closeEditModal();
                     }
                   }}
-                  maxLength={50}
+                  maxLength={20}
                   autoFocus
                   disabled={saving}
                   placeholder="เช่น NightWalker"
@@ -233,7 +233,7 @@ export default function ProfilePage() {
                   </span>
 
                   <span>
-                    {editName.length}/50
+                    {editName.length}/20
                   </span>
                 </div>
 
