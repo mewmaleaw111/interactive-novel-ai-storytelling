@@ -491,7 +491,7 @@ export default function StoryDetailPage() {
             creatorResponse.ok &&
             creatorData.success &&
             typeof creatorData.creatorName ===
-              'string' &&
+            'string' &&
             creatorData.creatorName.trim()
           ) {
             creatorName =
@@ -574,11 +574,11 @@ export default function StoryDetailPage() {
         const latestSharedChapter =
           sharedChapters.length > 0
             ? Math.max(
-                ...sharedChapters.map(
-                  (chapter) =>
-                    chapter.chapterNumber
-                )
+              ...sharedChapters.map(
+                (chapter) =>
+                  chapter.chapterNumber
               )
+            )
             : 1;
 
         /* =========================
@@ -632,7 +632,7 @@ export default function StoryDetailPage() {
           const {
             data: newSession,
             error:
-              createSessionError,
+            createSessionError,
           } = await supabase
             .from('game_sessions')
             .insert({
@@ -686,9 +686,9 @@ export default function StoryDetailPage() {
             ) {
               const {
                 data:
-                  existingSessionAfterConflict,
+                existingSessionAfterConflict,
                 error:
-                  reloadSessionError,
+                reloadSessionError,
               } = await supabase
                 .from(
                   'game_sessions'
@@ -824,9 +824,9 @@ export default function StoryDetailPage() {
 
         const {
           data:
-            sessionChapterData,
+          sessionChapterData,
           error:
-            sessionChapterError,
+          sessionChapterError,
         } = await supabase
           .from(
             'session_chapters'
@@ -937,14 +937,14 @@ export default function StoryDetailPage() {
         const latestLoadedChapter =
           chapters.length > 0
             ? chapters[
-                chapters.length - 1
-              ].chapterNumber
+              chapters.length - 1
+            ].chapterNumber
             : 1;
 
         const sessionCurrentChapter =
           Number(
             currentSession.current_chapter ||
-              1
+            1
           );
 
         const currentChapter =
@@ -963,7 +963,7 @@ export default function StoryDetailPage() {
         ) {
           const {
             error:
-              updateSessionError,
+            updateSessionError,
           } = await supabase
             .from(
               'game_sessions'
@@ -1044,6 +1044,12 @@ export default function StoryDetailPage() {
           totalChapters,
 
           currentChapter,
+
+          completedChapters: chapters.filter(
+            (chapter) =>
+              chapter.chapterNumber <=
+              Number(currentSession.current_chapter || 1)
+          ).length,
 
           wordCount:
             chapters.reduce(
