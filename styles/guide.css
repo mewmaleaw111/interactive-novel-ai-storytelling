@@ -188,14 +188,15 @@
   line-height: 1.7;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .guide-sidebar {
-    width: 210px;
-    min-width: 210px;
+    width: 200px;
+    min-width: 200px;
+    padding: 28px 16px;
   }
 
   .guide-content {
-    padding: 55px 35px 80px;
+    padding: 50px 30px 80px;
   }
 }
 
@@ -218,6 +219,12 @@
   .guide-navigation {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .guide-nav-item {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
   }
 
   .guide-content {
@@ -279,5 +286,75 @@
     color: #79665d;
     font-size: 15px;
     line-height: 1.8;
+  }
+}
+
+@media (max-width: 420px) {
+  .guide-sidebar {
+    padding: 16px 14px;
+  }
+
+  .guide-navigation {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .guide-nav-item {
+    min-height: 44px;
+    padding: 12px 14px;
+    font-size: 13.5px;
+  }
+
+  .guide-content {
+    padding: 35px 16px 60px;
+  }
+
+  .guide-header {
+    margin-bottom: 35px;
+  }
+
+  .guide-header h1 {
+    font-size: 28px;
+    line-height: 1.2;
+  }
+
+  .guide-header p {
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .guide-section {
+    padding: 35px 0 50px;
+  }
+
+  .guide-section h2 {
+    font-size: 23px;
+  }
+
+  .guide-section>p {
+    font-size: 14.5px;
+  }
+
+  .guide-faq-item {
+    padding: 16px 14px;
+  }
+}
+
+@media (max-width: 360px) {
+  .guide-sidebar {
+    padding: 14px 10px;
+  }
+
+  .guide-content {
+    padding: 28px 10px 50px;
+  }
+
+  .guide-header h1 {
+    font-size: 24px;
+  }
+
+  .guide-nav-item {
+    padding: 11px 12px;
+    font-size: 13px;
   }
 }
