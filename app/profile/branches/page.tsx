@@ -4,7 +4,7 @@ import { useUser } from '@clerk/nextjs';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
-  calculateStoryProgress,
+    calculateStoryProgress,
 } from '@/lib/storyProgress';
 
 import '@/styles/profile-branches.css';
@@ -234,13 +234,10 @@ export default function ProfileBranchesPage() {
                         <section className="profile-branches-list">
 
                             {branches.map((branch) => {
-                                const progress =
-  calculateStoryProgress({
-    completedChapters:
-      branch.completedChapters,
-    totalChapters:
-      branch.totalChapters,
-  });
+                                const progress = calculateStoryProgress({
+                                    completedChapters: branch.currentChapter,
+                                    totalChapters: branch.totalChapters,
+                                });
 
                                 return (
                                     <article
