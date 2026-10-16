@@ -588,7 +588,7 @@ export default function GuidePage() {
           </p>
 
           <GuideFigure
-            src="/guide/read.jpg"
+            src="/guide/Read.jpg"
             alt="หน้าอ่านนิยายของ GonnaTales"
             caption="หน้าอ่านนิยาย แสดงเนื้อเรื่อง ปุ่มปรับขนาดตัวอักษร และแถบสถานะด้านข้าง"
           />
