@@ -155,7 +155,6 @@ export const Navbar: React.FC = () => {
             <span>นิยายของฉัน</span>
           </Link>
 
-
           {/* ผู้ดูแลระบบ */}
 
           {isSignedIn && isAdmin && (
@@ -380,6 +379,7 @@ export const Navbar: React.FC = () => {
           </Link>
 
 
+
           {/* นิยายของฉัน */}
 
           <Link
@@ -401,6 +401,51 @@ export const Navbar: React.FC = () => {
             </svg>
 
             <span>นิยายของฉัน</span>
+          </Link>
+
+
+          {/* คู่มือการใช้งาน - Mobile Menu */}
+
+          <Link
+            href="/guide"
+            className={`mobile-nav-link ${isActive('/guide') ? 'active' : ''
+              }`}
+            onClick={closeMobileMenu}
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="22"
+              height="22"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.65"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              {/* รูปเอกสารพร้อมมุมพับ */}
+              <path d="M6.5 3.5h7l4 4v12.8H6.5z" />
+              <path d="M13.5 3.8v4h3.8" />
+
+              {/* เนื้อหาในคู่มือ */}
+              <path d="M9.5 10.5h4" />
+              <path d="M9.5 13.5h2" />
+
+              {/* สัญลักษณ์ช่วยเหลือ */}
+              <circle cx="15.5" cy="16.5" r="3.5" fill="currentColor" stroke="none" />
+              <path
+                d="M14.6 15.4a.95.95 0 1 1 1.6.7c-.5.4-.7.7-.7 1.2"
+                stroke="var(--background, #fffaf4)"
+                strokeWidth="1.2"
+              />
+              <path
+                d="M15.5 18.3h.01"
+                stroke="var(--background, #fffaf4)"
+                strokeWidth="1.4"
+              />
+            </svg>
+
+            <span>คู่มือการใช้งาน</span>
           </Link>
 
 
