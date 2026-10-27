@@ -1479,20 +1479,13 @@ export default function BranchReaderPage() {
               </h2>
 
               <div className="story-sidebar-tags">
-                {genre && (
-                  <span>{genre}</span>
-                )}
-
-                {tone && (
-                  <span>{tone}</span>
-                )}
+                <span>{genre}</span>
+                <span>{tone}</span>
               </div>
 
-              {synopsis && (
-                <p>
-                  {synopsis}
-                </p>
-              )}
+              <p>
+                {synopsis}
+              </p>
 
               <div className="story-sidebar-author">
                 ผู้เขียน {creatorName}
@@ -1584,117 +1577,72 @@ export default function BranchReaderPage() {
             </div>
 
             <div className="story-sidebar-status-list">
-              {currentStatus.location && (
-                <div className="story-sidebar-status-item">
-                  <span className="status-icon">
-                    <LocationIcon />
-                  </span>
+              <div className="story-sidebar-status-item">
+                <span className="status-icon">
+                  <LocationIcon />
+                </span>
 
-                  <div>
-                    <small>
-                      สถานที่
-                    </small>
-
-                    <strong>
-                      {currentStatus.location}
-                    </strong>
-                  </div>
+                <div>
+                  <small>สถานที่</small>
+                  <strong>
+                    {currentStatus.location || 'ไม่ระบุ'}
+                  </strong>
                 </div>
-              )}
+              </div>
 
-              {currentStatus.physicalCondition && (
-                <div className="story-sidebar-status-item">
-                  <span className="status-icon">
-                    <Icon>
-                      <path d="M12 3v18" />
-                      <path d="M5 8h14" />
-                      <path d="M7 8v5a5 5 0 0 0 10 0V8" />
-                    </Icon>
-                  </span>
+              <div className="story-sidebar-status-item">
+                <span className="status-icon">
+                  <Icon>
+                    <path d="M12 3v18" />
+                    <path d="M5 8h14" />
+                    <path d="M7 8v5a5 5 0 0 0 10 0V8" />
+                  </Icon>
+                </span>
 
-                  <div>
-                    <small>
-                      สภาพร่างกาย
-                    </small>
-
-                    <strong>
-                      {
-                        currentStatus.physicalCondition
-                      }
-                    </strong>
-                  </div>
+                <div>
+                  <small>สภาพร่างกาย</small>
+                  <strong>
+                    {currentStatus.physicalCondition || 'ไม่ระบุ'}
+                  </strong>
                 </div>
-              )}
+              </div>
 
-              {currentStatus.importantSituation && (
-                <div className="story-sidebar-status-item">
-                  <span className="status-icon">
-                    <ChoiceIcon />
-                  </span>
+              <div className="story-sidebar-status-item">
+                <span className="status-icon">
+                  <Icon>
+                    <rect x="3" y="6" width="18" height="14" rx="2" />
+                    <path d="M8 6V4h8v2" />
+                    <path d="M3 11h18" />
+                  </Icon>
+                </span>
 
-                  <div>
-                    <small>
-                      สถานการณ์สำคัญ
-                    </small>
-
-                    <strong>
-                      {
-                        currentStatus.importantSituation
-                      }
-                    </strong>
-                  </div>
+                <div>
+                  <small>ของติดตัว</small>
+                  <strong>
+                    {currentStatus.inventory?.length
+                      ? currentStatus.inventory.join(', ')
+                      : 'ไม่มี'}
+                  </strong>
                 </div>
-              )}
+              </div>
 
-              {currentStatus.inventory.length > 0 && (
-                <div className="story-sidebar-status-item">
-                  <span className="status-icon">
-                    <Icon>
-                      <rect
-                        x="3"
-                        y="6"
-                        width="18"
-                        height="14"
-                        rx="2"
-                      />
-                      <path d="M8 6V4h8v2" />
-                      <path d="M3 11h18" />
-                    </Icon>
-                  </span>
+              <div className="story-sidebar-status-item">
+                <span className="status-icon">
+                  <Icon>
+                    <path d="M12 3 22 20H2L12 3Z" />
+                    <path d="M12 9v4" />
+                    <path d="M12 17h.01" />
+                  </Icon>
+                </span>
 
-                  <div>
-                    <small>
-                      สิ่งของ
-                    </small>
-
-                    <div className="story-sidebar-inventory-list">
-                      {currentStatus.inventory.map(
-                        (
-                          item,
-                          index
-                        ) => (
-                          <span
-                            key={`${item}-${index}`}
-                            className="story-sidebar-inventory-item"
-                          >
-                            {item}
-                          </span>
-                        )
-                      )}
-                    </div>
-                  </div>
+                <div>
+                  <small>สถานการณ์สำคัญ</small>
+                  <strong>
+                    {currentStatus.importantSituation || 'ไม่มี'}
+                  </strong>
                 </div>
-              )}
+              </div>
             </div>
-
-            {!currentStatus.location &&
-              !currentStatus.physicalCondition &&
-              !currentStatus.importantSituation &&
-              currentStatus.inventory.length === 0 && (
-                <div className="story-sidebar-empty">
-                  ยังไม่มีข้อมูลสถานะ
-                </div>
-              )}
           </section>
 
           {/* Characters */}

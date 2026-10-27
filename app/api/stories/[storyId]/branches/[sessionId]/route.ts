@@ -188,6 +188,43 @@ export async function GET(
       }
     }
 
+
+    // โหลด Session ต้นฉบับของเจ้าของนิยาย
+    // ใช้ข้อมูลนี้ร่วมกันทุกคน เพื่อให้สถานะและตัวละครเหมือนกัน
+    const {
+      data: originalSession,
+      error: originalSessionError,
+    } = await supabaseAdmin
+      .from('game_sessions')
+      .select(`
+        id,
+        current_location,
+        physical_condition,
+        current_inventory,
+        important_situation
+      `)
+      .eq('story_id', storyId)
+      .eq('user_id', story.user_id)
+      .order('created_at', { ascending: true })
+      .limit(1)
+      .maybeSingle();
+
+    if (originalSessionError) {
+      console.error(
+        'Error loading original story session:',
+        originalSessionError
+      );
+
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Failed to load original story session',
+        },
+        { status: 500 }
+      );
+    }
+
+
     // ==================================================
     // 5. โหลด Username ของเจ้าของ Branch
     // ==================================================
@@ -226,16 +263,15 @@ export async function GET(
     }
 
     // ==================================================
-    // 6. โหลด Characters ของ Branch
+    // 6. โหลด Characters ต้นฉบับของ Story
     // ==================================================
 
     const {
-      data: sessionCharacters,
+      data: storyCharacters,
       error: charactersError,
     } = await supabaseAdmin
-      .from('session_characters')
-      .select(
-        `
+      .from('characters')
+      .select(`
         id,
         name,
         gender,
@@ -244,31 +280,27 @@ export async function GET(
         personality,
         initial_items,
         created_at
-        `
-      )
-      .eq(
-        'session_id',
-        sessionId
-      )
+      `)
+      .eq('story_id', storyId)
       .order('created_at', {
         ascending: true,
       });
 
     if (charactersError) {
       console.error(
-        'Error loading session characters:',
+        'Error loading story characters:',
         charactersError
       );
 
       return NextResponse.json(
         {
           success: false,
-          error:
-            'Failed to load branch characters',
+          error: 'Failed to load story characters',
         },
         { status: 500 }
       );
     }
+
 
     // ==================================================
     // 7. โหลด Chapter กลางของ Story
@@ -440,28 +472,26 @@ export async function GET(
           b.chapterNumber
       );
 
+
     // ==================================================
     // 10. จัดรูปข้อมูล Characters
     // ==================================================
 
     const characters = (
-      sessionCharacters ?? []
+      storyCharacters ?? []
     ).map((character) => ({
       id: character.id,
       name: character.name,
       gender: character.gender ?? '',
       role: character.role ?? 'npc',
-      appearance:
-        character.appearance ?? '',
-      personality:
-        character.personality ?? '',
+      appearance: character.appearance ?? '',
+      personality: character.personality ?? '',
       initial_items:
-        Array.isArray(
-          character.initial_items
-        )
+        Array.isArray(character.initial_items)
           ? character.initial_items
           : [],
     }));
+
 
     // ==================================================
     // 11. Response
@@ -526,24 +556,22 @@ export async function GET(
       // ==================================================
       // สถานะปัจจุบันของเส้นเรื่อง
       // ==================================================
-
       currentStatus: {
         location:
-          session.current_location ?? '',
+          originalSession?.current_location ?? '',
 
         physicalCondition:
-          session.physical_condition ?? '',
+          originalSession?.physical_condition ?? '',
 
         inventory:
-          Array.isArray(
-            session.current_inventory
-          )
-            ? session.current_inventory
+          Array.isArray(originalSession?.current_inventory)
+            ? originalSession.current_inventory
             : [],
 
         importantSituation:
-          session.important_situation ?? '',
+          originalSession?.important_situation ?? '',
       },
+
 
       // ==================================================
       // ตัวละครใน Session

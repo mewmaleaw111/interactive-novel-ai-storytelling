@@ -333,6 +333,8 @@ function StoryDetailLoading() {
   );
 }
 
+
+
 export default function StoryDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -768,43 +770,49 @@ export default function StoryDetailPage() {
           currentSession.id
         );
 
+        let originalSessionData: {
+          id: string;
+          storyId: string;
+          currentChapter: number;
+          status: string;
+          currentLocation: string | null;
+          physicalCondition: string | null;
+          currentInventory: string[] | null;
+          importantSituation: string | null;
+        } | null = null;
+
         /* =========================
            Load Session Characters
         ========================= */
 
-        try {
-          const charactersResponse =
-            await fetch(
-              `/api/session-characters?storyId=${encodeURIComponent(
-                storyId
-              )}`,
-              {
-                cache: 'no-store',
-              }
-            );
 
-          const charactersData =
-            await charactersResponse.json();
+
+        try {
+          const charactersResponse = await fetch(
+            `/api/session-characters?storyId=${encodeURIComponent(
+              storyId
+            )}`,
+            {
+              cache: 'no-store',
+            }
+          );
+
+          const charactersData = await charactersResponse.json();
 
           if (
             charactersResponse.ok &&
             charactersData.success
           ) {
+            originalSessionData = charactersData.session || null;
+
             const loadedCharacters =
-              charactersData.characters ||
-              [];
+              charactersData.characters || [];
 
             const loadedRelationships =
-              charactersData.relationships ||
-              [];
+              charactersData.relationships || [];
 
-            setSessionCharacters(
-              loadedCharacters
-            );
-
-            setSessionRelationships(
-              loadedRelationships
-            );
+            setSessionCharacters(loadedCharacters);
+            setSessionRelationships(loadedRelationships);
           } else {
             console.error(
               'Error loading session characters:',
@@ -1066,23 +1074,31 @@ export default function StoryDetailPage() {
              Current Story Status
           ========================= */
 
+
           currentLocation:
-            currentSession.current_location ||
+            originalSessionData?.currentLocation ??
+            currentSession.current_location ??
             '',
 
           physicalCondition:
-            currentSession.physical_condition ||
+            originalSessionData?.physicalCondition ??
+            currentSession.physical_condition ??
             '',
 
           currentInventory:
             Array.isArray(
-              currentSession.current_inventory
+              originalSessionData?.currentInventory
             )
-              ? currentSession.current_inventory
-              : [],
+              ? originalSessionData.currentInventory
+              : Array.isArray(
+                currentSession.current_inventory
+              )
+                ? currentSession.current_inventory
+                : [],
 
           importantSituation:
-            currentSession.important_situation ||
+            originalSessionData?.importantSituation ??
+            currentSession.important_situation ??
             '',
 
           isFavorite:
@@ -1090,6 +1106,7 @@ export default function StoryDetailPage() {
             false,
 
           chapters,
+
         };
 
         setStory(

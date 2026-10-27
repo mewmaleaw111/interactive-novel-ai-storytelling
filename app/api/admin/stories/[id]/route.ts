@@ -9,6 +9,9 @@ type RouteContext = {
     }>;
 };
 
+/**
+ * PATCH: เปลี่ยนสถานะแบน/ปลดแบนของนิยาย
+ */
 export async function PATCH(
     request: Request,
     { params }: RouteContext
@@ -38,7 +41,19 @@ export async function PATCH(
             );
         }
 
-        const body = await request.json();
+        let body: { isBanned?: unknown };
+
+        try {
+            body = await request.json();
+        } catch {
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: 'รูปแบบข้อมูลไม่ถูกต้อง',
+                },
+                { status: 400 }
+            );
+        }
 
         if (typeof body.isBanned !== 'boolean') {
             return NextResponse.json(
@@ -99,6 +114,9 @@ export async function PATCH(
     }
 }
 
+/**
+ * DELETE: ลบนิยาย
+ */
 export async function DELETE(
     _request: Request,
     { params }: RouteContext
