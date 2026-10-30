@@ -19,7 +19,7 @@ import '@/styles/admin-users.css';
 import '@/styles/admin-stories-loading.css';
 import '@/styles/admin-user-detail.css';
 
-import { Navbar } from '@/components/Navbar';
+import ConditionalNavbar from '@/components/ConditionalNavbar';
 
 
 /* =========================================================
@@ -79,7 +79,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="th">
         <body className={`${sarabun.variable} ${inter.variable}`}>
-          <Navbar />
+          <ConditionalNavbar />
 
           <main>{children}</main>
         </body>
