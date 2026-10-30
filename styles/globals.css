@@ -1,0 +1,547 @@
+@import "tailwindcss";
+
+
+/* =========================================================
+   GonnaTales - Global Theme
+   ========================================================= */
+
+:root {
+  /* =======================================================
+     Tailwind Default Font
+     ======================================================= */
+
+  --default-font-family:
+    var(--font-sarabun),
+    system-ui,
+    sans-serif;
+
+  --default-font-feature-settings: normal;
+  --default-font-variation-settings: normal;
+
+
+  /* =======================================================
+     Colors
+     ======================================================= */
+
+  --bg-main: #f9f6f0;
+  --bg-card: #ffffff;
+  --bg-subtle: #f2ebd9;
+
+  --border-color: #e5dcc3;
+
+  --text-primary: #2c221e;
+  --text-secondary: #70635c;
+  --text-muted: #9e918a;
+
+  --accent-color: #8c533e;
+  --accent-hover: #703f2d;
+  --accent-light: #f5ece5;
+
+
+  /* =======================================================
+     Radius
+     ======================================================= */
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+
+
+  /* =======================================================
+     Shadow
+     ======================================================= */
+
+  --shadow-sm:
+    0 2px 8px rgba(0, 0, 0, 0.04);
+
+  --shadow-md:
+    0 4px 16px rgba(0, 0, 0, 0.08);
+
+
+  /* =======================================================
+     Typography
+     ======================================================= */
+
+  /*
+   * ฟอนต์หลักของเว็บไซต์
+   *
+   * Sarabun:
+   * - ภาษาไทย
+   * - เนื้อหานิยาย
+   * - UI
+   * - หัวข้อ
+   */
+
+  --font-global:
+    var(--font-sarabun),
+    system-ui,
+    sans-serif;
+
+
+  /*
+   * รองรับ CSS เดิมของแต่ละหน้า
+   *
+   * ทั้ง serif / sans ใช้ Sarabun
+   * เพื่อให้รูปแบบฟอนต์ของเว็บไซต์เป็นไปในทิศทางเดียวกัน
+   */
+
+  --font-serif:
+    var(--font-sarabun),
+    system-ui,
+    sans-serif;
+
+  --font-sans:
+    var(--font-sarabun),
+    system-ui,
+    sans-serif;
+
+
+  /*
+   * ฟอนต์สำหรับตัวเลขโดยเฉพาะ
+   *
+   * Inter:
+   * - ตัวเลข
+   * - สถิติ
+   * - จำนวนบท
+   * - จำนวนผู้เล่น
+   * - ตัวเลข Dashboard
+   */
+
+  --font-number:
+    var(--font-inter),
+    system-ui,
+    sans-serif;
+}
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+
+/* =========================================================
+   GLOBAL TYPOGRAPHY
+   ========================================================= */
+
+html {
+  min-height: 100%;
+
+  font-family: var(--font-global);
+
+  font-variant-numeric: normal;
+}
+
+
+body {
+  min-height: 100vh;
+
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+
+  font-family: var(--font-global);
+
+  line-height: 1.6;
+
+  font-variant-numeric: normal;
+}
+
+
+/*
+ * ให้ element ทั่วไปสืบทอดฟอนต์จาก parent
+ */
+
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+
+/* =========================================================
+   NUMBER TYPOGRAPHY
+   ========================================================= */
+
+/*
+ * ตัวเลขที่ต้องการใช้ Inter
+ *
+ * ตัวอย่าง:
+ *
+ * <span className="number">128</span>
+ * <span className="stat-number">15</span>
+ * <span className="count-number">30</span>
+ *
+ * Inter จะถูกใช้เฉพาะ element ที่กำหนด selector เหล่านี้
+ */
+
+.number,
+[data-number],
+[data-stat],
+.stat-number,
+.count-number {
+  font-family: var(--font-number) !important;
+
+  font-variant-numeric: tabular-nums;
+
+  font-feature-settings: "tnum";
+
+  letter-spacing: -0.01em;
+}
+
+
+/* =========================================================
+   ADMIN / STAT NUMBERS
+   ========================================================= */
+
+/*
+ * ตัวเลขใน Dashboard และหน้า Statistics
+ */
+
+.admin-stat-content strong,
+.admin-dashboard-overview-card strong,
+.admin-dashboard-breakdown-item strong,
+.admin-stat-value,
+.admin-skeleton-stat-value,
+.author-stats-banner,
+.stat-box,
+.stat-val {
+  font-family: var(--font-number) !important;
+
+  font-variant-numeric: tabular-nums;
+
+  font-feature-settings: "tnum";
+
+  letter-spacing: -0.01em;
+}
+
+
+/* =========================================================
+   LINKS
+   ========================================================= */
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+
+/* =========================================================
+   BUTTON
+   ========================================================= */
+
+button {
+  cursor: pointer;
+
+  border: none;
+  outline: none;
+
+  font-variant-numeric: normal;
+}
+
+
+/* =========================================================
+   FORM
+   ========================================================= */
+
+input,
+textarea,
+select {
+  font-variant-numeric: normal;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+table,
+th,
+td {
+  font-variant-numeric: normal;
+}
+
+
+/* =========================================================
+   STORY CARD
+   ========================================================= */
+
+.card-cover-placeholder {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  background: #f1eee8;
+  color: #8b7355;
+
+  font-size: 40px;
+}
+
+
+/* =========================================================
+   COVER LOADING
+   ========================================================= */
+
+.card-cover-wrapper {
+  position: relative;
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   Skeleton
+   ========================================================= */
+
+.card-cover-skeleton {
+  position: absolute;
+  inset: 0;
+
+  z-index: 1;
+
+  overflow: hidden;
+
+  background: #d6e0ea;
+
+  border-radius: inherit;
+}
+
+
+/* =========================================================
+   Shimmer
+   ========================================================= */
+
+.card-cover-shimmer {
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    90deg,
+    #d6e0ea 0%,
+    #d6e0ea 35%,
+    #e9eef3 50%,
+    #d6e0ea 65%,
+    #d6e0ea 100%
+  );
+
+  background-size: 200% 100%;
+
+  animation: coverShimmer 1.5s ease-in-out infinite;
+}
+
+
+@keyframes coverShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+
+/* =========================================================
+   Cover Image
+   ========================================================= */
+
+.card-cover-img {
+  position: relative;
+
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  transition:
+    opacity 0.6s ease,
+    filter 0.6s ease,
+    transform 0.6s ease;
+}
+
+
+/* =========================================================
+   ตอนกำลังโหลด
+   ========================================================= */
+
+.card-cover-loading {
+  opacity: 0;
+
+  transform: scale(1.04);
+
+  filter: blur(8px);
+}
+
+
+/* =========================================================
+   โหลดเสร็จ
+   ========================================================= */
+
+.card-cover-loaded {
+  opacity: 1;
+
+  transform: scale(1);
+
+  filter: blur(0);
+}
+
+
+/* =========================================================
+   Placeholder
+   ========================================================= */
+
+.card-cover-placeholder {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  background: #d6e0ea;
+
+  color: #8b98a7;
+
+  font-size: 32px;
+}
+
+
+/* =========================================================
+   Library Skeleton
+   ========================================================= */
+
+@keyframes skeletonPulse {
+  0% {
+    opacity: 0.55;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.55;
+  }
+}
+
+
+.animate-skeleton {
+  background: #d6e0ea;
+
+  animation:
+    skeletonPulse 1.5s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   Shimmer
+   ========================================================= */
+
+@keyframes skeletonShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    #d6e0ea 0%,
+    #d6e0ea 35%,
+    #e8eef4 50%,
+    #d6e0ea 65%,
+    #d6e0ea 100%
+  );
+
+  background-size: 200% 100%;
+
+  animation:
+    skeletonShimmer 1.5s ease-in-out infinite;
+}
+
+
+/* =========================================================
+   SIGN IN PAGE
+   ========================================================= */
+
+.signin-page {
+  width: 100%;
+
+  min-height: calc(100vh - 64px);
+
+  display: flex !important;
+
+  justify-content: center !important;
+  align-items: center !important;
+
+  padding: 32px 20px;
+}
+
+
+.signin-clerk-root {
+  width: fit-content !important;
+
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+
+.signin-clerk-card {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+
+/* =========================================================
+   GLOBAL NUMERIC TYPOGRAPHY
+   ========================================================= */
+
+/*
+ * ใช้ tabular numbers กับกลุ่มตัวเลข
+ * เพื่อให้ตัวเลขในสถิติจัดแนวได้สม่ำเสมอ
+ */
+
+.number,
+[data-number],
+[data-stat],
+.stat-number,
+.count-number,
+.admin-stat-value,
+.admin-skeleton-stat-value,
+.author-stats-banner,
+.stat-box,
+.stat-val {
+  font-variant-numeric: tabular-nums;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .number,
+  [data-number],
+  [data-stat],
+  .stat-number,
+  .count-number,
+  .admin-stat-value,
+  .admin-skeleton-stat-value,
+  .author-stats-banner,
+  .stat-box,
+  .stat-val {
+    font-variant-numeric: tabular-nums;
+  }
+}

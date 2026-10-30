@@ -1,0 +1,1495 @@
+/* =========================================================
+   ADMIN USER DETAIL
+   GonnaTales / GonnaTales
+
+   Used by:
+   /admin/users/[userId]
+========================================================= */
+
+.admin-user-detail-page {
+  --detail-line: #ddd3c9;
+  --detail-line-soft: #ebe4dd;
+  --detail-surface: #fffdf9;
+  --detail-surface-soft: #f8f4ef;
+  --detail-text: #3f342d;
+  --detail-muted: #786c62;
+  --detail-subtle: #978a7f;
+  --detail-accent-soft: #f2e7df;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.admin-user-detail-page .admin-page-header {
+  margin-bottom: 34px;
+}
+
+.admin-user-detail-page .admin-page-header .admin-back-link {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin: 0 0 24px;
+  padding: 0;
+  background: none;
+  color: var(--accent-color);
+  font-family: var(--font-global);
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition:
+    color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.admin-user-detail-page .admin-page-header .admin-back-link:hover {
+  color: var(--accent-hover);
+  transform: translateX(-2px);
+}
+
+.admin-user-detail-page .admin-page-header .admin-back-link:focus,
+.admin-user-detail-page .admin-page-header .admin-back-link:active {
+  background: none;
+  border: none;
+  outline: none;
+}
+
+.admin-user-detail-page .admin-user-detail-label {
+  display: block;
+  width: fit-content;
+  margin: 0 0 8px;
+  padding-left: 15px;
+  color: var(--accent-color) !important;
+  font-family: var(--font-global);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  line-height: 1.2;
+  opacity: 1;
+}
+
+.admin-user-detail-page .admin-page-header h1 {
+  position: relative;
+  margin: 0;
+  padding-left: 15px;
+  color: var(--text-primary);
+  font-family: var(--font-global);
+  font-size: clamp(2rem, 4vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+
+.admin-user-detail-page .admin-page-header h1::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 4px;
+  bottom: 4px;
+  width: 3px;
+  background: var(--accent-color);
+  border-radius: 999px;
+}
+
+.admin-user-detail-page .admin-page-header p {
+  display: block;
+  max-width: 600px;
+  margin: 10px 0 0;
+  padding-left: 15px;
+  color: var(--text-muted) !important;
+  font-family: var(--font-global);
+  font-size: 0.88rem;
+  font-weight: 400;
+  line-height: 1.7;
+  opacity: 1;
+}
+
+/* =========================================================
+   PROFILE CARD
+========================================================= */
+
+.admin-user-profile-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 16px;
+  padding: 25px 27px;
+  background: var(--detail-surface);
+  border: 1px solid var(--detail-line);
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(70, 48, 36, 0.025);
+}
+
+.admin-user-profile-main {
+  display: flex;
+  align-items: center;
+  gap: 17px;
+  min-width: 0;
+  flex: 1;
+}
+
+.admin-user-profile-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 62px;
+  height: 62px;
+  flex-shrink: 0;
+  background: var(--detail-accent-soft);
+  color: var(--accent-color);
+  border: 1px solid #decfc2;
+  border-radius: 50%;
+  font-family: var(--font-global);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.admin-user-profile-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.admin-user-profile-info h2 {
+  margin: 0;
+  overflow: hidden;
+  color: var(--detail-text);
+  font-family: var(--font-global);
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.35;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.admin-user-profile-id {
+  max-width: 460px;
+  margin-top: 6px;
+  overflow: hidden;
+  color: var(--detail-muted);
+  font-family: var(--font-number);
+  font-size: 0.62rem;
+  line-height: 1.5;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.admin-user-profile-details {
+  display: flex;
+  flex-shrink: 0;
+  gap: 34px;
+}
+
+.admin-user-profile-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.admin-user-profile-detail span {
+  color: var(--detail-subtle);
+  font-family: var(--font-global);
+  font-size: 0.61rem;
+  font-weight: 600;
+}
+
+.admin-user-profile-detail strong {
+  color: var(--detail-text);
+  font-family: var(--font-global);
+  font-size: 0.68rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   STATISTICS
+========================================================= */
+
+.admin-user-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 34px;
+}
+
+.admin-user-stat-card {
+  position: relative;
+  min-height: 132px;
+  padding: 21px 23px;
+  background: var(--detail-surface);
+  border: 1px solid var(--detail-line);
+  border-radius: 12px;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.admin-user-stat-card:hover {
+  background: #ffffff;
+  border-color: #cfc0b3;
+  transform: translateY(-1px);
+}
+
+.admin-user-stat-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 18px;
+  bottom: 18px;
+  width: 3px;
+  background: var(--accent-color);
+  border-radius: 0 3px 3px 0;
+  opacity: 0.7;
+}
+
+.admin-user-stat-label {
+  color: var(--detail-muted);
+  font-family: var(--font-global);
+  font-size: 0.69rem;
+  font-weight: 600;
+}
+
+.admin-user-stat-value {
+  display: block;
+  margin-top: 9px;
+  color: var(--detail-text);
+  font-family: var(--font-number) !important;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  letter-spacing: -0.035em;
+}
+
+.admin-user-stat-description {
+  display: block;
+  margin-top: 9px;
+  color: var(--detail-muted);
+  font-family: var(--font-global);
+  font-size: 0.64rem;
+  line-height: 1.55;
+}
+
+/* =========================================================
+   DETAIL SECTIONS
+========================================================= */
+
+.admin-detail-card {
+  margin-bottom: 16px;
+  padding: 24px 25px;
+  background: var(--detail-surface);
+  border: 1px solid var(--detail-line);
+  border-radius: 14px;
+  box-shadow: 0 2px 10px rgba(70, 48, 36, 0.02);
+}
+
+.admin-section-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--detail-line-soft);
+}
+
+.admin-section-header > div {
+  min-width: 0;
+}
+
+.admin-section-header h2 {
+  margin: 0;
+  color: var(--detail-text);
+  font-family: var(--font-global);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.admin-section-header p {
+  margin: 5px 0 0;
+  color: var(--detail-muted);
+  font-family: var(--font-global);
+  font-size: 0.68rem;
+  line-height: 1.55;
+}
+
+.admin-section-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 0 10px;
+  flex-shrink: 0;
+  background: var(--detail-surface-soft);
+  color: var(--detail-text);
+  border: 1px solid var(--detail-line);
+  border-radius: 999px;
+  font-family: var(--font-number);
+  font-size: 0.61rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   STORIES
+========================================================= */
+
+.admin-user-story-list {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.admin-user-story-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 25px;
+  padding: 19px 20px;
+  background: #faf7f3;
+  border: 1px solid var(--detail-line-soft);
+  border-radius: 10px;
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.admin-user-story-item:hover {
+  background: #fffdf9;
+  border-color: #d5c8bc;
+}
+
+.admin-user-story-content {
+  min-width: 0;
+  flex: 1;
+}
+
+.admin-user-story-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.admin-user-story-header h3 {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  color: var(--detail-text);
+  font-family: var(--font-global);
+  font-size: 0.91rem;
+  font-weight: 700;
+  line-height: 1.45;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.admin-user-story-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 9px;
+}
+
+.admin-user-story-meta span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 23px;
+  padding: 0 8px;
+  background: #fffdf9;
+  color: #6f6258;
+  border: 1px solid #ddd2c8;
+  border-radius: 5px;
+  font-family: var(--font-global);
+  font-size: 0.59rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.admin-user-story-synopsis {
+  display: -webkit-box;
+  max-width: 780px;
+  margin: 10px 0 0;
+  overflow: hidden;
+  color: #62574e;
+  font-family: var(--font-global);
+  font-size: 0.69rem;
+  line-height: 1.65;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.admin-user-story-date {
+  margin-top: 9px;
+  color: #8a7d72;
+  font-family: var(--font-global);
+  font-size: 0.59rem;
+  line-height: 1.5;
+}
+
+.admin-user-story-action {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  align-self: center;
+  padding-top: 1px;
+}
+
+.admin-user-story-action .admin-view-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 105px;
+}
+
+/* =========================================================
+   GAME SESSIONS
+========================================================= */
+
+.admin-user-session-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-user-session-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  min-width: 0;
+  padding: 16px 18px;
+  background: #faf7f3;
+  border: 1px solid var(--detail-line-soft);
+  border-radius: 10px;
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.admin-user-session-item:hover {
+  background: #fffdf9;
+  border-color: #d5c8bc;
+}
+
+.admin-user-session-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 35px;
+  height: 35px;
+  flex-shrink: 0;
+  background: #fffdf9;
+  color: var(--detail-text);
+  border: 1px solid var(--detail-line);
+  border-radius: 50%;
+  font-family: var(--font-number) !important;
+  font-size: 0.68rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+.admin-user-session-content {
+  min-width: 0;
+  flex: 1;
+}
+
+.admin-user-session-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  min-width: 0;
+}
+
+.admin-user-session-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  width: 100%;
+}
+
+.admin-user-session-title h3 {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  color: var(--detail-text);
+  font-family: var(--font-global);
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.45;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.admin-user-session-id {
+  max-width: 100%;
+  margin-top: 0;
+  overflow: hidden;
+  color: #8a7d72;
+  font-family: var(--font-number);
+  font-size: 0.57rem;
+  line-height: 1.45;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.admin-user-session-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin-top: 8px;
+}
+
+.admin-user-session-meta span {
+  color: #665b52;
+  font-family: var(--font-global);
+  font-size: 0.62rem;
+  line-height: 1.45;
+}
+
+.admin-user-session-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.admin-user-session-action .admin-view-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 105px;
+}
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.admin-user-detail-page .admin-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 23px;
+  padding: 0 8px;
+  flex-shrink: 0;
+  border-radius: 999px;
+  font-family: var(--font-global);
+  font-size: 0.57rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.admin-user-detail-page .admin-status-published {
+  background: #eaf2ea;
+  color: #506b53;
+  border: 1px solid #d2e1d3;
+}
+
+.admin-user-detail-page .admin-status-private {
+  background: #f0ebe6;
+  color: #6d625a;
+  border: 1px solid #ddd3ca;
+}
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.admin-user-detail-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 125px;
+  padding: 25px;
+  color: var(--detail-muted);
+  background: var(--detail-surface-soft);
+  border: 1px dashed #d8cec5;
+  border-radius: 10px;
+  font-family: var(--font-global);
+  font-size: 0.67rem;
+  text-align: center;
+}
+
+/* =========================================================
+   SKELETON
+========================================================= */
+
+.admin-user-detail-page .admin-skeleton {
+  position: relative;
+  overflow: hidden;
+  background: #ebe5de;
+  border-radius: 6px;
+}
+
+.admin-user-detail-page .admin-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  transform: translateX(-100%);
+  animation: admin-user-detail-shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes admin-user-detail-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Header skeleton */
+
+.admin-user-detail-skeleton-header {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.admin-skeleton-back {
+  width: 115px;
+  height: 15px;
+  margin-bottom: 4px;
+}
+
+.admin-skeleton-title {
+  width: 190px;
+  height: 30px;
+}
+
+.admin-skeleton-subtitle {
+  width: 290px;
+  max-width: 100%;
+  height: 13px;
+}
+
+/* Profile skeleton */
+
+.admin-user-profile-skeleton {
+  min-height: 110px;
+}
+
+.admin-skeleton-avatar {
+  width: 62px;
+  height: 62px;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.admin-skeleton-profile-name {
+  width: 155px;
+  height: 20px;
+}
+
+.admin-skeleton-profile-id {
+  width: 200px;
+  height: 10px;
+  margin-top: 7px;
+}
+
+.admin-skeleton-detail-label {
+  width: 68px;
+  height: 9px;
+}
+
+.admin-skeleton-detail-value {
+  width: 130px;
+  height: 12px;
+  margin-top: 4px;
+}
+
+/* Stats skeleton */
+
+.admin-skeleton-stat-label {
+  width: 90px;
+  height: 10px;
+}
+
+.admin-skeleton-stat-value {
+  width: 58px;
+  height: 30px;
+  margin-top: 9px;
+}
+
+.admin-skeleton-stat-description {
+  width: 155px;
+  height: 9px;
+  margin-top: 9px;
+}
+
+/* Section skeleton */
+
+.admin-skeleton-section-title {
+  width: 140px;
+  height: 18px;
+}
+
+.admin-skeleton-section-description {
+  width: 220px;
+  height: 9px;
+  margin-top: 7px;
+}
+
+.admin-skeleton-count {
+  width: 65px;
+  height: 28px;
+  border-radius: 999px;
+}
+
+/* Story skeleton */
+
+.admin-skeleton-story-title {
+  width: 190px;
+  max-width: 50%;
+  height: 15px;
+}
+
+.admin-skeleton-status {
+  width: 62px;
+  height: 23px;
+  border-radius: 999px;
+}
+
+.admin-skeleton-meta {
+  width: 58px;
+  height: 21px;
+}
+
+.admin-skeleton-meta-short {
+  width: 47px;
+}
+
+.admin-skeleton-story-description {
+  width: 75%;
+  height: 10px;
+  margin-top: 10px;
+}
+
+.admin-skeleton-story-date {
+  width: 110px;
+  height: 8px;
+  margin-top: 9px;
+}
+
+.admin-skeleton-action-button {
+  width: 105px;
+  height: 35px;
+  border-radius: 7px;
+}
+
+/* Session skeleton */
+
+.admin-skeleton-session-number {
+  width: 35px;
+  height: 35px;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.admin-skeleton-session-title {
+  width: 190px;
+  max-width: 100%;
+  height: 14px;
+}
+
+.admin-skeleton-session-id {
+  width: 150px;
+  height: 8px;
+  margin-top: 6px;
+}
+
+.admin-skeleton-session-meta {
+  width: 75px;
+  height: 8px;
+}
+
+.admin-skeleton-session-meta-short {
+  width: 58px;
+}
+
+/* =========================================================
+   RESPONSIVE — TABLET
+========================================================= */
+
+@media (max-width: 1000px) {
+  .admin-user-profile-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .admin-user-profile-main {
+    width: 100%;
+  }
+
+  .admin-user-profile-details {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE — SMALL TABLET
+========================================================= */
+
+@media (max-width: 800px) {
+  .admin-user-profile-details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .admin-user-profile-detail strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE — MOBILE
+========================================================= */
+
+@media (max-width: 680px) {
+  .admin-user-detail-page .admin-page-header {
+    margin-bottom: 24px;
+  }
+
+  .admin-user-detail-page .admin-page-header h1 {
+    font-size: 1.85rem;
+  }
+
+  .admin-user-detail-page .admin-page-header p {
+    max-width: 100%;
+    font-size: 0.72rem;
+  }
+
+  .admin-user-detail-page .admin-page-header .admin-back-link {
+    margin-bottom: 1.8rem;
+  }
+
+  .admin-user-profile-card {
+    gap: 20px;
+    padding: 19px;
+  }
+
+  .admin-user-profile-avatar {
+    width: 52px;
+    height: 52px;
+    font-size: 0.9rem;
+  }
+
+  .admin-user-profile-info h2 {
+    font-size: 1.05rem;
+  }
+
+  .admin-user-profile-id {
+    max-width: 100%;
+    font-size: 0.58rem;
+  }
+
+  .admin-user-profile-details {
+    grid-template-columns: 1fr;
+    gap: 13px;
+  }
+
+  .admin-user-profile-detail strong {
+    white-space: normal;
+  }
+
+  .admin-user-stats {
+    grid-template-columns: 1fr;
+    gap: 9px;
+    margin-bottom: 26px;
+  }
+
+  .admin-user-stat-card {
+    min-height: 112px;
+    padding: 18px 20px;
+  }
+
+  .admin-user-stat-value {
+    font-size: 1.8rem;
+  }
+
+  .admin-detail-card {
+    padding: 19px;
+  }
+
+  .admin-section-header {
+    gap: 12px;
+  }
+
+  .admin-section-header h2 {
+    font-size: 0.98rem;
+  }
+
+  .admin-section-header p {
+    font-size: 0.64rem;
+  }
+
+  /* =======================================================
+     STORIES
+  ======================================================= */
+
+  .admin-user-story-item {
+    flex-direction: column;
+    gap: 15px;
+    padding: 17px;
+  }
+
+  .admin-user-story-header {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-direction: row;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .admin-user-story-header h3 {
+    width: auto;
+    min-width: 0;
+    flex: 1;
+    padding-right: 4px;
+    white-space: normal;
+  }
+
+  .admin-user-story-header .admin-status {
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
+  .admin-user-story-synopsis {
+    max-width: 100%;
+    font-size: 0.66rem;
+  }
+
+  .admin-user-story-action {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .admin-user-story-action .admin-view-button {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* =======================================================
+     GAME SESSIONS
+  ======================================================= */
+
+  .admin-user-session-item {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 15px;
+  }
+
+  .admin-user-session-number {
+    width: 34px;
+    height: 34px;
+  }
+
+  .admin-user-session-content {
+    width: calc(100% - 47px);
+    min-width: 0;
+    flex: 1;
+  }
+
+  .admin-user-session-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 7px;
+    width: 100%;
+    text-align: left;
+  }
+
+  .admin-user-session-title {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+    text-align: left;
+  }
+
+  .admin-user-session-title h3 {
+    width: auto;
+    min-width: 0;
+    max-width: 100%;
+    flex: 1;
+    white-space: normal;
+    text-align: left;
+  }
+
+  .admin-user-session-title .admin-status {
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
+  .admin-user-session-id {
+    max-width: 100%;
+    margin-top: 3px;
+    text-align: left;
+  }
+
+  .admin-user-session-meta {
+    justify-content: flex-start;
+    gap: 6px 14px;
+    margin-top: 8px;
+    text-align: left;
+  }
+
+  .admin-user-session-meta span {
+    text-align: left;
+  }
+
+  .admin-user-session-action {
+    display: flex;
+    align-items: center;
+    justify-content: stretch;
+    width: calc(100% - 46px);
+    margin-left: 46px;
+  }
+
+  .admin-user-session-action .admin-view-button {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE — PHONE
+========================================================= */
+
+@media (max-width: 520px) {
+  .admin-user-detail-page .admin-page-header h1 {
+    font-size: 1.65rem;
+  }
+
+  .admin-user-detail-page .admin-page-header h1::before {
+    top: 3px;
+    bottom: 3px;
+  }
+
+  .admin-user-detail-page .admin-page-header p {
+    margin-top: 8px;
+    font-size: 0.68rem;
+    line-height: 1.65;
+  }
+
+  .admin-user-detail-page .admin-page-header .admin-back-link {
+    margin-bottom: 1.7rem;
+    font-size: 0.8rem;
+  }
+
+  .admin-user-profile-card {
+    padding: 17px;
+  }
+
+  .admin-user-profile-main {
+    gap: 12px;
+  }
+
+  .admin-user-profile-avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 0.82rem;
+  }
+
+  .admin-user-profile-info h2 {
+    font-size: 0.98rem;
+  }
+
+  .admin-user-profile-id {
+    margin-top: 4px;
+    font-size: 0.54rem;
+  }
+
+  .admin-user-profile-details {
+    gap: 11px;
+  }
+
+  .admin-user-profile-detail span {
+    font-size: 0.58rem;
+  }
+
+  .admin-user-profile-detail strong {
+    font-size: 0.63rem;
+  }
+
+  .admin-user-stat-card {
+    min-height: 105px;
+    padding: 17px 18px;
+  }
+
+  .admin-user-stat-label {
+    font-size: 0.65rem;
+  }
+
+  .admin-user-stat-value {
+    margin-top: 8px;
+    font-size: 1.7rem;
+  }
+
+  .admin-user-stat-description {
+    margin-top: 8px;
+    font-size: 0.59rem;
+  }
+
+  .admin-detail-card {
+    padding: 17px;
+  }
+
+  .admin-section-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 9px;
+    margin-bottom: 16px;
+    padding-bottom: 13px;
+  }
+
+  .admin-section-header h2 {
+    font-size: 0.92rem;
+  }
+
+  .admin-section-header p {
+    margin-top: 4px;
+    font-size: 0.61rem;
+  }
+
+  .admin-section-count {
+    min-height: 26px;
+    padding: 0 9px;
+    font-size: 0.57rem;
+  }
+
+  /* =======================================================
+     STORIES
+  ======================================================= */
+
+  .admin-user-story-list {
+    gap: 9px;
+  }
+
+  .admin-user-story-item {
+    gap: 13px;
+    padding: 15px;
+  }
+
+  .admin-user-story-header {
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .admin-user-story-header h3 {
+    font-size: 0.84rem;
+  }
+
+  .admin-user-story-header .admin-status {
+    margin-left: auto;
+  }
+
+  .admin-user-story-meta {
+    gap: 5px;
+    margin-top: 8px;
+  }
+
+  .admin-user-story-meta span {
+    min-height: 22px;
+    padding: 0 7px;
+    font-size: 0.55rem;
+  }
+
+  .admin-user-story-synopsis {
+    margin-top: 9px;
+    font-size: 0.62rem;
+    line-height: 1.6;
+  }
+
+  .admin-user-story-date {
+    margin-top: 8px;
+    font-size: 0.55rem;
+  }
+
+  .admin-user-story-action {
+    width: 100%;
+  }
+
+  .admin-user-story-action .admin-view-button {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* =======================================================
+     GAME SESSIONS
+  ======================================================= */
+
+  .admin-user-session-list {
+    gap: 8px;
+  }
+
+  .admin-user-session-item {
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .admin-user-session-number {
+    width: 32px;
+    height: 32px;
+    font-size: 0.62rem;
+  }
+
+  .admin-user-session-content {
+    width: calc(100% - 42px);
+    flex: 1;
+  }
+
+  .admin-user-session-header {
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 7px;
+    text-align: left;
+  }
+
+  .admin-user-session-title {
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 7px;
+    text-align: left;
+  }
+
+  .admin-user-session-title h3 {
+    width: auto;
+    max-width: 100%;
+    flex: 1;
+    font-size: 0.79rem;
+    text-align: left;
+  }
+
+  .admin-user-session-title .admin-status {
+    margin-left: auto;
+  }
+
+  .admin-user-session-id {
+    margin-top: 3px;
+    font-size: 0.52rem;
+    text-align: left;
+  }
+
+  .admin-user-session-meta {
+    justify-content: flex-start;
+    gap: 5px 10px;
+    margin-top: 7px;
+    text-align: left;
+  }
+
+  .admin-user-session-meta span {
+    font-size: 0.57rem;
+    text-align: left;
+  }
+
+  .admin-user-detail-page .admin-status {
+    min-height: 22px;
+    padding: 0 7px;
+    font-size: 0.53rem;
+  }
+
+  .admin-user-session-action {
+    width: calc(100% - 42px);
+    margin-left: 42px;
+    justify-content: stretch;
+  }
+
+  .admin-user-session-action .admin-view-button {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+/* =========================================================
+   RESPONSIVE — SMALL PHONE
+========================================================= */
+
+@media (max-width: 400px) {
+  .admin-user-detail-page .admin-page-header h1 {
+    font-size: 1.48rem;
+  }
+
+  .admin-user-detail-page .admin-page-header p {
+    font-size: 0.64rem;
+  }
+
+  .admin-user-detail-page .admin-page-header .admin-back-link {
+    margin-bottom: 1.5rem;
+    font-size: 0.74rem;
+  }
+
+  .admin-user-profile-card {
+    padding: 15px;
+  }
+
+  .admin-user-profile-main {
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .admin-user-profile-avatar {
+    width: 44px;
+    height: 44px;
+    font-size: 0.76rem;
+  }
+
+  .admin-user-profile-info h2 {
+    font-size: 0.9rem;
+  }
+
+  .admin-user-profile-id {
+    max-width: 100%;
+    font-size: 0.5rem;
+  }
+
+  .admin-detail-card {
+    padding: 15px;
+  }
+
+  .admin-section-header h2 {
+    font-size: 0.88rem;
+  }
+
+  .admin-section-header p {
+    font-size: 0.58rem;
+  }
+
+  /* =======================================================
+     STORIES
+  ======================================================= */
+
+  .admin-user-story-item {
+    padding: 13px;
+  }
+
+  .admin-user-story-header {
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 7px;
+  }
+
+  .admin-user-story-header h3 {
+    font-size: 0.79rem;
+  }
+
+  .admin-user-story-action {
+    width: 100%;
+  }
+
+  .admin-user-story-action .admin-view-button {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* =======================================================
+     GAME SESSIONS
+  ======================================================= */
+
+  .admin-user-session-item {
+    align-items: flex-start;
+    padding: 13px;
+  }
+
+  .admin-user-session-number {
+    width: 30px;
+    height: 30px;
+    font-size: 0.59rem;
+  }
+
+  .admin-user-session-content {
+    width: calc(100% - 40px);
+  }
+
+  .admin-user-session-header {
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 6px;
+    text-align: left;
+  }
+
+  .admin-user-session-title {
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 6px;
+    text-align: left;
+  }
+
+  .admin-user-session-title h3 {
+    width: auto;
+    max-width: 100%;
+    flex: 1;
+    font-size: 0.75rem;
+    text-align: left;
+  }
+
+  .admin-user-session-title .admin-status {
+    margin-left: auto;
+  }
+
+  .admin-user-session-id {
+    font-size: 0.5rem;
+    text-align: left;
+  }
+
+  .admin-user-session-meta {
+    justify-content: flex-start;
+    gap: 5px 8px;
+    text-align: left;
+  }
+
+  .admin-user-session-meta span {
+    font-size: 0.54rem;
+    text-align: left;
+  }
+
+  .admin-user-detail-page .admin-status {
+    min-height: 21px;
+    font-size: 0.51rem;
+  }
+
+  .admin-user-session-action {
+    width: calc(100% - 40px);
+    margin-left: 40px;
+    justify-content: stretch;
+  }
+
+  .admin-user-session-action .admin-view-button {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+.admin-user-detail-page button:focus-visible,
+.admin-user-detail-page a:focus-visible {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 3px;
+}

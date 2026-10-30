@@ -1,0 +1,737 @@
+/* =========================================================
+   STORY CARD
+========================================================= */
+
+.story-card {
+  background-color: var(--bg-card);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.story-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+
+/* =========================================================
+   COVER
+========================================================= */
+
+.card-cover-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  background: #eee7dd;
+}
+
+
+/* =========================================================
+   COVER IMAGE
+========================================================= */
+
+.card-cover-img {
+  position: relative;
+  z-index: 2;
+
+  display: block;
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  filter: blur(18px);
+  opacity: 0.85;
+  transform: scale(1.08);
+
+  transition:
+    filter 1.8s ease,
+    opacity 1.4s ease,
+    transform 1.8s ease;
+}
+
+
+/* =========================================================
+   COVER LOADING
+========================================================= */
+
+.card-cover-loading {
+  filter: blur(18px);
+  opacity: 0.85;
+  transform: scale(1.08);
+}
+
+
+/* =========================================================
+   COVER LOADED
+========================================================= */
+
+.card-cover-loaded {
+  filter: blur(0);
+  opacity: 1;
+  transform: scale(1);
+}
+
+
+/* =========================================================
+   COVER HOVER
+========================================================= */
+
+.story-card:hover .card-cover-loaded {
+  transform: scale(1.03);
+}
+
+
+/* =========================================================
+   COVER SKELETON
+========================================================= */
+
+.card-cover-skeleton {
+  position: absolute;
+  inset: 0;
+
+  z-index: 1;
+
+  overflow: hidden;
+
+  background: #d6e0ea;
+}
+
+
+/* =========================================================
+   SHIMMER
+========================================================= */
+
+.card-cover-shimmer {
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    90deg,
+    #d6e0ea 0%,
+    #d6e0ea 30%,
+    #edf2f7 50%,
+    #d6e0ea 70%,
+    #d6e0ea 100%
+  );
+
+  background-size: 200% 100%;
+
+  animation:
+    storyShimmer
+    1.5s
+    ease-in-out
+    infinite;
+}
+
+@keyframes storyShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+
+/* =========================================================
+   DEFAULT COVER
+========================================================= */
+
+.card-cover-placeholder {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    linear-gradient(
+      145deg,
+      #f4eee6 0%,
+      #e9ddd0 45%,
+      #ddcbb9 100%
+    );
+
+  color: #765f4c;
+
+  filter: none;
+  opacity: 1;
+  transform: none;
+
+  overflow: hidden;
+}
+
+
+/* Decorative background */
+
+.card-cover-placeholder::before {
+  content: '';
+
+  position: absolute;
+
+  width: 150%;
+  height: 55%;
+
+  left: -25%;
+  bottom: -12%;
+
+  background: rgba(255, 255, 255, 0.22);
+
+  border-radius: 50%;
+
+  transform: rotate(-8deg);
+
+  pointer-events: none;
+}
+
+
+/* Inner content */
+
+.card-cover-placeholder-inner {
+  position: relative;
+  z-index: 1;
+
+  width: 82%;
+  height: 88%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(118, 95, 76, 0.22);
+
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, 0.16);
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18),
+    0 8px 22px rgba(90, 65, 45, 0.08);
+}
+
+
+/* Book icon */
+
+.card-cover-placeholder-icon {
+  width: 54px;
+  height: 54px;
+
+  margin-bottom: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #765f4c;
+}
+
+.card-cover-placeholder-icon svg {
+  width: 54px;
+  height: 54px;
+}
+
+
+/* Brand */
+
+.card-cover-placeholder-brand {
+  display: block;
+
+  color: #654e3d;
+
+  font-family: var(--font-global);
+
+  font-size: 0.95rem;
+
+  font-weight: 700;
+
+  letter-spacing: 0.04em;
+
+  line-height: 1.2;
+
+  text-align: center;
+}
+
+
+/* Story label */
+
+.card-cover-placeholder-label {
+  display: block;
+
+  margin-top: 7px;
+
+  color: #8d7967;
+
+  font-family: var(--font-global);
+
+  font-size: 0.55rem;
+
+  font-weight: 600;
+
+  letter-spacing: 0.28em;
+
+  line-height: 1;
+
+  text-align: center;
+}
+
+
+/* =========================================================
+   GENRE
+========================================================= */
+
+.genre-badge {
+  position: absolute;
+
+  top: 10px;
+  left: 10px;
+
+  z-index: 4;
+
+  background-color:
+    rgba(44, 34, 30, 0.75);
+
+  color: #ffffff;
+
+  font-size: 0.75rem;
+
+  padding: 2px 8px;
+
+  border-radius: 4px;
+
+  backdrop-filter: blur(4px);
+}
+
+
+/* =========================================================
+   FAVORITE
+========================================================= */
+
+.favorite-button {
+  position: absolute;
+
+  top: 12px;
+  right: 12px;
+
+  z-index: 5;
+
+  width: 38px;
+  height: 38px;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.92);
+
+  font-size: 22px;
+
+  line-height: 1;
+
+  cursor: pointer;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.favorite-button:hover {
+  transform: scale(1.1);
+
+  background: #ffffff;
+}
+
+.favorite-button:disabled {
+  cursor: wait;
+
+  opacity: 0.7;
+}
+
+.favorite-active {
+  color: #c6a962;
+}
+
+
+/* =========================================================
+   CARD INFO
+========================================================= */
+
+.card-info {
+  padding: 0.85rem;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 0.3rem;
+
+  flex-grow: 1;
+}
+
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+.card-title {
+  font-family: var(--font-global);
+
+  font-size: 1rem;
+
+  font-weight: 700;
+
+  color: var(--text-primary);
+
+  line-height: 1.3;
+
+  display: -webkit-box;
+
+  -webkit-line-clamp: 1;
+
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   AUTHOR
+========================================================= */
+
+.card-author {
+  font-size: 0.8rem;
+
+  color: var(--text-muted);
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.card-stats {
+  font-size: 0.75rem;
+
+  color: var(--text-secondary);
+
+  display: flex;
+
+  gap: 0.4rem;
+
+  margin-top: auto;
+
+  padding-top: 0.4rem;
+}
+
+
+/* =========================================================
+   PROGRESS
+========================================================= */
+
+.card-progress {
+  margin-top: auto;
+
+  padding-top: 0.5rem;
+}
+
+.progress-text {
+  font-size: 0.75rem;
+
+  color: var(--text-secondary);
+
+  margin-bottom: 0.25rem;
+}
+
+.progress-bar-bg {
+  width: 100%;
+
+  height: 4px;
+
+  background-color: var(--bg-subtle);
+
+  border-radius: 2px;
+
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+
+  background-color: var(--accent-color);
+
+  border-radius: 2px;
+
+  transition: width 0.4s ease;
+}
+
+
+/* =========================================================
+   VIEW BRANCHES
+========================================================= */
+
+.view-branches-button {
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin-top: 12px;
+
+  padding: 9px 0 7px;
+
+  border-top: 1px solid var(--border-color);
+
+  background: transparent;
+
+  color: var(--text-secondary);
+
+  font-family: var(--font-global);
+
+  font-size: 0.78rem;
+
+  font-weight: 600;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    padding-left 0.2s ease;
+}
+
+.view-branches-button:hover {
+  color: var(--accent-color);
+
+  padding-left: 3px;
+}
+
+.view-branches-arrow {
+  font-size: 0.95rem;
+
+  transition:
+    transform 0.2s ease;
+}
+
+.view-branches-button:hover
+.view-branches-arrow {
+  transform: translateX(3px);
+}
+
+
+/* =========================================================
+   FULL CARD SKELETON
+========================================================= */
+
+.skeleton-story-card {
+  pointer-events: none;
+
+  cursor: default;
+}
+
+
+/* =========================================================
+   SKELETON TEXT
+========================================================= */
+
+.skeleton-line {
+  height: 14px;
+
+  border-radius: 6px;
+
+  background: #d6e0ea;
+
+  animation:
+    storySkeletonPulse
+    1.5s
+    ease-in-out
+    infinite;
+}
+
+.skeleton-title {
+  width: 85%;
+
+  height: 18px;
+
+  margin-top: 2px;
+}
+
+.skeleton-author {
+  width: 55%;
+
+  margin-top: 10px;
+}
+
+.skeleton-stats {
+  width: 70%;
+
+  margin-top: 12px;
+}
+
+@keyframes storySkeletonPulse {
+  0% {
+    opacity: 0.55;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.55;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 650px) {
+
+  .card-info {
+    padding: 0.7rem;
+  }
+
+  .card-title {
+    font-size: 0.88rem;
+  }
+
+  .card-author {
+    font-size: 0.7rem;
+  }
+
+  .card-stats {
+    font-size: 0.68rem;
+
+    gap: 0.3rem;
+  }
+
+  .view-branches-button {
+    margin-top: 9px;
+
+    padding: 7px 0 5px;
+
+    font-size: 0.68rem;
+  }
+
+  .view-branches-arrow {
+    font-size: 0.82rem;
+  }
+
+  .favorite-button {
+    width: 32px;
+    height: 32px;
+
+    top: 8px;
+    right: 8px;
+
+    font-size: 18px;
+  }
+
+  .genre-badge {
+    top: 8px;
+    left: 8px;
+
+    padding: 2px 6px;
+
+    font-size: 0.65rem;
+  }
+
+  .card-cover-placeholder-inner {
+    width: 82%;
+    height: 88%;
+  }
+
+  .card-cover-placeholder-icon {
+    width: 46px;
+    height: 46px;
+
+    margin-bottom: 14px;
+  }
+
+  .card-cover-placeholder-icon svg {
+    width: 46px;
+    height: 46px;
+  }
+
+  .card-cover-placeholder-brand {
+    font-size: 0.8rem;
+  }
+
+  .card-cover-placeholder-label {
+    margin-top: 6px;
+
+    font-size: 0.48rem;
+  }
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 420px) {
+
+  .card-info {
+    padding: 0.62rem;
+  }
+
+  .card-title {
+    font-size: 0.84rem;
+  }
+
+  .card-author {
+    font-size: 0.67rem;
+  }
+
+  .card-stats {
+    font-size: 0.64rem;
+  }
+
+  .view-branches-button {
+    font-size: 0.65rem;
+  }
+
+  .card-cover-placeholder-icon {
+    width: 40px;
+    height: 40px;
+
+    margin-bottom: 12px;
+  }
+
+  .card-cover-placeholder-icon svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .card-cover-placeholder-brand {
+    font-size: 0.72rem;
+  }
+
+  .card-cover-placeholder-label {
+    font-size: 0.42rem;
+
+    letter-spacing: 0.22em;
+  }
+}

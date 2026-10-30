@@ -1,0 +1,1016 @@
+/* ========================================
+   GonnaTales - Login Required
+======================================== */
+
+.login-required-page {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(181, 113, 75, 0.09),
+      transparent 38%
+    ),
+    #f8f3ec;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+
+/* ========================================
+   Decorative Background
+======================================== */
+
+.login-required-page::before {
+  content: "";
+
+  position: absolute;
+
+  width: 460px;
+  height: 460px;
+
+  top: -220px;
+  right: -130px;
+
+  border-radius: 50%;
+
+  background: rgba(181, 120, 80, 0.045);
+
+  pointer-events: none;
+}
+
+.login-required-page::after {
+  content: "";
+
+  position: absolute;
+
+  width: 360px;
+  height: 360px;
+
+  bottom: -180px;
+  left: -130px;
+
+  border-radius: 50%;
+
+  background: rgba(217, 164, 65, 0.045);
+
+  pointer-events: none;
+}
+
+
+/* ========================================
+   Card
+======================================== */
+
+.login-required-card {
+  position: relative;
+  z-index: 1;
+
+  width: min(100%, 560px);
+
+  padding: 56px 58px 42px;
+
+  border: 1px solid rgba(112, 63, 45, 0.13);
+
+  border-radius: 30px;
+
+  background: rgba(255, 253, 249, 0.97);
+
+  box-shadow:
+    0 28px 70px rgba(74, 48, 38, 0.10),
+    0 6px 20px rgba(74, 48, 38, 0.045);
+
+  text-align: center;
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+
+  animation: loginCardAppear 0.5s ease-out;
+}
+
+
+/* Top Accent */
+
+.login-required-card::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 50%;
+
+  width: 100px;
+  height: 4px;
+
+  transform: translateX(-50%);
+
+  border-radius: 0 0 8px 8px;
+
+  background: #a45f40;
+}
+
+
+/* ========================================
+   Card Animation
+======================================== */
+
+@keyframes loginCardAppear {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* ========================================
+   Icon
+======================================== */
+
+.login-required-icon {
+  width: 88px;
+  height: 88px;
+
+  margin: 0 auto 26px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      #fffaf4,
+      #f4e5d7
+    );
+
+  border: 1px solid rgba(164, 95, 64, 0.18);
+
+  box-shadow:
+    0 12px 28px rgba(154, 91, 63, 0.10),
+    inset 0 0 0 7px rgba(255, 255, 255, 0.45);
+}
+
+.login-required-icon span {
+  display: block;
+
+  font-size: 38px;
+
+  line-height: 1;
+
+  transform: translateY(1px);
+
+  filter:
+    drop-shadow(
+      0 3px 4px rgba(74, 48, 38, 0.08)
+    );
+}
+
+
+/* ========================================
+   Content
+======================================== */
+
+.login-required-content {
+  margin-bottom: 34px;
+}
+
+.login-required-label {
+  margin: 0 0 10px;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.08em;
+
+  color: #a36547;
+}
+
+.login-required-content h1 {
+  margin: 0;
+
+  font-family:
+    var(--font-global),
+    "Noto Serif Thai",
+    serif;
+
+  font-size: clamp(30px, 5vw, 36px);
+
+  line-height: 1.35;
+
+  font-weight: 700;
+
+  letter-spacing: -0.025em;
+
+  color: #543a2f;
+}
+
+.login-required-description {
+  margin: 16px 0 0;
+
+  font-family:
+    var(--font-global),
+    "Noto Serif Thai",
+    sans-serif;
+
+  font-size: 15px;
+
+  line-height: 1.9;
+
+  color: #8b776b;
+}
+
+
+/* ========================================
+   Buttons
+======================================== */
+
+.login-required-actions {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 12px;
+}
+
+
+/* ========================================
+   Primary Button
+======================================== */
+
+.login-required-primary {
+  width: 100%;
+
+  min-height: 56px;
+
+  padding: 0 24px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 12px;
+
+  border: 1px solid #a45f40;
+
+  border-radius: 15px;
+
+  background: #a45f40;
+
+  color: #fffaf5;
+
+  font-family:
+    var(--font-global),
+    "Noto Serif Thai",
+    sans-serif;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-sizing: border-box;
+
+  box-shadow:
+    0 10px 24px rgba(164, 95, 64, 0.18);
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.login-required-primary:hover {
+  background: #914f34;
+
+  border-color: #914f34;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 14px 30px rgba(164, 95, 64, 0.24);
+}
+
+.login-required-primary:active {
+  transform: translateY(0);
+
+  box-shadow:
+    0 7px 16px rgba(164, 95, 64, 0.18);
+}
+
+.button-arrow {
+  font-size: 20px;
+
+  font-weight: 400;
+
+  line-height: 1;
+
+  transition:
+    transform 0.2s ease;
+}
+
+.login-required-primary:hover .button-arrow {
+  transform: translateX(4px);
+}
+
+
+/* ========================================
+   Secondary Button
+======================================== */
+
+.login-required-secondary {
+  width: 100%;
+
+  min-height: 54px;
+
+  padding: 0 24px;
+
+  border: 1px solid rgba(112, 63, 45, 0.17);
+
+  border-radius: 15px;
+
+  background: rgba(255, 253, 249, 0.85);
+
+  color: #6f584b;
+
+  font-family:
+    var(--font-global),
+    "Noto Serif Thai",
+    sans-serif;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  box-sizing: border-box;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.login-required-secondary:hover {
+  background: #f8f0e7;
+
+  border-color: rgba(164, 95, 64, 0.28);
+
+  color: #914f34;
+
+  transform: translateY(-1px);
+}
+
+
+/* ========================================
+   Footer
+======================================== */
+
+.login-required-footer {
+  margin: 30px 0 0;
+
+  padding-top: 22px;
+
+  border-top: 1px solid rgba(112, 63, 45, 0.11);
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 13px;
+
+  font-style: italic;
+
+  letter-spacing: 0.02em;
+
+  color: #a28d80;
+}
+
+
+/* ========================================
+   Focus
+======================================== */
+
+.login-required-primary:focus-visible,
+.login-required-secondary:focus-visible {
+  outline: 3px solid rgba(164, 95, 64, 0.22);
+
+  outline-offset: 3px;
+}
+
+
+/* ========================================
+   Mobile
+======================================== */
+
+@media (max-width: 600px) {
+  .login-required-page {
+    min-height: 100dvh;
+
+    padding: 30px 18px;
+  }
+
+  .login-required-card {
+    width: 100%;
+
+    padding: 46px 24px 32px;
+
+    border-radius: 26px;
+  }
+
+  .login-required-card::before {
+    width: 80px;
+  }
+
+  .login-required-icon {
+    width: 76px;
+    height: 76px;
+
+    margin-bottom: 23px;
+  }
+
+  .login-required-icon span {
+    font-size: 32px;
+  }
+
+  .login-required-content {
+    margin-bottom: 29px;
+  }
+
+  .login-required-label {
+    font-size: 14px;
+  }
+
+  .login-required-content h1 {
+    font-size: 26px;
+  }
+
+  .login-required-description {
+    margin-top: 14px;
+
+    font-size: 14px;
+
+    line-height: 1.85;
+  }
+
+  .login-required-primary {
+    min-height: 54px;
+
+    border-radius: 14px;
+  }
+
+  .login-required-secondary {
+    min-height: 52px;
+
+    border-radius: 14px;
+  }
+
+  .login-required-footer {
+    margin-top: 26px;
+
+    padding-top: 19px;
+
+    font-size: 12px;
+  }
+}
+
+
+/* ========================================
+   Small Mobile
+======================================== */
+
+@media (max-width: 380px) {
+  .login-required-page {
+    padding: 22px 14px;
+  }
+
+  .login-required-card {
+    padding: 40px 20px 28px;
+
+    border-radius: 23px;
+  }
+
+  .login-required-icon {
+    width: 70px;
+    height: 70px;
+  }
+
+  .login-required-icon span {
+    font-size: 29px;
+  }
+
+  .login-required-content h1 {
+    font-size: 24px;
+  }
+
+  .login-required-description {
+    font-size: 13px;
+  }
+}
+
+/* ========================================
+   Login Required Modal
+======================================== */
+
+.login-required-modal-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 9999;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  padding: 24px;
+
+  background:
+    rgba(57, 42, 35, 0.42);
+
+  backdrop-filter: blur(7px);
+
+  -webkit-backdrop-filter: blur(7px);
+
+  animation:
+    loginModalOverlayIn
+    0.2s ease-out;
+}
+
+
+/* ========================================
+   Modal Card
+======================================== */
+
+.login-required-modal-card {
+  position: relative;
+
+  width: min(100%, 520px);
+
+  padding: 48px 52px 36px;
+
+  border: 1px solid
+    rgba(112, 63, 45, 0.14);
+
+  border-radius: 28px;
+
+  background:
+    rgba(255, 253, 249, 0.98);
+
+  box-shadow:
+    0 30px 80px
+      rgba(62, 42, 34, 0.20),
+    0 8px 30px
+      rgba(62, 42, 34, 0.08);
+
+  text-align: center;
+
+  box-sizing: border-box;
+
+  overflow: hidden;
+
+  animation:
+    loginModalCardIn
+    0.3s
+    cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+
+/* ========================================
+   Top Accent
+======================================== */
+
+.login-required-modal-card::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 50%;
+
+  width: 92px;
+  height: 4px;
+
+  transform:
+    translateX(-50%);
+
+  border-radius:
+    0 0 8px 8px;
+
+  background: #a45f40;
+}
+
+
+/* ========================================
+   Close
+======================================== */
+
+.login-required-modal-close {
+  position: absolute;
+
+  top: 16px;
+  right: 18px;
+
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: transparent;
+
+  color: #9a877b;
+
+  font-size: 25px;
+
+  font-weight: 400;
+
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.login-required-modal-close:hover {
+  background: #f5ebe2;
+
+  color: #704735;
+
+  transform: rotate(5deg);
+}
+
+
+/* ========================================
+   Icon
+======================================== */
+
+.login-required-modal-icon {
+  width: 82px;
+  height: 82px;
+
+  margin:
+    10px auto 24px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle at 35% 30%,
+      #fffaf4,
+      #f3e4d6
+    );
+
+  border:
+    1px solid
+    rgba(164, 95, 64, 0.18);
+
+  box-shadow:
+    0 10px 25px
+      rgba(154, 91, 63, 0.09),
+    inset
+      0 0 0 6px
+      rgba(255, 255, 255, 0.45);
+}
+
+.login-required-modal-icon span {
+  font-size: 35px;
+
+  line-height: 1;
+}
+
+
+/* ========================================
+   Content
+======================================== */
+
+.login-required-modal-content {
+  margin-bottom: 30px;
+}
+
+.login-required-modal-label {
+  margin: 0 0 8px;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.08em;
+
+  color: #a36547;
+}
+
+.login-required-modal-content h2 {
+  margin: 0;
+
+  font-family:
+    var(--font-global),
+    "Noto Serif Thai",
+    sans-serif;
+
+  font-size: 31px;
+
+  line-height: 1.35;
+
+  font-weight: 700;
+
+  letter-spacing: -0.02em;
+
+  color: #543a2f;
+}
+
+.login-required-modal-content p:last-child {
+  margin: 14px 0 0;
+
+  font-family:
+    var(--font-global),
+    "Noto Serif Thai",
+    sans-serif;
+
+  font-size: 14px;
+
+  line-height: 1.9;
+
+  color: #8b776b;
+}
+
+
+/* ========================================
+   Actions
+======================================== */
+
+.login-required-modal-actions {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 11px;
+}
+
+
+/* ========================================
+   Primary
+======================================== */
+
+.login-required-modal-primary {
+  width: 100%;
+
+  min-height: 54px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 11px;
+
+  border:
+    1px solid #a45f40;
+
+  border-radius: 14px;
+
+  background: #a45f40;
+
+  color: #fffaf5;
+
+  font-family:
+    var(--font-global),
+    "Noto Serif Thai",
+    sans-serif;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 9px 22px
+      rgba(164, 95, 64, 0.18);
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.login-required-modal-primary:hover {
+  background: #914f34;
+
+  border-color: #914f34;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 13px 28px
+      rgba(164, 95, 64, 0.23);
+}
+
+.login-required-modal-primary:active {
+  transform: translateY(0);
+}
+
+.login-required-modal-arrow {
+  font-size: 19px;
+
+  transition:
+    transform 0.2s ease;
+}
+
+.login-required-modal-primary:hover
+.login-required-modal-arrow {
+  transform: translateX(4px);
+}
+
+
+/* ========================================
+   Secondary
+======================================== */
+
+.login-required-modal-secondary {
+  width: 100%;
+
+  min-height: 52px;
+
+  border:
+    1px solid
+    rgba(112, 63, 45, 0.17);
+
+  border-radius: 14px;
+
+  background: #fffdf9;
+
+  color: #6f584b;
+
+  font-family:
+    var(--font-global),
+    "Noto Serif Thai",
+    sans-serif;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.login-required-modal-secondary:hover {
+  background: #f8f0e7;
+
+  border-color:
+    rgba(164, 95, 64, 0.25);
+
+  color: #914f34;
+}
+
+
+/* ========================================
+   Footer
+======================================== */
+
+.login-required-modal-footer {
+  margin: 25px 0 0;
+
+  padding-top: 19px;
+
+  border-top:
+    1px solid
+    rgba(112, 63, 45, 0.10);
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 12px;
+
+  font-style: italic;
+
+  color: #a28d80;
+}
+
+
+/* ========================================
+   Animation
+======================================== */
+
+@keyframes loginModalOverlayIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes loginModalCardIn {
+  from {
+    opacity: 0;
+    transform:
+      translateY(18px)
+      scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+
+/* ========================================
+   Mobile
+======================================== */
+
+@media (max-width: 600px) {
+  .login-required-modal-overlay {
+    padding: 18px;
+  }
+
+  .login-required-modal-card {
+    padding:
+      44px 24px 30px;
+
+    border-radius: 25px;
+  }
+
+  .login-required-modal-icon {
+    width: 74px;
+    height: 74px;
+
+    margin-bottom: 21px;
+  }
+
+  .login-required-modal-icon span {
+    font-size: 31px;
+  }
+
+  .login-required-modal-content h2 {
+    font-size: 26px;
+  }
+
+  .login-required-modal-content p:last-child {
+    font-size: 13px;
+  }
+
+  .login-required-modal-primary {
+    min-height: 53px;
+  }
+
+  .login-required-modal-secondary {
+    min-height: 51px;
+  }
+}
