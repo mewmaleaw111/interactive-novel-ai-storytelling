@@ -19,6 +19,7 @@ import { createSupabaseClient } from '@/lib/supabaseClient';
 
 import type {
   Story,
+  Chapter,
   Genre,
   NarrativeTone,
 } from '@/types/story';
@@ -58,40 +59,19 @@ export default function DiscoverPage() {
       return;
     }
 
+    // ถ้า login แล้วแต่ session ยังไม่พร้อม ให้รอก่อน
+    // ไม่งั้น query chapters จะไม่มี token (เหมือนหน้าแรก)
+    if (isSignedIn && !session) {
+      return;
+    }
+
     const loadStories = async () => {
       setIsLoading(true);
 
       try {
-        let favoriteStoryIds: string[] = [];
-
-        if (isSignedIn && user) {
-          try {
-            const favoriteResponse =
-              await fetch(
-                '/api/favorites',
-                {
-                  cache: 'no-store',
-                }
-              );
-
-            const favoriteData =
-              await favoriteResponse.json();
-
-            if (
-              favoriteResponse.ok &&
-              favoriteData.success
-            ) {
-              favoriteStoryIds =
-                favoriteData.favoriteStoryIds ||
-                [];
-            }
-          } catch (error) {
-            console.error(
-              'Load Favorites Error:',
-              error
-            );
-          }
-        }
+        // ==================================================
+        // 1. โหลด Story public
+        // ==================================================
 
         const storyResponse =
           await fetch(
@@ -127,9 +107,147 @@ export default function DiscoverPage() {
           return;
         }
 
+        const storyIds: string[] =
+          storyData.map(
+            (story: { id: string }) =>
+              story.id
+          );
+
+        // ==================================================
+        // 2. โหลด Chapters จาก Supabase (ใช้นับจำนวนคำ)
+        // ==================================================
+
+        const {
+          data: chapterData,
+          error: chapterError,
+        } = await supabase
+          .from('chapters')
+          .select('*')
+          .in('story_id', storyIds)
+          .order('chapter_number', {
+            ascending: true,
+          });
+
+        if (chapterError) {
+          console.error(
+            'Supabase Chapter Error:',
+            chapterError
+          );
+
+          setStories([]);
+          return;
+        }
+
+        const chapters: any[] =
+          chapterData || [];
+
+        // ==================================================
+        // 3. โหลด Favorites + ชื่อผู้แต่ง (ต้อง login)
+        // ==================================================
+
+        let favoriteStoryIds: string[] = [];
+
+        let creatorMap: Record<
+          string,
+          string
+        > = {};
+
+        if (isSignedIn && user) {
+          try {
+            const favoriteResponse =
+              await fetch(
+                '/api/favorites',
+                {
+                  cache: 'no-store',
+                }
+              );
+
+            const favoriteData =
+              await favoriteResponse.json();
+
+            if (
+              favoriteResponse.ok &&
+              favoriteData.success
+            ) {
+              favoriteStoryIds =
+                favoriteData.favoriteStoryIds ||
+                [];
+            }
+          } catch (error) {
+            console.error(
+              'Load Favorites Error:',
+              error
+            );
+          }
+
+          try {
+            const creatorResponse =
+              await fetch(
+                '/api/stories/creators',
+                {
+                  cache: 'no-store',
+                }
+              );
+
+            const creatorData =
+              await creatorResponse.json();
+
+            if (
+              creatorResponse.ok &&
+              creatorData.success
+            ) {
+              creatorMap =
+                creatorData.creators ||
+                {};
+            }
+          } catch (error) {
+            console.error(
+              'Load Creators Error:',
+              error
+            );
+          }
+        }
+
+        // ==================================================
+        // 4. แปลงเป็น Story (ตรรกะเดียวกับหน้าแรก)
+        // ==================================================
+
         const mappedStories: Story[] =
           storyData.map(
             (story: any) => {
+              const storyChapters: Chapter[] =
+                chapters
+                  .filter(
+                    (chapter) =>
+                      chapter.story_id ===
+                      story.id
+                  )
+                  .map((chapter) => ({
+                    id: chapter.id,
+
+                    chapterNumber:
+                      chapter.chapter_number,
+
+                    title:
+                      chapter.title ||
+                      `บทที่ ${chapter.chapter_number}`,
+
+                    content:
+                      chapter.content ||
+                      '',
+
+                    createdAt:
+                      chapter.created_at,
+                  }));
+
+              const wordCount =
+                storyChapters.reduce(
+                  (total, chapter) =>
+                    total +
+                    chapter.content.length,
+                  0
+                );
+
               const isFresh =
                 Date.now() -
                 new Date(
@@ -179,7 +297,8 @@ export default function DiscoverPage() {
                   '',
 
                 author:
-                  'นักเขียน',
+                  creatorMap[story.id] ||
+                  'ไม่ระบุชื่อ',
 
                 totalChapters:
                   story.total_chapters ||
@@ -188,11 +307,10 @@ export default function DiscoverPage() {
                 currentChapter:
                   0,
 
-                wordCount:
-                  0,
+                wordCount,
 
                 chapters:
-                  [],
+                  storyChapters,
 
                 isFavorite:
                   favoriteStoryIds.includes(
@@ -230,6 +348,7 @@ export default function DiscoverPage() {
   }, [
     isLoaded,
     isSignedIn,
+    session,
     user,
     supabase,
   ]);
@@ -247,22 +366,22 @@ export default function DiscoverPage() {
     );
   };
 
-return (
-  <>
-    <DiscoverView
-      stories={stories}
-      isLoading={isLoading}
-      onSelectStory={
-        handleSelectStory
-      }
-    />
+  return (
+    <>
+      <DiscoverView
+        stories={stories}
+        isLoading={isLoading}
+        onSelectStory={
+          handleSelectStory
+        }
+      />
 
-    <LoginRequiredModal
-      isOpen={showLoginModal}
-      onClose={() =>
-        setShowLoginModal(false)
-      }
-    />
-  </>
-);
+      <LoginRequiredModal
+        isOpen={showLoginModal}
+        onClose={() =>
+          setShowLoginModal(false)
+        }
+      />
+    </>
+  );
 }

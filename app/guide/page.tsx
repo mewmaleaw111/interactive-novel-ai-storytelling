@@ -644,7 +644,7 @@ export default function GuidePage() {
           </ol>
 
           <GuideFigure
-            src="/guide/choice.png"
+            src="/guide/choice.jpg"
             alt="กล่องคุณจะทำอย่างไรต่อ ที่ท้ายบทล่าสุด"
             caption="กล่องตัดสินใจท้ายบท มีตัวเลือก 1-3 ช่องพิมพ์เอง และปุ่มดำเนินเรื่องต่อ"
           />
