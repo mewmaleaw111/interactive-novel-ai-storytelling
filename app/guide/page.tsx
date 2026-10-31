@@ -240,7 +240,7 @@ export default function GuidePage() {
           </p>
 
           <GuideFigure
-            src="/guide/begin.png"
+            src="/guide/begin.jpg"
             alt="หน้าหลักของ GonnaTales ที่มีปุ่มสมัครสมาชิกและเข้าสู่ระบบบนแถบเมนู"
             caption="แถบเมนูด้านบนมีปุ่มสมัครสมาชิกและเข้าสู่ระบบ"
           />
@@ -296,7 +296,7 @@ export default function GuidePage() {
           </p>
 
           <GuideFigure
-            src="/guide/home.png"
+            src="/guide/home.jpg"
             alt="หน้าหลักของ GonnaTales"
             caption="หน้าหลักของ GonnaTales"
           />
