@@ -704,7 +704,7 @@ export const LibraryView: React.FC<
         </p>
 
         <span className="quote-author">
-          — Cs66
+          — CS66
         </span>
 
       </div>
