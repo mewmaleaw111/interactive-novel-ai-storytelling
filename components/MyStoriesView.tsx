@@ -568,12 +568,15 @@ const MyStoryItem: React.FC<
           )}
 
 
-          {/* ==================================
-          ACTIONS
+        </div>
+
+
+        {/* ==================================
+          ACTIONS (ลูกของการ์ดโดยตรง เพื่อให้กว้างเต็มการ์ดบนมือถือ)
       ================================== */}
 
-          <div
-            className="my-story-action"
+        <div
+          className="my-story-action"
             onClick={(e) =>
               e.stopPropagation()
             }
@@ -616,6 +619,8 @@ const MyStoryItem: React.FC<
                   <button
                     type="button"
                     className="story-action-btn story-action-delete"
+                    aria-label="ลบนิยาย"
+                    title="ลบนิยาย"
                     onClick={(e) =>
                       onDelete(e, story)
                     }
@@ -772,6 +777,8 @@ const MyStoryItem: React.FC<
                   <button
                     type="button"
                     className="story-action-btn story-action-delete"
+                    aria-label="ลบนิยาย"
+                    title="ลบนิยาย"
                     onClick={(e) =>
                       onDelete(e, story)
                     }
@@ -808,7 +815,6 @@ const MyStoryItem: React.FC<
 
           </div>
 
-        </div>
       </div>
     );
   };

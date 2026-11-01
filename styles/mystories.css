@@ -4048,3 +4048,181 @@
     overflow-wrap: anywhere !important;
   }
 }
+
+
+/* =========================================================
+   MY STORIES — MOBILE LAYOUT (FINAL OVERRIDE)
+   - ปกชิดซ้ายบน ข้อความกินพื้นที่ที่เหลือ
+   - ปุ่มอยู่แถวล่างกว้างเต็มการ์ด (.my-story-action เป็นลูกของการ์ด)
+   - "แต่งต่อ" เป็นปุ่มหลักเต็มแถว / "ลบ" เป็นไอคอนเล็กกันกดพลาด
+   วางไว้ท้ายไฟล์เพื่อให้ชนะกฎเก่าที่ซ้อนกันอยู่ด้านบน
+========================================================= */
+@media (max-width: 700px) {
+
+  .my-stories-list {
+    gap: 12px !important;
+  }
+
+  .my-stories-list .my-story-item {
+    display: grid !important;
+    grid-template-columns: 72px minmax(0, 1fr) !important;
+    grid-template-areas:
+      "cover details"
+      "actions actions" !important;
+    align-items: start !important;
+    gap: 10px 12px !important;
+    padding: 14px !important;
+    transform: none !important;
+  }
+
+  .my-stories-list .my-story-cover-wrapper {
+    grid-area: cover !important;
+    width: 72px !important;
+    min-width: 72px !important;
+    height: 108px !important;
+    align-self: start !important;
+  }
+
+  .my-stories-list .my-story-cover-wrapper .my-story-cover {
+    width: 72px !important;
+    height: 108px !important;
+  }
+
+  .my-stories-list .my-story-details {
+    grid-area: details !important;
+    min-width: 0 !important;
+  }
+
+  .my-stories-list .my-story-top h3 {
+    font-size: 1rem !important;
+    line-height: 1.4 !important;
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical !important;
+    -webkit-line-clamp: 2 !important;
+    overflow: hidden !important;
+  }
+
+  .my-stories-list .my-story-premise {
+    font-size: 0.8rem !important;
+    -webkit-line-clamp: 2 !important;
+    line-clamp: 2 !important;
+  }
+
+  .my-stories-list .my-story-meta {
+    font-size: 0.72rem !important;
+  }
+
+  .my-stories-list .my-story-progress-top,
+  .my-stories-list .my-story-progress-top span:last-child {
+    font-size: 0.7rem !important;
+  }
+
+  /* ---------- แถวปุ่ม ---------- */
+
+  .my-stories-list .my-story-item > .my-story-action {
+    grid-area: actions !important;
+    position: static !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 4px 0 0 !important;
+    padding: 12px 0 0 !important;
+    border: 0 !important;
+    border-top: 1px solid var(--border-color) !important;
+  }
+
+  .my-stories-list .my-story-item .story-card-actions {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 44px !important;
+    gap: 8px !important;
+    width: 100% !important;
+    margin: 0 !important;
+  }
+
+  .my-stories-list .my-story-item .story-card-actions > .story-action-btn,
+  .my-stories-list .my-story-item .story-card-actions > .story-banned-status {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: 42px !important;
+    min-height: 42px !important;
+    padding: 0 10px !important;
+    gap: 6px !important;
+    font-size: 0.85rem !important;
+    border-radius: 10px !important;
+    white-space: nowrap !important;
+  }
+
+  .my-stories-list .my-story-item .story-card-actions .story-action-label {
+    font-size: 0.85rem !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+  }
+
+  .my-stories-list .my-story-item .story-card-actions .story-action-icon,
+  .my-stories-list .my-story-item .story-card-actions .story-action-icon svg {
+    width: 16px !important;
+    height: 16px !important;
+    flex: 0 0 16px !important;
+  }
+
+  /* ปุ่มหลัก "แต่งต่อ" เต็มแถว */
+  .my-stories-list .my-story-item .story-card-actions > .story-action-continue {
+    grid-column: 1 / -1 !important;
+    height: 46px !important;
+    min-height: 46px !important;
+    font-size: 0.95rem !important;
+  }
+
+  .my-stories-list .my-story-item .story-card-actions > .story-action-continue .story-action-label {
+    font-size: 0.95rem !important;
+  }
+
+  /* "ลบ" เป็นปุ่มไอคอนอย่างเดียว */
+  .my-stories-list .my-story-item .story-card-actions > .story-action-delete {
+    padding: 0 !important;
+  }
+
+  .my-stories-list .my-story-item .story-card-actions > .story-action-delete .story-action-label {
+    display: none !important;
+  }
+
+  /* นิยายถูกแบน: สถานะ + ปุ่มลบ */
+  .my-stories-list .my-story-item.is-banned .story-card-actions {
+    grid-template-columns: 1fr 44px !important;
+  }
+
+  .my-stories-list .my-story-item.is-banned .story-card-actions > .story-banned-status {
+    justify-content: center !important;
+  }
+}
+
+/* จอเล็กมาก: ลดขนาดปกลงนิดหน่อย */
+@media (max-width: 360px) {
+  .my-stories-list .my-story-item {
+    grid-template-columns: 60px minmax(0, 1fr) !important;
+    padding: 12px !important;
+    gap: 8px 10px !important;
+  }
+
+  .my-stories-list .my-story-cover-wrapper,
+  .my-stories-list .my-story-cover-wrapper .my-story-cover {
+    width: 60px !important;
+    min-width: 60px !important;
+    height: 90px !important;
+  }
+
+  .my-stories-list .my-story-item .story-card-actions > .story-action-btn {
+    font-size: 0.8rem !important;
+    padding: 0 6px !important;
+  }
+}
+
+/* แท็บเล็ต: ปุ่มอยู่แถวล่างเต็มการ์ด ตัดเส้นแบ่งแนวตั้งของ desktop ออก */
+@media (min-width: 701px) and (max-width: 1099px) {
+  .my-stories-list .my-story-item > .my-story-action {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    border-left: 0 !important;
+  }
+}
