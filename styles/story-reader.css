@@ -4030,3 +4030,30 @@
         font-size: 0.95rem !important;
     }
 }
+
+/* =========================================================
+   PC (จอกว้าง ≥1520px): เนื้อหาหลักอยู่กึ่งกลางหน้าจอจริงๆ
+   sidebar ชิดขวา  — จอที่แคบกว่านี้ใช้ layout แบบกลุ่มกึ่งกลางเดิม
+   (ต้องมีที่ว่างพอสำหรับ sidebar 340px ฝั่งขวาโดยไม่ชนเนื้อหา)
+========================================================= */
+@media (min-width: 1520px) {
+    .story-reader-layout {
+        grid-template-columns:
+            minmax(0, 1fr) minmax(0, 760px) minmax(0, 1fr) !important;
+        justify-content: stretch !important;
+        column-gap: 0 !important;
+        width: calc(100% - 48px) !important;
+        max-width: none !important;
+    }
+
+    .story-reader-main {
+        grid-column: 2 !important;
+    }
+
+    .story-reader-sidebar {
+        grid-column: 3 !important;
+        justify-self: end !important;
+        width: 100% !important;
+        max-width: 340px !important;
+    }
+}
