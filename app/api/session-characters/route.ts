@@ -121,6 +121,49 @@ export async function GET(req: Request) {
       );
     }
 
+    // 3.1 ดึงรูปตัวละครจากตัวละครต้นฉบับของ Story (ตาราง characters)
+    const baseCharacterIds = (characters || [])
+      .map((character) => character.base_character_id)
+      .filter((id): id is string => Boolean(id));
+
+    const imageByBaseId = new Map<string, string>();
+
+    if (baseCharacterIds.length > 0) {
+      const {
+        data: baseCharacters,
+        error: baseCharacterError,
+      } = await supabaseAdmin
+        .from('characters')
+        .select('id, image_url')
+        .in('id', baseCharacterIds);
+
+      if (baseCharacterError) {
+        // รูปเป็นส่วนเสริม ไม่ควรทำให้หน้าอ่านพัง
+        console.error(
+          'Load Base Character Images Error:',
+          baseCharacterError
+        );
+      } else {
+        for (const baseCharacter of baseCharacters || []) {
+          if (baseCharacter.image_url) {
+            imageByBaseId.set(
+              baseCharacter.id,
+              baseCharacter.image_url
+            );
+          }
+        }
+      }
+    }
+
+    const charactersWithImages = (characters || []).map(
+      (character) => ({
+        ...character,
+        image_url:
+          imageByBaseId.get(character.base_character_id) ??
+          null,
+      })
+    );
+
     // 4. โหลดความสัมพันธ์จาก Session ต้นฉบับ
     const {
       data: relationships,
@@ -159,7 +202,7 @@ export async function GET(req: Request) {
         currentInventory: originalSession.current_inventory,
         importantSituation: originalSession.important_situation,
       },
-      characters: characters || [],
+      characters: charactersWithImages,
       relationships: relationships || [],
     });
   } catch (error) {

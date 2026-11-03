@@ -1472,6 +1472,44 @@ ${chapterContent}
    Helper: Parse Initial Items
 ========================================================= */
 
+/**
+ * ตรวจสอบ URL รูปตัวละคร
+ * รับเฉพาะรูปที่อยู่ใน Supabase Storage ของโปรเจกต์นี้
+ */
+function sanitizeCharacterImageUrl(value: unknown): string | null {
+  if (typeof value !== 'string') {
+    return null;
+  }
+
+  const trimmed = value.trim();
+
+  if (!trimmed || trimmed.length > 2048) {
+    return null;
+  }
+
+  try {
+    const imageUrl = new URL(trimmed);
+    const supabaseUrl = new URL(
+      process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+    );
+
+    if (
+      imageUrl.protocol !== 'https:' &&
+      imageUrl.protocol !== 'http:'
+    ) {
+      return null;
+    }
+
+    if (imageUrl.host !== supabaseUrl.host) {
+      return null;
+    }
+
+    return trimmed;
+  } catch {
+    return null;
+  }
+}
+
 function parseInitialItems(value: unknown): string[] {
   if (typeof value !== 'string') return [];
 
@@ -1729,6 +1767,9 @@ export async function POST(req: Request) {
                 ? character.personality.trim()
                 : 'ตัวละครประกอบของเรื่อง',
             initial_items: parseInitialItems(character.items),
+            image_url: sanitizeCharacterImageUrl(
+              character.imageUrl
+            ),
           }))
         : [];
 
@@ -2054,6 +2095,10 @@ ${supportingCharacterPrompt}
               parseInitialItems(
                 formData.protagonistItems
               ),
+            image_url:
+              sanitizeCharacterImageUrl(
+                formData.protagonistImageUrl
+              ),
           });
 
         if (
@@ -2093,6 +2138,7 @@ ${supportingCharacterPrompt}
                 gender: 'ชาย' | 'หญิง' | 'ไม่ระบุ';
                 personality: string;
                 initial_items: string[];
+                image_url: string | null;
               }) => ({
                 story_id: story.id,
                 name: character.name,
@@ -2101,6 +2147,7 @@ ${supportingCharacterPrompt}
                 appearance: null,
                 personality: character.personality,
                 initial_items: character.initial_items,
+                image_url: character.image_url,
               })
             )
           );

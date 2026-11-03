@@ -47,6 +47,7 @@ export async function GET(req: Request) {
         appearance,
         personality,
         initial_items,
+        image_url,
         created_at
       `)
       .eq('story_id', storyId)

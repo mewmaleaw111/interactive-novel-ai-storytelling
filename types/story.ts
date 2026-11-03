@@ -160,6 +160,12 @@ export interface SupportingCharacter {
   personality: string;
 
   items: string;
+
+  /**
+   * รูปตัวละคร (Supabase Storage public URL)
+   * แสดงตอนต้นบทที่ 1 ในหน้าอ่าน
+   */
+  imageUrl?: string;
 }
 
 /* =========================================================
@@ -266,6 +272,11 @@ export interface CreateStoryFormData {
   protagonistPersonality: string;
 
   protagonistItems: string;
+
+  /**
+   * รูปตัวละครหลัก (Supabase Storage public URL)
+   */
+  protagonistImageUrl?: string;
 
   /* -------------------------------------------------------
      ตัวละครประกอบ (NPC)

@@ -15,6 +15,7 @@ import type {
 
 import '@/styles/reader.css';
 import '@/styles/story-reader.css';
+import ChapterOneCharacterIntro from '@/components/ChapterOneCharacterIntro';
 
 interface ReaderViewProps {
   story: Story;
@@ -1177,6 +1178,16 @@ export const ReaderView: React.FC<
             {/* =================================================
                 STORY CONTENT
             ================================================= */}
+
+            {/* =================================================
+                CHARACTER IMAGES (CHAPTER 1 ONLY)
+            ================================================= */}
+
+            {currentChapter.chapterNumber === 1 && (
+              <ChapterOneCharacterIntro
+                characters={sortedSessionCharacters}
+              />
+            )}
 
             <div className="story-reader-text font-serif">
 

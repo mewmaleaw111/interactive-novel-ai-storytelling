@@ -279,6 +279,7 @@ export async function GET(
         appearance,
         personality,
         initial_items,
+        image_url,
         created_at
       `)
       .eq('story_id', storyId)
@@ -486,6 +487,7 @@ export async function GET(
       role: character.role ?? 'npc',
       appearance: character.appearance ?? '',
       personality: character.personality ?? '',
+      image_url: character.image_url ?? null,
       initial_items:
         Array.isArray(character.initial_items)
           ? character.initial_items

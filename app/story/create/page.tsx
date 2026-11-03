@@ -13,6 +13,8 @@ import {
   SignInButton,
 } from '@clerk/nextjs';
 
+import CharacterImageUpload from '@/components/CharacterImageUpload';
+
 import {
   CreateStoryFormData,
   Genre,
@@ -84,6 +86,7 @@ const emptyForm: CreateStoryFormData = {
   protagonistGender: 'ไม่ระบุ',
   protagonistPersonality: '',
   protagonistItems: '',
+  protagonistImageUrl: '',
 
   supportingCharacters: [],
 
@@ -211,6 +214,12 @@ export default function CreateStoryPage() {
                         'string'
                         ? character.items
                         : '',
+
+                    imageUrl:
+                      typeof character.imageUrl ===
+                        'string'
+                        ? character.imageUrl
+                        : '',
                   })
                 )
               : [];
@@ -313,6 +322,7 @@ export default function CreateStoryPage() {
       gender: 'ไม่ระบุ',
       personality: '',
       items: '',
+      imageUrl: '',
     };
 
     setFormData((previous) => ({
@@ -555,6 +565,9 @@ export default function CreateStoryPage() {
 
             items:
               character.items.trim(),
+
+            imageUrl:
+              character.imageUrl || '',
           })
         );
 
@@ -589,6 +602,9 @@ export default function CreateStoryPage() {
 
       protagonistItems:
         formData.protagonistItems.trim(),
+
+      protagonistImageUrl:
+        formData.protagonistImageUrl || '',
 
       supportingCharacters:
         cleanSupportingCharacters,
@@ -1016,6 +1032,41 @@ export default function CreateStoryPage() {
                 </div>
 
                 {/* =================================================
+                    รูปตัวละครหลัก
+                ================================================= */}
+
+                <div className="story-create-field">
+
+                  <label>
+                    รูปตัวละครหลัก
+                    <span className="story-create-optional">
+                      {' '} (ไม่จำเป็น)
+                    </span>
+                  </label>
+
+                  <p>
+                    รูปนี้จะแสดงตอนเริ่มอ่านบทที่ 1 เพื่อให้ผู้อ่านจินตนาการถึงตัวละครได้
+                  </p>
+
+                  <CharacterImageUpload
+                    imageUrl={
+                      formData.protagonistImageUrl
+                    }
+                    alt={
+                      formData.protagonist ||
+                      'ตัวละครหลัก'
+                    }
+                    onChange={(url) =>
+                      updateField(
+                        'protagonistImageUrl',
+                        url
+                      )
+                    }
+                  />
+
+                </div>
+
+                {/* =================================================
                     เพศตัวละครหลัก
                 ================================================= */}
 
@@ -1265,6 +1316,34 @@ export default function CreateStoryPage() {
                                 )}
 
                               </div>
+
+                            </div>
+
+                            <div className="story-create-field">
+
+                              <label>
+                                รูปตัวละคร
+                                <span className="story-create-optional">
+                                  {' '} (ไม่จำเป็น)
+                                </span>
+                              </label>
+
+                              <CharacterImageUpload
+                                imageUrl={
+                                  character.imageUrl
+                                }
+                                alt={
+                                  character.name ||
+                                  'ตัวละครประกอบ'
+                                }
+                                onChange={(url) =>
+                                  updateSupportingCharacter(
+                                    index,
+                                    'imageUrl',
+                                    url
+                                  )
+                                }
+                              />
 
                             </div>
 

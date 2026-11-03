@@ -14,6 +14,7 @@ import {
 
 import '@/styles/reader.css';
 import '@/styles/story-reader.css';
+import ChapterOneCharacterIntro from '@/components/ChapterOneCharacterIntro';
 import { calculateStoryProgress } from '@/lib/storyProgress';
 
 /* =========================================================
@@ -47,6 +48,7 @@ interface Character {
   appearance?: string;
   personality?: string;
   initial_items?: string[];
+  image_url?: string | null;
 }
 
 interface CurrentStatus {
@@ -128,6 +130,29 @@ const CharactersIcon = () => (
   </Icon>
 );
 
+const HealthIcon = () => (
+  <Icon>
+    <path d="M20.8 8.8c0 5.2-8.8 10-8.8 10s-8.8-4.8-8.8-10A4.8 4.8 0 0 1 8 4.2c1.6 0 3.1.8 4 2 0.9-1.2 2.4-2 4-2a4.8 4.8 0 0 1 4.8 4.6Z" />
+    <path d="M8 10h2l1.2-2.2L13 13l1.3-2H16" />
+  </Icon>
+);
+
+const InventoryIcon = () => (
+  <Icon>
+    <path d="M5 8.5h14l-1 11H6l-1-11Z" />
+    <path d="M9 8.5V7a3 3 0 0 1 6 0v1.5" />
+    <path d="M8 12h8" />
+  </Icon>
+);
+
+const WarningIcon = () => (
+  <Icon>
+    <path d="M12 3 21 20H3L12 3Z" />
+    <path d="M12 9v4" />
+    <path d="M12 16h.01" />
+  </Icon>
+);
+
 const PathIcon = () => (
   <Icon>
     <circle cx="6" cy="18" r="2" />
@@ -174,38 +199,38 @@ const parseStoryContent = (
     .map((rawText): StoryParagraph => {
       const text = rawText.trim();
 
-      if (/^\*\*\[\*\*dialogue\*\*\]\*\*\s\*/i.test(text)) {
+      if (/^\[dialogue\]\s*/i.test(text)) {
         return {
           type: 'dialogue',
           text: text
-            .replace(/^\*\*\[\*\*dialogue\*\*\]\*\*\s\*/i, '')
+            .replace(/^\[dialogue\]\s*/i, '')
             .trim(),
         };
       }
 
-      if (/^\*\*\[\*\*thought\*\*\]\*\*\s\*/i.test(text)) {
+      if (/^\[thought\]\s*/i.test(text)) {
         return {
           type: 'thought',
           text: text
-            .replace(/^\*\*\[\*\*thought\*\*\]\*\*\s\*/i, '')
+            .replace(/^\[thought\]\s*/i, '')
             .trim(),
         };
       }
 
-      if (/^\*\*\[\*\*action\*\*\]\*\*\s\*/i.test(text)) {
+      if (/^\[action\]\s*/i.test(text)) {
         return {
           type: 'action',
           text: text
-            .replace(/^\*\*\[\*\*action\*\*\]\*\*\s\*/i, '')
+            .replace(/^\[action\]\s*/i, '')
             .trim(),
         };
       }
 
-      if (/^\*\*\[\*\*important\*\*\]\*\*\s\*/i.test(text)) {
+      if (/^\[important\]\s*/i.test(text)) {
         return {
           type: 'important',
           text: text
-            .replace(/^\*\*\[\*\*important\*\*\]\*\*\s\*/i, '')
+            .replace(/^\[important\]\s*/i, '')
             .trim(),
         };
       }
@@ -1186,11 +1211,7 @@ export default function BranchReaderPage() {
                 {currentStatus.physicalCondition && (
                   <div className="story-sidebar-status-item">
                     <span className="status-icon">
-                      <Icon>
-                        <path d="M12 3v18" />
-                        <path d="M5 8h14" />
-                        <path d="M7 8v5a5 5 0 0 0 10 0V8" />
-                      </Icon>
+                      <HealthIcon />
                     </span>
 
                     <div>
@@ -1226,17 +1247,7 @@ export default function BranchReaderPage() {
                 {currentStatus.inventory.length > 0 && (
                   <div className="story-sidebar-status-item">
                     <span className="status-icon">
-                      <Icon>
-                        <rect
-                          x="3"
-                          y="6"
-                          width="18"
-                          height="14"
-                          rx="2"
-                        />
-                        <path d="M8 6V4h8v2" />
-                        <path d="M3 11h18" />
-                      </Icon>
+                      <InventoryIcon />
                     </span>
 
                     <div>
@@ -1399,6 +1410,12 @@ export default function BranchReaderPage() {
               </div>
             )}
 
+            {currentChapter.chapterNumber === 1 && (
+              <ChapterOneCharacterIntro
+                characters={characters}
+              />
+            )}
+
             <div className="story-reader-text font-serif">
               {storyParagraphs.map(
                 (
@@ -1493,78 +1510,6 @@ export default function BranchReaderPage() {
             </div>
           </section>
 
-          {/* Branch Info */}
-
-          <section className="story-sidebar-card">
-            <div className="story-sidebar-section-title">
-              <span className="sidebar-section-icon">
-                <BranchIcon />
-              </span>
-
-              ข้อมูลเส้นเรื่อง
-            </div>
-
-            <div className="story-sidebar-status-list">
-
-              {/* Player */}
-
-              <div className="story-sidebar-status-item">
-                <span className="status-icon">
-                  <CharactersIcon />
-                </span>
-
-                <div>
-                  <small>
-                    ผู้เล่น
-                  </small>
-
-                  <strong>
-                    {playerName}
-                  </strong>
-                </div>
-              </div>
-
-              {/* Current Chapter */}
-
-              <div className="story-sidebar-status-item">
-                <span className="status-icon">
-                  <PathIcon />
-                </span>
-
-                <div>
-                  <small>
-                    บทปัจจุบัน
-                  </small>
-
-                  <strong>
-                    บทที่{' '}
-                    {currentChapter.chapterNumber}
-                  </strong>
-                </div>
-              </div>
-
-              {/* Visibility */}
-
-              <div className="story-sidebar-status-item">
-                <span className="status-icon">
-                  <LocationIcon />
-                </span>
-
-                <div>
-                  <small>
-                    การมองเห็น
-                  </small>
-
-                  <strong>
-                    {isPublic
-                      ? 'Public'
-                      : 'Private'}
-                  </strong>
-                </div>
-              </div>
-            </div>
-          </section>
-
           {/* Current Status */}
 
           <section className="story-sidebar-card">
@@ -1592,11 +1537,7 @@ export default function BranchReaderPage() {
 
               <div className="story-sidebar-status-item">
                 <span className="status-icon">
-                  <Icon>
-                    <path d="M12 3v18" />
-                    <path d="M5 8h14" />
-                    <path d="M7 8v5a5 5 0 0 0 10 0V8" />
-                  </Icon>
+                  <HealthIcon />
                 </span>
 
                 <div>
@@ -1609,11 +1550,7 @@ export default function BranchReaderPage() {
 
               <div className="story-sidebar-status-item">
                 <span className="status-icon">
-                  <Icon>
-                    <rect x="3" y="6" width="18" height="14" rx="2" />
-                    <path d="M8 6V4h8v2" />
-                    <path d="M3 11h18" />
-                  </Icon>
+                  <InventoryIcon />
                 </span>
 
                 <div>
@@ -1628,11 +1565,7 @@ export default function BranchReaderPage() {
 
               <div className="story-sidebar-status-item">
                 <span className="status-icon">
-                  <Icon>
-                    <path d="M12 3 22 20H2L12 3Z" />
-                    <path d="M12 9v4" />
-                    <path d="M12 17h.01" />
-                  </Icon>
+                  <WarningIcon />
                 </span>
 
                 <div>
